@@ -28,6 +28,12 @@ common:
     url: https://www.moogsoft.com
   - type: Documentation
     url: https://docs.moogsoft.com
+  - type: Integrations
+    url: https://www.moogsoft.com/integrations/
+integrations:
+  - name: Partner - AppDynamics floating
+  - name: Partner - AWS floating floating
+  - name: Integration Solarwinds
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
