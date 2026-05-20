@@ -24,6 +24,10 @@ apis:
       - type: Documentation
         url: https://docs.moogsoft.com
 common:
+  - type: GitHubOrganization
+    url: https://github.com/moogsoft
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/moogsoft
   - type: Website
     url: https://www.moogsoft.com
   - type: Documentation
