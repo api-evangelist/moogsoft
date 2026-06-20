@@ -3,7 +3,7 @@ name: Moogsoft
 description: >-
   Moogsoft is an AIOps platform that uses AI to reduce alert noise, correlate incidents, and automate root cause analysis.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
   - AIOps
   - Incident Management
