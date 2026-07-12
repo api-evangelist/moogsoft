@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://www.moogsoft.com/security/
+url: https://www.moogsoft.com/security/
+certifications:
+- SOC 2
+- GDPR
+- CSA STAR
+evidence:
+- source: https://www.moogsoft.com/security/
+  keywords:
+  - soc2
+  - gdpr
+  - csa star
