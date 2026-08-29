@@ -1,0 +1,62 @@
+generated: '2026-08-29'
+method: searched
+source: https://api.docs.moogsoft.com/docs/latest/branches/main/eb1492ed9496e-api-license-and-disclaimer
+versioning:
+  scheme: URL path major version, versioned PER SERVICE
+  evidence: Paths carry /v1 and /v2 prefixes; the Alerts/Incidents, Config, Collector, Webhook, CloudWatch
+    and Azure APIs each mix /v1 and /v2 resources in the same contract.
+  policy_quote: Each individual API is versioned separately. For example, we might publish a v2/events
+    API but not a /v2/metrics API. The general format of different APIs in the same version, such as v2,
+    might be different.
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/eb1492ed9496e-api-license-and-disclaimer
+deprecation:
+  published: true
+  window: Existing versions are supported for up to 6 months before the resource may be sunset.
+  policy_quote: When breaking changes are required to innovate and evolve the Incident Management platform,
+    we will provide version updates for individual APIs as designated by changes to the next whole number
+    -- for example, /v1/metrics, /v2/metrics, etc. ... We will support existing versions for up to 6 months
+    before we permit ourselves to sunset the resource.
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/eb1492ed9496e-api-license-and-disclaimer
+  headers:
+    sunset: false
+    deprecation: false
+    note: RFC 8594 Sunset and Deprecation response headers are NOT declared in any of the 17 contracts.
+      The window is prose only, so a client cannot detect an impending sunset at runtime.
+  backward_compatible_changes:
+  - Adding a new resource (new URL or path)
+  - Adding new optional request parameters
+  - Adding new JSON fields in API responses
+  - Changing the order of properties
+  - Changing the length or format of strings in error messages
+deprecated_operations:
+  count: 0
+  note: 'No operation in any of the 17 contracts carries deprecated: true.'
+status_page:
+  url: https://status.moogsoft.com
+  platform: Atlassian Statuspage
+  access: authenticated
+  probe:
+    url: https://status.moogsoft.com
+    status: 200
+    final_url: https://status.moogsoft.com/access/login
+    checked: '2026-08-29'
+  note: 'The status page is real and operated by Moogsoft, but it is a PRIVATE Statuspage: the root 302s
+    to /access/login and /api/v2/status.json returns the login HTML instead of JSON. Customers can subscribe;
+    the public and machine clients cannot read incident state.'
+sla:
+  published: false
+  note: No public SLA document. The API license page explicitly disclaims warranties and states no particular
+    support is provided for the public REST APIs absent a separate written agreement.
+license:
+  name: Apex AIOps Incident Management Proprietary
+  declared_in: info.license of all 17 contracts
+  terms: https://www.moogsoft.com/legal-information/moogsoft-cloud-terms-of-service/
+  note: The API license page requires users to license any improvements they make to the public REST APIs
+    back to Moogsoft on a perpetual, irrevocable, royalty-free, worldwide basis.
+corporate:
+  acquired_by: Dell Technologies
+  announced: '2023-07-20'
+  closed: '2023-10-19'
+  rebrand: Application rebranded from Moogsoft to APEX AIOps Incident Management on 2024-05-21 per the
+    product notices.
+  source: https://docs.moogsoft.com/moogsoft-cloud/en/what-s-new.html

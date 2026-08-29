@@ -1,0 +1,57 @@
+generated: '2026-08-29'
+method: searched
+source: openapi/ + https://api.docs.moogsoft.com/docs/latest/branches/main/eb1492ed9496e-api-license-and-disclaimer
+  + https://www.moogsoft.com/security/
+standards:
+- id: openapi-3.1
+  conforms: true
+  evidence: '16 of 17 published contracts declare openapi: 3.1.0; moogsoft-ui-services-openapi.yaml declares
+    3.0.0.'
+- id: oauth2
+  conforms: false
+  evidence: components.securitySchemes across all 17 specs declares only ApiKeyAuth (apiKey in header).
+    OAuth 2.0 appears only as an option for credentials Moogsoft uses to call OUT to customer systems
+    (webhook endpoints, credential store), never for inbound API auth.
+- id: oidc
+  conforms: true
+  evidence: auth.moogsoft.ai serves a valid /.well-known/openid-configuration (HTTP 200) for console sign-in
+    via Auth0. This governs the UI, not the REST API.
+- id: rfc9457
+  conforms: false
+  evidence: Error bodies use a proprietary envelope {status, message, additional[]} served as application/json
+    (components.schemas.MoogErrorResponse / MoogFailureResponse), not application/problem+json.
+- id: pagination
+  conforms: true
+  evidence: start / limit query parameters plus a search_after cursor on the alert and incident list operations
+    (ListAlertsRequest, ListIncidentsRequest in moogsoft-alerts-incidents-openapi.yaml).
+- id: idempotency
+  conforms: false
+  evidence: No Idempotency-Key header, and no idempotency language, in any of the 17 contracts or in the
+    API documentation.
+- id: rfc8594
+  conforms: false
+  evidence: No Sunset or Deprecation response headers are declared in any spec. The deprecation policy
+    is prose only (see lifecycle/moogsoft-lifecycle.yml).
+- id: scim
+  conforms: false
+  evidence: User Management API is a proprietary /v1 and /v2 user, group, role and API key surface. No
+    SCIM schema URNs appear in moogsoft-user-management-openapi.yaml.
+- id: opentelemetry
+  conforms: false
+  evidence: No OTLP ingestion endpoint in the published contracts; ingestion is Moogsoft-proprietary events,
+    metrics and collector endpoints.
+domain_standards:
+- id: aiops-event-interchange
+  conforms: false
+  evidence: The IT operations / AIOps market has no ratified event-interchange standard equivalent to
+    FHIR or ISO 20022, and Moogsoft does not declare one. Ingestion is via its own event and metric schemas
+    (WebEventDto, MetricDatum). CloudEvents, OpenTelemetry OTLP and PagerDuty Events API v2 shapes were
+    all checked against the contracts and none is declared.
+  note: Reward-only dimension. Recorded as an honest absence, not a penalty.
+compliance:
+  certifications:
+  - SOC 2
+  - GDPR
+  - CSA STAR
+  source: https://www.moogsoft.com/security/
+  see: security/moogsoft-trust-center.yml

@@ -1,0 +1,90 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/ (17 published Moogsoft OpenAPI 3.1 contracts); searched moogsoft.com, docs.moogsoft.com,
+  api.docs.moogsoft.com and the moogsoft GitHub org for a hosted or packaged MCP server
+status: candidate
+note: Moogsoft / Dell APEX AIOps Incident Management publishes no MCP server. No hosted endpoint, no npm/PyPI
+  package, no mention of Model Context Protocol anywhere in the documentation, the product notices, or
+  the GitHub organization. The tool groups below are a CANDIDATE surface derived from the provider OpenAPI
+  contracts, not something the provider ships. No endpoint URL is asserted because none exists.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: searched
+  note: Nothing to reach. If Moogsoft ever ships one, the API auth model it would wrap is a single apiKey
+    header.
+candidate_tools:
+- name: moogsoft_alerts_incidents
+  source_openapi: openapi/moogsoft-alerts-incidents-openapi.yaml
+  operations: 71
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating
+    to them
+- name: moogsoft_azure_app_insights
+  source_openapi: openapi/moogsoft-azure-service-openapi.yaml
+  operations: 12
+  description: Use Apex AIOps Incident Management API for sending/receiving alerts, events, and incidents
+- name: moogsoft_create_your_own_integration
+  source_openapi: openapi/moogsoft-byo-api-service-openapi.yaml
+  operations: 18
+  description: This API enables you to create and manage custom endpoints for inbound integrations.
+- name: moogsoft_cloudwatch
+  source_openapi: openapi/moogsoft-cloudwatch-service-openapi.yaml
+  operations: 18
+  description: API for Apex AIOps Incident Management Cloudwatch Service
+- name: moogsoft_collector
+  source_openapi: openapi/moogsoft-collectors-openapi.yaml
+  operations: 35
+  description: This API enables you to work with collectors
+- name: moogsoft_config
+  source_openapi: openapi/moogsoft-config-openapi.yaml
+  operations: 80
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu
+    actions, and maintenance windows
+- name: moogsoft_events_integration
+  source_openapi: openapi/moogsoft-events-integration-openapi.yaml
+  operations: 7
+  description: API for Apex AIOps Incident Management Events Integration.
+- name: moogsoft_on_call
+  source_openapi: openapi/moogsoft-incident-responder-openapi.yaml
+  operations: 22
+  description: This API allows you to save and retrieve on-call schedules, escalation policies
+- name: moogsoft_rollup_service
+  source_openapi: openapi/moogsoft-metric-processor-openapi.yaml
+  operations: 5
+  description: Moogsoft Rollup Service API
+- name: moogsoft_metrics
+  source_openapi: openapi/moogsoft-metrics-integration-openapi.yaml
+  operations: 11
+  description: This API enables you to create metrics and manage metrics policies.
+- name: moogsoft_pagerduty
+  source_openapi: openapi/moogsoft-pagerduty-service-openapi.yaml
+  operations: 6
+  description: This API enables you to create and manage Pager Duty integrations.
+- name: moogsoft_probable_root_cause
+  source_openapi: openapi/moogsoft-probable-rootcause-openapi.yaml
+  operations: 5
+  description: This API enables you to retrieve and update Probable Root Cause, and other APIs relating
+    to them
+- name: moogsoft_similar_incidents
+  source_openapi: openapi/moogsoft-similar-incidents-openapi.yaml
+  operations: 3
+  description: API for the similar incidents service.
+- name: moogsoft_ui_services
+  source_openapi: openapi/moogsoft-ui-services-openapi.yaml
+  operations: 4
+  description: APIs for handling features requests and some UI driven queries.
+- name: moogsoft_user_management
+  source_openapi: openapi/moogsoft-user-management-openapi.yaml
+  operations: 38
+  description: API for User Service
+- name: moogsoft_webhook
+  source_openapi: openapi/moogsoft-webhook-service-v2-openapi.yaml
+  operations: 12
+  description: You can use this API to create, retrieve, update, delete, and test webhoook integrations.
+- name: moogsoft_workflow_engine
+  source_openapi: openapi/moogsoft-workflow-engine-service-openapi.yaml
+  operations: 17
+  description: This API enables you to create and manage workflows

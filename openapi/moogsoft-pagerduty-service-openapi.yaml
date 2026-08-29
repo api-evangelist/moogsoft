@@ -1,0 +1,666 @@
+openapi: 3.1.0
+info:
+  version: 2.0.0
+  title: Pager Duty API
+  description: This API enables you to create and manage Pager Duty integrations.
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v2/integrations/pagerduty-test:
+    post:
+      tags:
+        - pagerduty-test
+      summary: Test a PagerDuty integration
+      description: 'Tests a PagerDuty integration by sending test events to PagerDuty with given filters and credentials.</br>Note: This will only test that events can be successfully triggered in PagerDuty and will not test webhook creation or the functionality of bidirectional updates.'
+      operationId: testPagerDutyIntegration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Pager Duty integration with base attributes.
+              properties:
+                name:
+                  type: string
+                  description: The name of your PagerDuty integration
+                  examples:
+                    - Test Integration
+                type:
+                  $ref: '#/components/schemas/PagerDutyIntegrationType'
+                credentialName:
+                  type: string
+                  description: Name of the credentials for your PagerDuty integration
+                  examples:
+                    - valid credential
+                alertFilter:
+                  type: string
+                  description: 'Alert filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - id > 10
+                incidentFilter:
+                  type: string
+                  description: 'Incident filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - severity = Critical
+                utcOffset:
+                  type: string
+                  description: 'Offset between your timezone and UTC time in hours, represented by GMT ± offset, e.g. PST will be GMT-8. This field is set by UI automatically.'
+                  examples:
+                    - GMT-8
+                robotUserEmail:
+                  type: string
+                  description: 'Email of the robot user in PagerDuty that updates from Moogsoft will be assigned to, will be auto-created by Moogsoft if left empty'
+                  examples:
+                    - pagerduty@moogsoft.com
+                webhookFilter:
+                  $ref: '#/components/schemas/WebhookFilterDto'
+                  description: Filter that will determine the scope of the events to be delivered by the Webhook Subscription (V3 Only)
+              required:
+                - name
+                - type
+                - credentialName
+            examples:
+              PD Integration:
+                description: PagerDuty integration to be tested
+                value:
+                  name: PD Integration
+                  type: both
+                  credentialName: PD Integration Credentials
+                  incidentFilter: severity = Critical
+                  alertFilter: ''
+                  webhookFilter:
+                    id: serviceId
+                    type: service_reference
+                  robotUserEmail: moog.user@moogsoft.com
+                  utcOffset: 'GMT-07:00'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePagerDutyPostEventResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v1/integrations/pagerduty:
+    post:
+      tags:
+        - pagerduty
+      summary: Create a PagerDuty integration
+      description: Creates a new PagerDuty integration.
+      operationId: postPagerDutyIntegration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Pager Duty integration with base attributes.
+              properties:
+                name:
+                  type: string
+                  description: The name of your PagerDuty integration
+                  examples:
+                    - Test Integration
+                type:
+                  $ref: '#/components/schemas/PagerDutyIntegrationType'
+                credentialName:
+                  type: string
+                  description: Name of the credentials for your PagerDuty integration
+                  examples:
+                    - valid credential
+                alertFilter:
+                  type: string
+                  description: 'Alert filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - id > 10
+                incidentFilter:
+                  type: string
+                  description: 'Incident filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - severity = Critical
+                utcOffset:
+                  type: string
+                  description: 'Offset between your timezone and UTC time in hours, represented by GMT ± offset, e.g. PST will be GMT-8. This field is set by UI automatically.'
+                  examples:
+                    - GMT-8
+                robotUserEmail:
+                  type: string
+                  description: 'Email of the robot user in PagerDuty that updates from Moogsoft will be assigned to, will be auto-created by Moogsoft if left empty'
+                  examples:
+                    - pagerduty@moogsoft.com
+                webhookFilter:
+                  $ref: '#/components/schemas/WebhookFilterDto'
+                  description: Filter that will determine the scope of the events to be delivered by the Webhook Subscription (V3 Only)
+              required:
+                - name
+                - type
+                - credentialName
+            examples:
+              PD Integration:
+                description: Parameters used to build a valid PagerDuty integration
+                value:
+                  name: PD Integration
+                  type: both
+                  credentialName: PD Integration Credentials
+                  incidentFilter: severity = Critical
+                  alertFilter: ''
+                  webhookFilter:
+                    id: serviceId
+                    type: service_reference
+                  robotUserEmail: moog.user@moogsoft.com
+                  utcOffset: 'GMT-07:00'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePagerDutyIntegrationDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - pagerduty
+      summary: List PagerDuty integrations
+      description: Lists all configured PagerDuty integrations
+      operationId: listPagerDutyIntegration
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfPagerDutyIntegrationDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+  '/v1/integrations/pagerduty/{id}':
+    patch:
+      tags:
+        - pagerduty
+      summary: Update a PagerDuty integration
+      description: Updates the PagerDuty integration that matches the given ID with the properties provided.
+      operationId: updatePagerDutyIntegration
+      parameters:
+        - name: id
+          in: path
+          description: ID of the PagerDuty integration to be updated (must be valid ObjectId)
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of your PagerDuty integration
+                  examples:
+                    - Test Integration
+                type:
+                  $ref: '#/components/schemas/PagerDutyIntegrationType'
+                credentialName:
+                  type: string
+                  description: Name of the credentials for your PagerDuty integration
+                  examples:
+                    - valid credential
+                alertFilter:
+                  type: string
+                  description: 'Alert filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - id > 10
+                incidentFilter:
+                  type: string
+                  description: 'Incident filter for your PagerDuty integration, no filter if this is empty'
+                  examples:
+                    - severity = Critical
+                utcOffset:
+                  type: string
+                  description: 'Offset between your timezone and UTC time in hours, represented by GMT ± offset, e.g. PST will be GMT-8. This field is set by UI automatically.'
+                  examples:
+                    - GMT-8
+                robotUserEmail:
+                  type: string
+                  description: 'Email of the robot user in PagerDuty that updates from Moogsoft will be assigned to, will be auto-created by Moogsoft if left empty'
+                  examples:
+                    - pagerduty@moogsoft.com
+                webhookFilter:
+                  $ref: '#/components/schemas/WebhookFilterDto'
+                  description: Filter that will determine the scope of the events to be delivered by the Webhook Subscription (V3 Only)
+              required:
+                - name
+                - type
+                - credentialName
+            examples:
+              PD Integration:
+                description: Parameters of the PagerDuty integration to be updated
+                value:
+                  type: alert
+                  credentialName: New PD Integration Credentials
+                  incidentFilter: ''
+                  alertFilter: id > 10
+                  webhookFilter:
+                    id: teamId
+                    type: team_reference
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePagerDutyIntegrationDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - pagerduty
+      summary: Get a PagerDuty integration
+      description: Gets the specific PagerDuty integration that matches the provided ObjectId.
+      operationId: getPagerDutyIntegrationById
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Pager Duty integration (must be valid ObjectId)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePagerDutyIntegrationDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - pagerduty
+      summary: Delete a PagerDuty integration
+      description: Deletes the PagerDuty integration associated with the given ID.
+      operationId: deletePagerDutyIntegration
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Pager Duty integration to be deleted (must be valid ObjectId)
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+tags:
+  - name: pagerduty
+    description: CRUD operations for Pager Duty integrations
+  - name: pagerduty-test
+    description: test Pager Duty integrations
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Pager Duty API
+      name: apiKey
+      in: header
+  schemas:
+    PagerDutyIntegrationType:
+      type: string
+      enum:
+        - alert
+        - incident
+        - both
+      title: Pager Duty Integration Type
+      description: 'The event type of your PagerDuty integration (alert, incidents or both)'
+    WebhookFilterDto:
+      type: object
+      title: Webhook Filter Dto
+      properties:
+        id:
+          type: string
+          description: 'ID of the PagerDuty service or team to filter events on, must be empty if filtering by account'
+        type:
+          $ref: '#/components/schemas/PagerDutyWebhookSubscriptionType'
+          description: 'Scope of the events to be delivered (account, team, or service)'
+      required:
+        - type
+    PagerDutyWebhookSubscriptionType:
+      type: string
+      enum:
+        - account_reference
+        - service_reference
+        - team_reference
+      title: Pager Duty Webhook Subscription Type
+      description: PagerDuty webhook subscription type
+    MoogResponsePagerDutyPostEventResponse:
+      type: object
+      title: Moog Response Pager Duty Post Event Response
+      description: Pager Duty API PagerDutyPostEventResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/PagerDutyPostEventResponse'
+      required:
+        - status
+        - data
+    PagerDutyPostEventResponse:
+      type: object
+      title: Pager Duty Post Event Response
+      properties:
+        status:
+          type: string
+        dedup_key:
+          type: string
+        message:
+          type: string
+    MoogFailureResponse:
+      type: object
+      description: Pager Duty API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Pager Duty API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogResponsePagerDutyIntegrationDto:
+      type: object
+      title: Moog Response Pager Duty Integration Dto
+      description: Pager Duty API PagerDutyIntegrationDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/PagerDutyIntegrationDto'
+      required:
+        - status
+        - data
+    PagerDutyIntegrationDto:
+      type: object
+      title: Pager Duty Integration Dto
+      properties:
+        name:
+          type: string
+          description: The name of your PagerDuty integration
+          examples:
+            - Test Integration
+        type:
+          $ref: '#/components/schemas/PagerDutyIntegrationType'
+        credentialName:
+          type: string
+          description: Name of the credentials for your PagerDuty integration
+          examples:
+            - valid credential
+        alertFilter:
+          type: string
+          description: 'Alert filter for your PagerDuty integration, no filter if this is empty'
+          examples:
+            - id > 10
+        incidentFilter:
+          type: string
+          description: 'Incident filter for your PagerDuty integration, no filter if this is empty'
+          examples:
+            - severity = Critical
+        utcOffset:
+          type: string
+          description: 'Offset between your timezone and UTC time in hours, represented by GMT ± offset, e.g. PST will be GMT-8. This field is set by UI automatically.'
+          examples:
+            - GMT-8
+        robotUserEmail:
+          type: string
+          description: 'Email of the robot user in PagerDuty that updates from Moogsoft will be assigned to, will be auto-created by Moogsoft if left empty'
+          examples:
+            - pagerduty@moogsoft.com
+        webhookFilter:
+          $ref: '#/components/schemas/WebhookFilterDto'
+          description: Filter that will determine the scope of the events to be delivered by the Webhook Subscription (V3 Only)
+      required:
+        - name
+        - type
+        - credentialName
+    MoogResponseListOfPagerDutyIntegrationDto:
+      type: object
+      title: Moog Response List Of Pager Duty Integration Dto
+      description: Pager Duty API PagerDutyIntegrationDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PagerDutyIntegrationDto'
+      required:
+        - status
+        - data
+security:
+  - ApiKeyAuth: []

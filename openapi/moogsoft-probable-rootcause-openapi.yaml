@@ -1,0 +1,493 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Probable Root Cause API
+  description: 'This API enables you to retrieve and update Probable Root Cause, and other APIs relating to them'
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  '/v1/root-cause/incidents/labels/{id}':
+    put:
+      tags:
+        - root cause
+      summary: 'Update labels for one or more alerts, relative to an incident'
+      operationId: updateAlertLabels
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrcLabelRequestDto'
+      responses:
+        '202':
+          description: Set labels request accepted
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:edit'
+        description: Required user permissions for this endpoint
+  /v1/root-cause/incidents/settings:
+    patch:
+      tags:
+        - root cause
+      summary: Update the incident root cause settings
+      operationId: updateIncidentFeatures
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrcFeaturesDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePrcFeaturesDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incident-config:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - root cause
+      summary: Get the incident root cause settings
+      operationId: getSettings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsePrcFeaturesDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incident-config:view'
+        description: Required user permissions for this endpoint
+  '/v1/root-cause/incidents/probabilities/{id}':
+    get:
+      tags:
+        - root cause
+      summary: Get the incident root cause and labels for a specific incident id
+      operationId: getIncidentPrc
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            description: Specifies limit when retrieving the probabilities
+            format: int32
+            exclusiveMinimum: 0
+            default: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            description: Specifies offset record when retrieving the probabilities
+            format: int32
+            minimum: 0
+            default: 0
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum:
+              - alert_id
+              - rc_probability
+              - rc_bucket
+            description: Specifies the sort criteria to use
+            pattern: ^(alert_id|rc_probability|rc_bucket)$
+            default: rc_probability
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            description: Specifies the sort direction
+            pattern: ^(asc|desc)$
+            default: desc
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfPrcRootCauseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+  /v1/root-cause/incidents/training:
+    post:
+      tags:
+        - root cause
+      summary: Request incident retraining
+      operationId: requestIncidentTraining
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PrcTrainingRequestDto'
+      responses:
+        '202':
+          description: Training request accepted
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incident-config:edit'
+        description: Required user permissions for this endpoint
+tags:
+  - name: root cause
+    description: Probable Root Cause
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Probable Root Cause API
+      name: apiKey
+      in: header
+  schemas:
+    PrcLabelRequestDto:
+      type: object
+      title: Prc Label Request Dto
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ERcLabel'
+      required:
+        - labels
+    ERcLabel:
+      type: string
+      enum:
+        - RootCause
+        - NonCausal
+        - Unlabelled
+      title: E Rc Label
+      description: Root-Cause Label (case-insensitive)
+    MoogFailureResponse:
+      type: object
+      description: Probable Root Cause API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Probable Root Cause API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    PrcFeaturesDto:
+      type: object
+      title: Prc Features Dto
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        medium_threshold:
+          type: number
+          format: double
+        high_threshold:
+          type: number
+          format: double
+        enabled:
+          type: boolean
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+        last_updated_by:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        created_by:
+          type: string
+        active_features:
+          type: array
+          items:
+            type: string
+        feature_definitions:
+          type: array
+          items:
+            type: object
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    MoogResponsePrcFeaturesDto:
+      type: object
+      title: Moog Response Prc Features Dto
+      description: Probable Root Cause API PrcFeaturesDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/PrcFeaturesDto'
+      required:
+        - status
+        - data
+    MoogResponseListOfPrcRootCauseDto:
+      type: object
+      title: Moog Response List Of Prc Root Cause Dto
+      description: Probable Root Cause API PrcRootCauseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrcRootCauseDto'
+      required:
+        - status
+        - data
+    PrcRootCauseDto:
+      type: object
+      title: Prc Root Cause Dto
+      properties:
+        incident_id:
+          type: integer
+          format: int64
+        alert_id:
+          type: integer
+          format: int64
+        rc_probability:
+          type: number
+          description: 'The computed root cause probability, 0.0 - 1.0, if any'
+        rc_label:
+          $ref: '#/components/schemas/ERcLabel'
+          description: 'The user-assigned label, if any'
+        rc_bucket:
+          $ref: '#/components/schemas/RcBucket'
+          description: 'The computed level: high, medium, low'
+    RcBucket:
+      type: string
+      enum:
+        - High
+        - Medium
+        - Low
+      title: Rc Bucket
+      description: Root-Cause Level (case-insensitive)
+    PrcTrainingRequestDto:
+      type: object
+      title: Prc Training Request Dto
+      properties:
+        type:
+          $ref: '#/components/schemas/TrainingType'
+          description: Training request type
+        features:
+          type: array
+          description: Optional retraining features to use when type='full
+          items:
+            type: string
+        ids:
+          type: array
+          description: IDs to retrain when type='incremental'
+          items:
+            type: integer
+            format: int64
+      required:
+        - type
+    TrainingType:
+      type: string
+      enum:
+        - incremental
+        - full
+      title: Training Type
+      description: Root-Cause training type
+security:
+  - ApiKeyAuth: []

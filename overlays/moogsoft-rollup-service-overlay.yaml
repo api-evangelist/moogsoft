@@ -1,0 +1,34 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Moogsoft Rollup Service API
+  version: 1.0.0
+extends: openapi/moogsoft-metric-processor-openapi.yaml
+x-generated: '2026-08-29'
+x-method: generated
+x-source: derived from repo artifacts; the original contract is never mutated
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      profile: https://apis.io/provider/moogsoft/
+      harvested: '2026-08-29'
+      source: https://api.stoplight.io/projects/cHJqOjMxODM0MQ/branches/main/export/metric-processor.yaml
+      artifacts:
+        authentication: authentication/moogsoft-authentication.yml
+        conventions: conventions/moogsoft-conventions.yml
+        errors: errors/moogsoft-problem-types.yml
+        lifecycle: lifecycle/moogsoft-lifecycle.yml
+        rate_limits: rate-limits/moogsoft-rate-limits.yml
+        data_model: data-model/moogsoft-data-model.yml
+      x-agent-notes:
+        idempotency: none — no Idempotency-Key header anywhere in this contract
+        pagination: start/limit, search_after cursor on alerts and incidents; 1000-record cap per GET
+        error_envelope: '{status, message, additional[]} as application/json; not RFC 9457'
+        rate_limit_headers: none declared
+        deprecation: prose policy only — versions supported up to 6 months; no Sunset/Deprecation headers
+- target: $.servers
+  description: The published contract declares development servers (http://localhost:3030, http://0.0.0.0:3030).
+    The production host for every other Moogsoft service is https://api.moogsoft.ai. Recorded as an observation;
+    the original servers[] block is NOT rewritten because Moogsoft has not published a production base
+    for this service.
+  update: {}

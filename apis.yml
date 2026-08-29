@@ -1,74 +1,527 @@
 aid: moogsoft
 name: Moogsoft
-description: >-
-  Moogsoft is an AIOps platform that uses AI to reduce alert noise, correlate incidents, and automate root cause analysis.
+description: 'Moogsoft is an AIOps platform for IT operations, DevOps and SRE teams that ingests events,
+  alerts and metrics from across a hybrid estate, deduplicates and reduces noise, correlates related alerts
+  into incidents, detects anomalies in metric streams, and surfaces probable root cause and similar past
+  incidents so responders can act faster. Founded in 2011 by Phil Tee and Mike Silvey, Moogsoft was acquired
+  by Dell Technologies in October 2023 and the SaaS product is now sold as Dell APEX AIOps Incident Management,
+  while the moogsoft.com brand, documentation and API surface remain live. The platform is API-first:
+  seventeen public OpenAPI 3.1 contracts covering alerts and incidents, configuration, catalogs, correlation
+  definitions, maintenance windows, collectors, inbound event/metric integrations, bring-your-own integrations,
+  on-call scheduling, outbound webhooks, workflow automation, user and API-key management are published
+  from api.moogsoft.ai and documented on a public Stoplight portal at api.docs.moogsoft.com.'
 type: Index
 deliveryModel:
-  model: unknown
+  model: saas
   open_source: false
-  commercial: false
-  callable_host: false
-  label: Delivery model not determined — needs a product licence on record
-  confidence: low
+  commercial: true
+  callable_host: true
+  label: Commercial SaaS with a callable API host (api.moogsoft.ai); an on-prem line also exists as Moogsoft
+    Enterprise v8.x
+  confidence: high
   source:
-  - none
-  generated: '2026-08-28'
-  method: derived
+  - openapi/ servers[] = https://api.moogsoft.ai on 16 of 17 contracts
+  - https://www.moogsoft.com/legal-information/moogsoft-cloud-terms-of-service/
+  - https://docs.moogsoft.com/ (separate Enterprise 8.0/8.1 and AIOps 7.2/7.3 documentation sets)
+  generated: '2026-08-29'
+  method: searched
 accessModel:
-  pricing: freemium
-  onboarding: unknown
+  pricing: contact-sales
+  onboarding: sales-led
   trial: false
   try_now: false
   public: false
-  label: Freemium
-  confidence: medium
+  label: Contact sales — no public pricing, no free tier, no self-service sign-up
+  confidence: high
   source:
-  - plans
-  generated: '2026-07-22'
-  method: derived
+  - plans/moogsoft-plans-pricing.yml
+  - https://www.moogsoft.com/pricing/ (HTTP 404)
+  - https://app.moogsoft.ai/ (302 to Auth0 sign-in, no registration)
+  generated: '2026-08-29'
+  method: searched
+  note: Corrects a prior derived value of "freemium" that came from a 2026-05-04 plans scaffold inventing
+    a Free tier Moogsoft has never published.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/moogsoft.png
 tags:
-  - AIOps
-  - Incident Management
-url: >-
-  https://raw.githubusercontent.com/api-evangelist/moogsoft/refs/heads/main/apis.yml
+- AIOps
+- Incident Management
+- Observability
+- Alerting
+- Event Management
+- Anomaly Detection
+- Correlation
+- On-Call
+- Monitoring
+- IT Operations
+- DevOps
+- SRE
+url: https://raw.githubusercontent.com/api-evangelist/moogsoft/refs/heads/main/apis.yml
 created: '2026-03-27'
-modified: '2026-03-27'
+modified: '2026-08-29'
 specificationVersion: '0.23'
 apis:
-  - aid: moogsoft:moogsoft
-    name: Moogsoft
-    description: >-
-      Moogsoft is an AIOps platform that uses AI to reduce alert noise, correlate incidents, and automate root cause analysis.
-    humanURL: https://www.moogsoft.com
-    tags:
-      - AIOps
-    properties:
-      - type: Documentation
-        url: https://docs.moogsoft.com
+- aid: moogsoft:alerts-incidents
+  name: Moogsoft Alerts/Incidents API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating
+    to them
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - alert-filters
+  - alert-workflows
+  - alerts
+  - alerts-search
+  - autoclose-config
+  - autoclose-policy
+  - automation-config
+  - dashboardSummaryPost
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-alerts-incidents-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-alerts-incidents-overlay.yaml
+- aid: moogsoft:azure-app-insights
+  name: Moogsoft Azure Application Insights API
+  description: Use Apex AIOps Incident Management API for sending/receiving alerts, events, and incidents
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - appinsights
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-azure-service-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-azure-app-insights-overlay.yaml
+- aid: moogsoft:create-your-own-integration
+  name: Moogsoft Create Your Own Integration API
+  description: This API enables you to create and manage custom endpoints for inbound integrations.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - byoapi-integration-endpoints
+  - custom-integration-configs
+  - custom-integration-endpoints
+  - custom-integration-error-logs
+  - custom-integration-traffic
+  - pre-configured-integration-endpoints
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-byo-api-service-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-create-your-own-integration-overlay.yaml
+- aid: moogsoft:cloudwatch
+  name: Moogsoft Amazon CloudWatch API
+  description: API for Apex AIOps Incident Management Cloudwatch Service
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - cloudwatch
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-cloudwatch-service-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-cloudwatch-overlay.yaml
+- aid: moogsoft:collector
+  name: Moogsoft Collector V2 API
+  description: This API enables you to work with collectors
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - collector-installer
+  - collectors
+  - manual-collector-config
+  - plugin-config
+  - plugins
+  - product-feedback
+  - support-files
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-collectors-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-collector-overlay.yaml
+- aid: moogsoft:config
+  name: Moogsoft Config API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu
+    actions, and maintenance windows
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - Menu action categories
+  - Menu actions
+  - catalogs
+  - config
+  - correlation-definitions
+  - correlation-groups
+  - maintenance windows
+  - watchers
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-config-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-config-overlay.yaml
+- aid: moogsoft:events-integration
+  name: Moogsoft Events Integration API
+  description: API for Apex AIOps Incident Management Events Integration.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - event-workflows
+  - events-filters
+  - events-integration
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-events-integration-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-events-integration-overlay.yaml
+- aid: moogsoft:on-call
+  name: Moogsoft On-Call API
+  description: This API allows you to save and retrieve on-call schedules, escalation policies
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - notification policies
+  - on-call open issues
+  - on-call schedule occurrences
+  - on-call schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-incident-responder-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-on-call-overlay.yaml
+- aid: moogsoft:rollup-service
+  name: Moogsoft Rollup Service API
+  description: Rollup Service API for the Moogsoft metric processor. The published contract carries development
+    servers (http://localhost:3030) rather than the production host; the production base is api.moogsoft.ai
+    like every other Moogsoft service.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-metric-processor-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-rollup-service-overlay.yaml
+- aid: moogsoft:metrics
+  name: Moogsoft Metrics API
+  description: This API enables you to create metrics and manage metrics policies.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - metrics
+  - policies
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-metrics-integration-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-metrics-overlay.yaml
+- aid: moogsoft:pagerduty
+  name: Moogsoft PagerDuty Integration API
+  description: This API enables you to create and manage Pager Duty integrations.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - pagerduty
+  - pagerduty-test
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-pagerduty-service-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-pagerduty-overlay.yaml
+- aid: moogsoft:probable-root-cause
+  name: Moogsoft Probable Root Cause API
+  description: This API enables you to retrieve and update Probable Root Cause, and other APIs relating
+    to them
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - root cause
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-probable-rootcause-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-probable-root-cause-overlay.yaml
+- aid: moogsoft:similar-incidents
+  name: Moogsoft Similar Incidents API
+  description: API for the similar incidents service.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - incident-similarity
+  - similar-incidents
+  - similar-incidents-settings
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-similar-incidents-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-similar-incidents-overlay.yaml
+- aid: moogsoft:ui-services
+  name: Moogsoft UI Services API
+  description: APIs for handling features requests and some UI driven queries.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - User
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-ui-services-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-ui-services-overlay.yaml
+- aid: moogsoft:user-management
+  name: Moogsoft User Management API
+  description: API for User Service
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - Apikeys
+  - Apikeys-users
+  - Groups
+  - InstanceType
+  - Roles
+  - SSO
+  - User
+  - apiurl
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-user-management-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-user-management-overlay.yaml
+- aid: moogsoft:webhook
+  name: Moogsoft Webhook API
+  description: You can use this API to create, retrieve, update, delete, and test webhoook integrations.
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - webhooksV2
+  - webhooksV2 Logs
+  - webhooksV2 Metrics
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-webhook-service-v2-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-webhook-overlay.yaml
+- aid: moogsoft:workflow-engine
+  name: Moogsoft Workflow Engine API
+  description: This API enables you to create and manage workflows
+  humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - AIOps
+  - Incident Management
+  - standalone-workflows
+  - test-workflows
+  - workflow-actions
+  - workflow-dependent-on
+  - workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-workflow-engine-service-openapi.yaml
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: Overlay
+    url: overlays/moogsoft-workflow-engine-overlay.yaml
 common:
-  - type: TrustCenter
-    url: security/moogsoft-trust-center.yml
-  - type: VulnerabilityDisclosure
-    url: security/moogsoft-vulnerability-disclosure.yml
-  - type: DomainSecurity
-    url: security/moogsoft-domain-security.yml
-  - type: GitHubOrganization
-    url: https://github.com/moogsoft
+- type: Website
+  url: https://www.moogsoft.com
+- type: DeveloperPortal
+  url: https://api.docs.moogsoft.com/docs/latest/branches/main/1sy0hr6odnj10-incident-management-api-documentation
+- type: Documentation
+  url: https://docs.moogsoft.com/moogsoft-cloud/moogsoft-cloud.html
+- type: APIReference
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+- type: GettingStarted
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/get-started-with-apis.html
+- type: Support
+  url: https://www.moogsoft.com/support/
+- type: Blog
+  url: https://www.moogsoft.com/resources/blog/
+- type: BlogRSS
+  url: https://www.moogsoft.com/feed/
+- type: GitHubOrganization
+  url: https://github.com/moogsoft
+- type: TermsOfService
+  url: https://www.moogsoft.com/legal-information/moogsoft-cloud-terms-of-service/
+- type: PrivacyPolicy
+  url: https://www.moogsoft.com/legal-information/privacy-policy/
+- type: Login
+  url: https://app.moogsoft.ai/
+- type: Integrations
+  url: https://www.moogsoft.com/integrations/
+- type: StatusPage
+  url: https://status.moogsoft.com
+- type: Authentication
+  url: authentication/moogsoft-authentication.yml
+- type: Conventions
+  url: conventions/moogsoft-conventions.yml
+- type: ErrorCatalog
+  url: errors/moogsoft-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/moogsoft-lifecycle.yml
+- type: Deprecation
+  url: lifecycle/moogsoft-lifecycle.yml
+- type: ChangeLog
+  url: changelog/moogsoft-changelog.yml
+- type: Conformance
+  url: conformance/moogsoft-conformance.yml
+- type: Compliance
+  url: security/moogsoft-trust-center.yml
+- type: TrustCenter
+  url: security/moogsoft-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/moogsoft-vulnerability-disclosure.yml
+- type: Security
+  url: security/moogsoft-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/moogsoft-domain-security.yml
+- type: DataModel
+  url: data-model/moogsoft-data-model.yml
+- type: Packages
+  url: packages/moogsoft-packages.yml
+- type: SDKs
+  url: packages/moogsoft-packages.yml
+- type: MCPServer
+  url: mcp/moogsoft-mcp.yml
+- type: LLMsTxt
+  url: llms/moogsoft-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Webhooks
+  url: asyncapi/moogsoft-webhooks.yml
+- type: Sandbox
+  url: sandbox/moogsoft-sandbox.yml
+- type: RateLimits
+  url: rate-limits/moogsoft-rate-limits.yml
+- type: Plans
+  url: plans/moogsoft-plans-pricing.yml
+- type: FinOps
+  url: finops/moogsoft-finops.yml
+integrations:
+- name: Partner - AppDynamics floating
+- name: Partner - AWS floating floating
+- name: Integration Solarwinds
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
+x-pointer-verification:
+  checked: '2026-08-29'
+  method: live GET with a browser User-Agent on every http(s) pointer in common[] and apis[].properties[]
+  live: 1
+  removed:
   - type: LinkedIn
     url: https://www.linkedin.com/company/moogsoft
-  - type: Website
-    url: https://www.moogsoft.com
-  - type: Documentation
-    url: https://docs.moogsoft.com
-  - type: Integrations
-    url: https://www.moogsoft.com/integrations/
-  - url: https://moogsoft.com/feed/
-    type: Blog
-integrations:
-  - name: Partner - AppDynamics floating
-  - name: Partner - AWS floating floating
-  - name: Integration Solarwinds
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+    status: 404
+    note: Confirmed dead, not a bot challenge — a control fetch of https://www.linkedin.com/company/microsoft/
+      from the same client returned 200. The Moogsoft company page no longer resolves; the brand sits
+      under Dell Technologies since the 2023 acquisition.
+  gated:
+  - type: StatusPage
+    url: https://status.moogsoft.com
+    status: 200
+    note: Live Atlassian Statuspage but customer-authenticated — root 302s to /access/login and /api/v2/status.json
+      returns login HTML. Recorded in lifecycle/moogsoft-lifecycle.yml.
+  - type: Login
+    url: https://app.moogsoft.ai/
+    status: 302
+    note: 302 to the Auth0 tenant at auth.moogsoft.ai. Sign-in only; there is no self-service sign-up.
+x-enrichment:
+  date: '2026-08-29'
+  status: enriched
+  artifacts_added: 56
+  pass: local-v1

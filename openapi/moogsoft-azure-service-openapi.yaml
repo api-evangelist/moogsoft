@@ -1,0 +1,753 @@
+openapi: 3.1.0
+info:
+  version: 1.0.1
+  title: API
+  description: 'Use Apex AIOps Incident Management API for sending/receiving alerts, events, and incidents'
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v2/integrations/azure/appinsights:
+    get:
+      tags:
+        - appinsights
+      summary: Gets all AppInsights Integrations
+      description: Retrieves all currently configured AppInsights integrations
+      operationId: listIntegrationsV2
+      responses:
+        '200':
+          description: Successfully retrieved AppInsights Integrations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - appinsights
+      summary: Creates a new AppInsights integration
+      description: Creates an AppInsights integration
+      operationId: createNewIntegrationV2
+      requestBody:
+        description: details of the AppInsights integration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsIntegration'
+      responses:
+        '200':
+          description: Successfully created AppInsights integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Integration config invalid
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v2/integrations/azure/appinsights/test:
+    post:
+      tags:
+        - appinsights
+      summary: Tests the matching credential set in the credential store
+      description: Tests credentials (identified by name) against the AppInsights API
+      operationId: testIntegrationCredentialsV2
+      requestBody:
+        description: The named credential set to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsValidator'
+      responses:
+        '200':
+          description: Successfully validated credentials
+        '400':
+          description: Credentials Invalid
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  '/v2/integrations/azure/appinsights/{id}':
+    get:
+      tags:
+        - appinsights
+      summary: gets an AppInsights integration
+      description: Gets AppInsights integration config by id
+      operationId: getIntegrationByIdV2
+      parameters:
+        - name: id
+          in: path
+          description: The id of the integration
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved AppInsights integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: No matching appinsights integration found
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    patch:
+      tags:
+        - appinsights
+      summary: Update an existing integration
+      description: Update an AppInsights integration by id
+      operationId: editIntegrationV2
+      parameters:
+        - name: id
+          in: path
+          description: The id of the integration
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Config updates for the integration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsIntegration'
+      responses:
+        '200':
+          description: Successfully updated the integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Integration Not Found
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - appinsights
+      summary: deletes an AppInsights integration
+      description: Deletes an AppInsights integration config and stops polling for data
+      operationId: deleteIntegrationByIdV2
+      parameters:
+        - name: id
+          in: path
+          description: The id of the integration
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted the integration
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Integration Not Found
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  '/v1/integrations/azure/appinsights/{name}':
+    get:
+      tags:
+        - appinsights
+      summary: gets an AppInsights integration
+      description: Gets AppInsights integration config by name
+      operationId: getIntegrationByName
+      parameters:
+        - name: name
+          in: path
+          description: The name of the integration
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved AppInsights integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: No matching appinsights integration found
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    patch:
+      tags:
+        - appinsights
+      summary: Update an existing integration
+      description: Update an AppInsights integration by name
+      operationId: editIntegration
+      parameters:
+        - name: name
+          in: path
+          description: The name of the integration
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Config updates for the integration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsIntegration'
+      responses:
+        '200':
+          description: Successfully updated the integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Integration Not Found
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - appinsights
+      summary: deletes an AppInsights integration
+      description: Deletes an AppInsights integration config and stops polling for data
+      operationId: deleteIntegrationByName
+      parameters:
+        - name: name
+          in: path
+          description: The name of the integration
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted the integration
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v1/integrations/azure/appinsights/test:
+    post:
+      tags:
+        - appinsights
+      summary: Tests the matching credential set in the credential store
+      description: Tests credentials (identified by name) against the AppInsights API
+      operationId: testIntegrationCredentials
+      requestBody:
+        description: The named credential set to validate
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsValidator'
+      responses:
+        '200':
+          description: Successfully validated credentials
+        '400':
+          description: Credentials Invalid
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v1/integrations/azure/appinsights:
+    get:
+      tags:
+        - appinsights
+      summary: Gets all AppInsights Integrations
+      description: Retrieves all currently configured AppInsights integrations
+      operationId: listIntegrations
+      responses:
+        '200':
+          description: Successfully retrieved AppInsights Integrations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfAppInsightsIntegration'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - appinsights
+      summary: Creates a new AppInsights integration
+      description: Creates an AppInsights integration
+      operationId: createNewIntegration
+      requestBody:
+        description: details of the AppInsights integration
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppInsightsIntegration'
+      responses:
+        '200':
+          description: Successfully created AppInsights integration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseAppInsightsIntegration'
+        '400':
+          description: Integration config invalid
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+tags:
+  - name: appinsights
+    description: Integration to Azure Application Insights
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing API
+      name: apiKey
+      in: header
+  schemas:
+    MoogResponseListOfAppInsightsIntegration:
+      type: object
+      title: Moog Response List Of App Insights Integration
+      description: API AppInsightsIntegration response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppInsightsIntegration'
+      required:
+        - status
+        - data
+    AppInsightsIntegration:
+      type: object
+      title: App Insights Integration
+      properties:
+        id:
+          type: string
+          description: Unique ID of App Insights integration
+          readOnly: true
+        name:
+          type: string
+        credentialName:
+          type: string
+          pattern: \S
+        status:
+          type: string
+          enum:
+            - NONE
+            - STARTING
+            - RUNNING
+            - LIMITED
+            - DISCONNECTED
+            - STOPPED
+        createdBy:
+          type: string
+          description: User ID of who created the integration
+          readOnly: true
+        lastUpdatedBy:
+          type: string
+          description: User ID of who last updated the integration
+          readOnly: true
+        metricCount:
+          type: integer
+          format: int32
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the integration was created
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+          description: When the integration was last updated
+      required:
+        - credentialName
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogResponseAppInsightsIntegration:
+      type: object
+      title: Moog Response App Insights Integration
+      description: API AppInsightsIntegration response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/AppInsightsIntegration'
+      required:
+        - status
+        - data
+    AppInsightsValidator:
+      type: object
+      title: App Insights Validator
+      description: Contains the name of the credentials to validate
+      properties:
+        credentialName:
+          type: string
+      required:
+        - credentialName
+security:
+  - ApiKeyAuth: []

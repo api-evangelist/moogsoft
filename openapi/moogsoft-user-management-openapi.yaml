@@ -1,0 +1,3169 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: User API
+  description: API for User Service
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v1/groups:
+    get:
+      tags:
+        - Groups
+      summary: List User Groups
+      description: List all user groups currently defined in the system.
+      operationId: getGroups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'group-management:no-access'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - Groups
+      summary: Create User Groups
+      description: Create new group(s) in the system
+      operationId: postGroups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The request body may be a single Group object or an array of Groups
+              minItems: 1
+              items:
+                type: object
+            examples:
+              User Groups:
+                description: Parameters used to build multiple valid user group
+                value:
+                  - name: Support Team
+                    description: Group for support team
+                    groupMembers:
+                      - 6217d0958391447445648af4
+                      - 6217d0958391447445645dg7
+                    roleAssignment: 6217d0958391498735648za2
+                  - name: Backend Team
+                    description: Group for backend team
+                    groupMembers:
+                      - 6217d0958391447445648ah6
+                      - 6217d0958391447445645df6
+                    roleAssignment: 6217d0958391498735648za3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+              examples:
+                User Groups:
+                  description: Response received after successfully creating multiple user groups
+                  value:
+                    status: success
+                    data:
+                      - name: Support Team
+                        description: Group for support team
+                        groupMembers:
+                          - 6217d0958391447445648af4
+                          - 6217d0958391447445645dg7
+                        roleAssignment: 6217d0958391498735648za2
+                        id: 6217d0958391447445648ab2
+                        created: '2022-03-10T16:15:50Z'
+                        createdBy: string
+                        lastModified: '2022-03-10T16:15:50Z'
+                        lastModifiedBy: string
+                        isSso: true
+                      - name: Backend Team
+                        description: Group for backend team
+                        groupMembers:
+                          - 6217d0958391447445648ah6
+                          - 6217d0958391447445645df6
+                        roleAssignment: 6217d0958391498735648za3
+                        id: 6217d0958391447445648ab2
+                        created: '2022-03-10T16:15:50Z'
+                        createdBy: string
+                        lastModified: '2022-03-10T16:15:50Z'
+                        lastModifiedBy: string
+                        isSso: true
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'group-management:edit'
+        description: Required user permissions for this endpoint
+  '/v1/groups/{id}':
+    patch:
+      tags:
+        - Groups
+      summary: Update a User Group
+      description: Update an existing user group in the system
+      operationId: patchGroup
+      parameters:
+        - name: id
+          in: path
+          description: ID of the group
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of your user group
+                  pattern: '^[a-zA-Z0-9.&()_\-\s]+$'
+                  minLength: 1
+                  maxLength: 127
+                  examples:
+                    - Support Team
+                description:
+                  type: string
+                  description: Description of your user group
+                  examples:
+                    - Group for Support Team
+                groupMembers:
+                  type: array
+                  description: List of the unique IDs for the members of the group
+                  examples:
+                    - - 6217d0958391447445648af4
+                      - 6217d095839144744565dg7
+                  items:
+                    type: string
+                roleAssignment:
+                  type: string
+                  description: Unique ID of the role to be assigned to the group
+                  examples:
+                    - 6217d0958391498735648za2
+              required:
+                - name
+                - groupMembers
+            examples:
+              User Group:
+                description: Parameters of the user group to be updated
+                value:
+                  name: Support Team
+                  description: Group for support team
+                  groupMembers:
+                    - 6217d0958391447445648af4
+                    - 6217d095839144744565dg7
+                  roleAssignment: 6217d0958391498735648za2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'group-management:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - Groups
+      summary: Get a User Group
+      description: Gets the specific user group that matches the provided ID
+      operationId: getGroup
+      parameters:
+        - name: id
+          in: path
+          description: ID of the group
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'group-management:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - Groups
+      summary: Delete a User Group
+      description: Delete a user group that already exists in the system
+      operationId: deleteGroup
+      parameters:
+        - name: id
+          in: path
+          description: ID of the group
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'group-management:edit'
+        description: Required user permissions for this endpoint
+  /v1/instance-type:
+    patch:
+      tags:
+        - InstanceType
+      summary: Sets the instance type
+      description: Sets the instance type
+      operationId: SetInstanceType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstanceDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseInstanceDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'instance:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - InstanceType
+      summary: Gets the instance type
+      description: Gets the instance type
+      operationId: GetInstanceType
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseInstanceDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'instance:view'
+        description: Required user permissions for this endpoint
+  /v1/roles:
+    get:
+      tags:
+        - Roles
+      summary: Get all roles in the system
+      description: Get all roles currently defined in the system
+      operationId: getRoles
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfRoleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:no-access'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - Roles
+      summary: Create a new roles in the system
+      description: Create a new role in the system
+      operationId: postRoles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRoleDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseRoleDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  '/v1/roles/{id}':
+    patch:
+      tags:
+        - Roles
+      summary: Update a role in the system
+      description: Update an existing role in the system
+      operationId: patchRoles
+      parameters:
+        - name: id
+          in: path
+          description: ID of the role
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseRoleDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseRoleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - Roles
+      summary: Get specific role details
+      description: Get details for a specific role
+      operationId: getRole
+      parameters:
+        - name: id
+          in: path
+          description: ID of the role
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseRoleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - Roles
+      summary: Delete a custom role in the system
+      description: Delete a role already in the system.
+      operationId: deleteRole
+      parameters:
+        - name: id
+          in: path
+          description: ID of the role
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/sso/advanced-connection:
+    post:
+      tags:
+        - SSO
+      summary: Create a local connection for Auth0 multi tenancy
+      description: Creates a local connection to a master Auth0 connection in a multi tenancy system
+      operationId: CreateAdvancedSSOConn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSOMultiTenancyConnDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/sso/callback_url:
+    get:
+      tags:
+        - SSO
+      summary: Get a callback url for OIDC authentication
+      description: Get a callback url for OIDC based connection
+      operationId: getSSOCallBackUrl
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/sso/connection:
+    patch:
+      tags:
+        - SSO
+      summary: Edit SSO connection
+      description: Edit SSO connection
+      operationId: editSSOConnection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 60
+                options:
+                  $ref: '#/components/schemas/SSOConnOptionsDto'
+                domains:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    pattern: \S
+                useMapping:
+                  type: boolean
+                useGroupMapping:
+                  type: boolean
+                defaultRoleId:
+                  type: string
+                mapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                groupMapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                isMultiTenant:
+                  type: boolean
+              required:
+                - name
+                - options
+                - domains
+            examples:
+              SSO Connection:
+                description: Parameters use to create a valid OIDC sso connection
+                value:
+                  name: connectionName
+                  options:
+                    clientId: yourClientID
+                    clientSecret: yourClientSecret
+                    discoveryUrl: your-discovery-url.com
+                    claimsScope: ''
+                    claimsFieldName: roles
+                    groupClaimsFieldName: ''
+                    strategy: oidc
+                  domains:
+                    - your-domain.com
+                  mapping:
+                    yourSSORole: yourMoogsoftRoleId
+                  useMapping: true
+                  groupMapping: {}
+                  useGroupMapping: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOReturnDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - SSO
+      summary: Get SSO connection details
+      description: Get SSO connection details
+      operationId: getSSOConnection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOConnMongoDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - SSO
+      summary: Create an auth0 connection
+      description: Create an auth0 connection
+      operationId: CreateAuth0Connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 60
+                options:
+                  $ref: '#/components/schemas/SSOConnOptionsDto'
+                domains:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    pattern: \S
+                useMapping:
+                  type: boolean
+                useGroupMapping:
+                  type: boolean
+                defaultRoleId:
+                  type: string
+                mapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                groupMapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                isMultiTenant:
+                  type: boolean
+              required:
+                - name
+                - options
+                - domains
+            examples:
+              SSO Connection:
+                description: Parameters use to create a valid OIDC sso connection
+                value:
+                  name: connectionName
+                  options:
+                    clientId: yourClientID
+                    clientSecret: yourClientSecret
+                    discoveryUrl: your-discovery-url.com
+                    claimsScope: ''
+                    claimsFieldName: roles
+                    groupClaimsFieldName: ''
+                    strategy: oidc
+                  domains:
+                    - your-domain.com
+                  mapping:
+                    yourSSORole: yourMoogsoftRoleId
+                  useMapping: true
+                  groupMapping: {}
+                  useGroupMapping: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOReturnDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/sso/disable:
+    put:
+      tags:
+        - SSO
+      summary: Disable an SSO connection
+      description: Disable an SSO connection
+      operationId: disableSSOConnection
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/sso/enable:
+    put:
+      tags:
+        - SSO
+      summary: Enable an SSO connection
+      description: Enable an SSO connection
+      operationId: enableSSOConnection
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v2/users:
+    post:
+      tags:
+        - User
+      summary: Create new users
+      description: Create new user(s) who will be granted access to the instance
+      operationId: createUser
+      parameters:
+        - name: X-Email-Sender-Address
+          in: header
+          schema:
+            type: string
+        - name: X-Email-Sender-Role-Arn
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/BaseUserDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseUserDto'
+              examples:
+                Invite Single User:
+                  description: Response received after successfully creating single user
+                  value:
+                    status: success
+                    data:
+                      email: string
+                      familyName: string
+                      givenName: string
+                      role: string
+                      roleId: string
+                      tenantName: string
+                      excludeUserDeletion: true
+                      isSSO: true
+                      countryCode: string
+                      phoneNumber: string
+                      notificationPreferences:
+                        - EMAIL
+                Invite Bulk Users:
+                  description: Response received after successfully creating multiple users
+                  value:
+                    status: success
+                    data:
+                      - email: user1@email.com
+                        familyName: string
+                        givenName: string
+                        role: string
+                        roleId: string
+                        tenantName: string
+                        excludeUserDeletion: true
+                        isSSO: true
+                        countryCode: string
+                        phoneNumber: string
+                        notificationPreferences:
+                          - EMAIL
+                      - email: user2@email.com
+                        familyName: string
+                        givenName: string
+                        role: string
+                        roleId: string
+                        tenantName: string
+                        excludeUserDeletion: true
+                        isSSO: true
+                        countryCode: string
+                        phoneNumber: string
+                        notificationPreferences:
+                          - EMAIL
+                          - VOICE
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - User
+      summary: Get all users in the system
+      description: Get details for all user in the system
+      operationId: getUsers
+      parameters:
+        - name: showDeleted
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            default: name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfUserDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:view'
+        description: Required user permissions for this endpoint
+  /v2/users/export:
+    get:
+      tags:
+        - User
+      summary: Export all users in the system as CSV file
+      description: 'Export information of all the users in the system including their Name, Email, Source, Role, User Groups, Status from the system in form of CSV file'
+      operationId: exportUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              examples:
+                default:
+                  value: |
+                    name,email,source,role,groups,status
+                    John Doe,john.doe@example.com,Invitation,Admin,[Group 1,Group 2],DELETED
+                    Jane Smith,jane.smith@example.com,SSO,Admin,[Group 2,Group 3],ACTIVE
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:view'
+        description: Required user permissions for this endpoint
+  /v2/users/profile:
+    patch:
+      tags:
+        - User
+      summary: Edit current user info
+      description: Edit the profile information for the current user
+      operationId: editProfileInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:no-access'
+        description: Required user permissions for this endpoint
+  '/v2/users/{id}':
+    patch:
+      tags:
+        - User
+      summary: Edit an existing user
+      description: Edit a user already in the system
+      operationId: editUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - User
+      summary: Get details for an existing user
+      description: Get details for user existing in the system
+      operationId: getUserDetails
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseUserDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - User
+      summary: Delete a user in the system
+      description: 'Delete a user already in the system, user will not be able to access the system'
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: ID of the user
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  '/v2/users/{userId}/keys':
+    post:
+      tags:
+        - Apikeys-users
+      summary: Create a new API key
+      description: Creates a new api key with the current user permissions
+      operationId: createApiKey
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user the API key is associated with
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseApiKeyDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - Apikeys-users
+      summary: Get an API keys for an user
+      description: Lists all the API keys associated with the system
+      operationId: getUserApiKeys
+      parameters:
+        - name: userId
+          in: path
+          description: ID of the user the API keys belongs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfApiKeyDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  '/v2/users/{userId}/keys/{keyId}':
+    get:
+      tags:
+        - Apikeys-users
+      summary: Get details for specific API key
+      description: Returns the details for a specific API key
+      operationId: getApiKey
+      parameters:
+        - name: keyId
+          in: path
+          description: ID of the API key to get details
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: ID of the user the API key belongs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseApiKeyDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - Apikeys-users
+      summary: Delete an API key associated with a user
+      description: Deletes the API associated with the userId
+      operationId: deleteApiKey
+      parameters:
+        - name: keyId
+          in: path
+          description: ID of the API key to delete
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: ID of the user the API key belongs to
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/permissions:
+    get:
+      tags:
+        - permissions
+      summary: GET all permissions
+      description: Returns a list of permissions in the Moogsoft platform
+      operationId: getPermissions
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfPermissionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+  '/v1/views/{id}':
+    patch:
+      tags:
+        - views
+      summary: Update the view
+      description: Update the view
+      operationId: updateView
+      parameters:
+        - name: id
+          in: path
+          description: Id of the view to be updated
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update payload for the view
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - views
+      summary: Get a View
+      description: Get a view by id if it is accessible to user
+      operationId: getViewById
+      parameters:
+        - name: id
+          in: path
+          description: View id of the view
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - views
+      summary: Delete a View
+      description: Delete a view that already exists in the system
+      operationId: deleteView
+      parameters:
+        - name: id
+          in: path
+          description: View id of the view
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+  /v1/keys:
+    get:
+      tags:
+        - Apikeys
+      summary: Get all API keys in the system
+      description: Get all API keys currently in the system
+      operationId: getAllApiKeys
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfApiKeyDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - Apikeys
+      summary: Delete API keys in the system
+      description: Delete one or more API keys in the system
+      operationId: deleteMultipleApiKeys
+      parameters:
+        - name: id
+          in: query
+          description: List of key ids to be deleted
+          required: true
+          schema:
+            type: array
+            examples:
+              - - key_id_1
+                - key_id_2
+            items:
+              type: string
+          examples:
+            default:
+              value:
+                - key_id_1
+                - key_id_2
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'user:edit'
+        description: Required user permissions for this endpoint
+  /v1/views:
+    get:
+      tags:
+        - views
+      summary: Get all Views
+      description: Get all view that are accessible to user
+      operationId: getAllViews
+      parameters:
+        - name: view_type
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - views
+      summary: Create a View
+      description: Create a new view in the system
+      operationId: postView
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'incidents:view'
+        description: Required user permissions for this endpoint
+tags:
+  - name: Apikeys
+    description: Endpoints relating to API key operations
+  - name: Apikeys-users
+    description: Endpoints relating to API key operations
+  - name: Groups
+    description: Endpoints relating to user groups
+  - name: InstanceType
+    description: Endpoints relating to instance types
+  - name: Roles
+    description: Endpoints relating to user roles
+  - name: SSO
+    description: Endpoints relating to auth0 / single sign on (SSO)
+  - name: User
+    description: Endpoints relating to user operations
+  - name: apiurl
+    description: Endpoints relating to get API key URL
+  - name: permissions
+    description: Endpoints relating to permissions
+  - name: views
+    description: Endpoints related to incident views
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+  schemas:
+    MoogResponseListOfGroupDto:
+      type: object
+      description: User API GroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+      required:
+        - status
+        - data
+    GroupDto:
+      type: object
+      title: Group Dto
+      properties:
+        name:
+          type: string
+          description: The name of your user group
+          pattern: '^[a-zA-Z0-9.&()_\-\s]+$'
+          minLength: 1
+          maxLength: 127
+          examples:
+            - Support Team
+        description:
+          type: string
+          description: Description of your user group
+          examples:
+            - Group for Support Team
+        groupMembers:
+          type: array
+          description: List of the unique IDs for the members of the group
+          examples:
+            - - 6217d0958391447445648af4
+              - 6217d095839144744565dg7
+          items:
+            type: string
+        roleAssignment:
+          type: string
+          description: Unique ID of the role to be assigned to the group
+          examples:
+            - 6217d0958391498735648za2
+        id:
+          type: string
+          description: ID of the user group
+          examples:
+            - 6217d0958391447445648ab2
+        created:
+          $ref: '#/components/schemas/Instant'
+        createdBy:
+          type: string
+        lastModified:
+          $ref: '#/components/schemas/Instant'
+        lastModifiedBy:
+          type: string
+        isSso:
+          type: boolean
+      required:
+        - name
+        - id
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    IsgErrorMessage:
+      type: object
+      title: Isg Error Message
+      description: Message relating to the API error
+      properties:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: string
+          description: ISO-8601 Date/time when the API error was reported
+          format: date-time
+          examples:
+            - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
+          type: array
+          description: Substitution arguments used for localization
+          items:
+            type: string
+    IsgErrorSeverity:
+      type: string
+      enum:
+        - Info
+        - Warning
+        - Error
+        - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
+    MoogResponseGroupDto:
+      type: object
+      description: User API GroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/GroupDto'
+      required:
+        - status
+        - data
+    InstanceDto:
+      type: object
+      title: Instance Dto
+      properties:
+        instance_type:
+          $ref: '#/components/schemas/InstanceType'
+    InstanceType:
+      type: string
+      enum:
+        - NOT_DEFINED
+        - PRODUCTION
+        - UAT
+        - TEST_AND_DEV
+      title: Instance Type
+    MoogResponseInstanceDto:
+      type: object
+      description: User API InstanceDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/InstanceDto'
+      required:
+        - status
+        - data
+    MoogResponseListOfRoleDto:
+      type: object
+      description: User API RoleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleDto'
+      required:
+        - status
+        - data
+    RoleDto:
+      type: object
+      title: Role Dto
+      properties:
+        name:
+          type: string
+          pattern: '^[a-zA-Z0-9.&()_\-\s]+$'
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissionsAsString:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        id:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        createdBy:
+          type: string
+        lastModified:
+          $ref: '#/components/schemas/Instant'
+        lastModifiedBy:
+          type: string
+      required:
+        - name
+    BaseRoleDto:
+      type: object
+      title: Base Role Dto
+      properties:
+        name:
+          type: string
+          pattern: '^[a-zA-Z0-9.&()_\-\s]+$'
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissionsAsString:
+          type: array
+          items:
+            type: string
+            minLength: 1
+      required:
+        - name
+    MoogResponseRoleDto:
+      type: object
+      description: User API RoleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/RoleDto'
+      required:
+        - status
+        - data
+    SSOMultiTenancyConnDto:
+      type: object
+      title: SSO Multi Tenancy Conn Dto
+      properties:
+        connectionId:
+          type: string
+          minLength: 1
+        domains:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            pattern: \S
+      required:
+        - connectionId
+        - domains
+    SSOConnOptionsDto:
+      type: object
+      title: SSO Conn Options Dto
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        discoveryUrl:
+          type: string
+        claimsScope:
+          type: string
+        claimsFieldName:
+          type: string
+        groupClaimsFieldName:
+          type: string
+        pingFederateBaseUrl:
+          type: string
+        cert:
+          type: string
+        strategy:
+          type: string
+    MoogResponseSSOReturnDto:
+      type: object
+      description: User API SSOReturnDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/SSOReturnDto'
+      required:
+        - status
+        - data
+    SSOReturnDto:
+      type: object
+      title: SSO Return Dto
+      properties:
+        testUrl:
+          type: string
+        publicKeyUrl:
+          type: string
+        metadataUrl:
+          type: string
+        token:
+          type: string
+    MoogResponseSSOConnMongoDto:
+      type: object
+      description: User API SSOConnMongoDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/SSOConnMongoDto'
+      required:
+        - status
+        - data
+    SSOConnMongoDto:
+      type: object
+      title: SSO Conn Mongo Dto
+      properties:
+        created:
+          $ref: '#/components/schemas/Instant'
+        createdBy:
+          type: string
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+        lastUpdatedBy:
+          type: string
+        claimsScope:
+          type: string
+        connectionId:
+          type: string
+        name:
+          type: string
+        defaultRoleId:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        options:
+          $ref: '#/components/schemas/SSOConnOptionsDto'
+        useMapping:
+          type: boolean
+        useGroupMapping:
+          type: boolean
+        mapping:
+          type: object
+          additionalProperties:
+            type: string
+        groupMapping:
+          type: object
+          additionalProperties:
+            type: string
+        enabled:
+          type: boolean
+        isMultiTenant:
+          type: boolean
+    BaseUserDto:
+      type: object
+      title: Base User Dto
+      properties:
+        email:
+          type: string
+          pattern: \S
+        familyName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+        tenantName:
+          type: string
+        excludeUserDeletion:
+          type: boolean
+        isSSO:
+          type: boolean
+        countryCode:
+          type: string
+          pattern: '^(\+?\d{1,3}|\d{1,4}|)$'
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+      required:
+        - email
+        - familyName
+        - givenName
+        - roleId
+    NotificationPreference:
+      type: string
+      enum:
+        - EMAIL
+        - SMS
+        - VOICE
+      title: Notification Preference
+    IsgListResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        results:
+          type: object
+      required:
+        - results
+    MoogResponseListOfUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+      required:
+        - status
+        - data
+    UserDto:
+      type: object
+      title: User Dto
+      properties:
+        email:
+          type: string
+          pattern: \S
+        familyName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+        tenantName:
+          type: string
+        excludeUserDeletion:
+          type: boolean
+        isSSO:
+          type: boolean
+        countryCode:
+          type: string
+          pattern: '^(\+?\d{1,3}|\d{1,4}|)$'
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+        id:
+          type: string
+        numericId:
+          type: integer
+          format: int64
+        emailVerified:
+          type: boolean
+        name:
+          type: string
+        picture:
+          type: string
+        createdAt:
+          type: string
+        createdBy:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/Instant'
+        updatedBy:
+          type: string
+        writtenAt:
+          $ref: '#/components/schemas/Instant'
+        lastLogin:
+          $ref: '#/components/schemas/Date'
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        blocked:
+          type: boolean
+        groups:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        jwtPermissions:
+          type: array
+          items:
+            type: string
+        tenants:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+      required:
+        - email
+        - familyName
+        - givenName
+        - roleId
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+        - '2022-03-10'
+    UserStatus:
+      type: string
+      enum:
+        - INVITED
+        - ACTIVE
+        - DELETED
+      title: User Status
+    UserProfileDto:
+      type: object
+      title: User Profile Dto
+      properties:
+        familyName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        countryCode:
+          type: string
+          pattern: '^(\+?\d{1,3}|\d{1,4}|)$'
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+    UpdateUserDto:
+      type: object
+      title: Update User Dto
+      properties:
+        familyName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: '^[a-zA-Z0-9()\-_ ]+$'
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+          pattern: \S
+        groups:
+          type: array
+          items:
+            type: string
+        countryCode:
+          type: string
+          pattern: '^(\+?\d{1,3}|\d{1,4}|)$'
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+      required:
+        - roleId
+    MoogResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/UserDto'
+      required:
+        - status
+        - data
+    BaseApiKeyDto:
+      type: object
+      title: Base Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+        - name
+    MoogResponseListOfApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeyDto'
+      required:
+        - status
+        - data
+    ApiKeyDto:
+      type: object
+      title: Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        userId:
+          type: string
+        userEmail:
+          type: string
+        apiKey:
+          type: string
+      required:
+        - name
+    MoogResponseApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/ApiKeyDto'
+      required:
+        - status
+        - data
+    MoogResponseListOfPermissionDto:
+      type: object
+      description: User API PermissionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionDto'
+      required:
+        - status
+        - data
+    PermissionDto:
+      type: object
+      title: Permission Dto
+      properties:
+        name:
+          type: string
+          maxLength: 60
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    Permission:
+      type: object
+      title: Permission
+      properties:
+        entity:
+          type: string
+        name:
+          type: string
+        operation:
+          type: string
+        description:
+          type: string
+        title:
+          type: string
+        asPermissionString:
+          type: string
+        impliedPermissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        defaultRoles:
+          type: array
+          items:
+            type: string
+    ViewConfigDto:
+      type: object
+      title: View Config Dto
+      description: Incident view definition
+      properties:
+        id:
+          type: string
+          description: Unique id of the view
+          readOnly: true
+        owner:
+          type: string
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
+          type: object
+          description: List of users this view is shared with (if any)
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        shared_with_groups:
+          type: object
+          description: List of groups this view is shared with (if any)
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: 'View configuration data, which is utilized by the UI'
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: 'View type, indicates the type of view'
+    ViewConfigType:
+      type: string
+      enum:
+        - INCIDENT
+        - ALERT
+        - METRIC
+      title: View Config Type
+      description: View types
+    MoogResponseViewConfigResponseDto:
+      type: object
+      description: User API ViewConfigResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/ViewConfigResponseDto'
+      required:
+        - status
+        - data
+    ViewConfigResponseDto:
+      type: object
+      title: View Config Response Dto
+      description: Incident view definition
+      properties:
+        id:
+          type: string
+          description: Unique id of the view
+          readOnly: true
+        owner:
+          type: string
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
+          type: array
+          description: List of users this view is shared with (if any)
+          items:
+            type: string
+        shared_with_groups:
+          type: array
+          description: List of groups this view is shared with (if any)
+          items:
+            type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: View configuration data
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: View type
+    MoogResponseListOfViewConfigResponseDto:
+      type: object
+      description: User API ViewConfigResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViewConfigResponseDto'
+      required:
+        - status
+        - data
+security:
+  - ApiKeyAuth: []

@@ -1,0 +1,1440 @@
+openapi: 3.1.0
+info:
+  version: 2.0.0
+  title: Webhook API
+  description: 'You can use this API to create, retrieve, update, delete, and test webhoook integrations.'
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v2/integrations/webhooks/items:
+    get:
+      tags:
+        - webhooksV2
+      summary: Reads webhooks from the DB.
+      description: Reads webhooks from the DB.
+      operationId: getWebhooksV2
+      parameters:
+        - name: name
+          in: query
+          description: Fetches by name (optional); other parameters ignored if name is specified
+          schema:
+            type: string
+        - name: on_demand_only
+          in: query
+          description: Specifies whether to retrieve on-demand-only webhooks
+          schema:
+            type: boolean
+        - name: type
+          in: query
+          description: Specifies the webhook type to retrieve
+          schema:
+            $ref: '#/components/schemas/WebhookType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWebhookDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+        - webhooksV2
+      summary: Post and process webhook config to the DB.
+      description: Post and process webhook config to the DB.
+      operationId: createWebhookV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseWebhookDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWebhookDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  '/v2/integrations/webhooks/items/{id}':
+    patch:
+      tags:
+        - webhooksV2
+      summary: Patch webhook config to the DB.
+      description: Patch webhook config to the DB.
+      operationId: patchWebhookV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchWebhookDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWebhookDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    put:
+      tags:
+        - webhooksV2
+      summary: Update webhook config to the DB.
+      description: Update webhook config to the DB.
+      operationId: modifyWebhookV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseWebhookDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWebhookDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+        - webhooksV2
+      summary: Get webhook config from the DB.
+      description: Get webhook config from the DB.
+      operationId: getWebhookV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWebhookDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - webhooksV2
+      summary: Delete webhook config from the DB.
+      description: Delete webhook config from the DB.
+      operationId: deleteWebhookV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  '/v2/integrations/webhooks/logs/{id}':
+    get:
+      tags:
+        - webhooksV2 Logs
+      summary: Reads webhook logs from the DB.
+      description: 'Reads webhook logs from the DB, in reverse chronological order.'
+      operationId: getWebhookLogs
+      parameters:
+        - name: errors
+          in: query
+          description: Indicates whether to fetch error logs
+          schema:
+            type: boolean
+            default: 'true'
+        - name: successes
+          in: query
+          description: Indicates whether to fetch success logs
+          schema:
+            type: boolean
+            default: 'true'
+        - name: id
+          in: path
+          description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWebhookTestDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - webhooksV2 Logs
+      summary: Deletes webhook logs from the DB.
+      description: Deletes webhook logs from the DB.
+      operationId: deleteWebhookLogs
+      parameters:
+        - name: id
+          in: path
+          description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  '/v2/integrations/webhooks/metrics/{id}':
+    get:
+      tags:
+        - webhooksV2 Metrics
+      summary: Reads webhook metrics from the DB.
+      description: Reads webhook metrics from the DB.
+      operationId: getWebhookMetrics
+      parameters:
+        - name: id
+          in: path
+          description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWebhookMetrics'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:view'
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+        - webhooksV2 Metrics
+      summary: Deletes webhook metrics from the DB.
+      description: Deletes webhook metrics from the DB.
+      operationId: deleteWebhookMetrics
+      parameters:
+        - name: id
+          in: path
+          description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v2/integrations/webhooks/preview:
+    post:
+      tags:
+        - webhooksV2
+      summary: Preview a webhook.
+      description: Preview the URL and body(ies) of a webhook.
+      operationId: previewWebhookV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseWebhookDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWebhookTestDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+  /v2/integrations/webhooks/test:
+    post:
+      tags:
+        - webhooksV2
+      summary: Test a webhook.
+      description: Test the execution of a webhook with a test payload.
+      operationId: testWebhookV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseWebhookDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWebhookTestDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        value:
+          - 'integrations:edit'
+        description: Required user permissions for this endpoint
+tags:
+  - name: webhooksV2
+    description: ''
+  - name: webhooksV2 Logs
+    description: ''
+  - name: webhooksV2 Metrics
+    description: ''
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Webhook API
+      name: apiKey
+      in: header
+  schemas:
+    WebhookType:
+      type: string
+      enum:
+        - INCIDENT
+        - ALERT
+      title: Webhook Type
+      description: Webhook Type
+    MoogResponseListOfWebhookDto:
+      type: object
+      title: Moog Response List Of Webhook Dto
+      description: Webhook API WebhookDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookDto'
+      required:
+        - status
+        - data
+    WebhookDto:
+      type: object
+      title: Webhook Dto
+      properties:
+        description:
+          type: string
+          description: Webhook description
+        enabled:
+          type: boolean
+          description: Enable/disable Outbound integration
+          default: true
+        on_demand_only:
+          type: boolean
+          description: Enable/disable On-Demand only webhooks
+          default: false
+        name:
+          type: string
+          description: Outbound integration name
+        type:
+          $ref: '#/components/schemas/WebhookType'
+          description: Outbound integration type
+        filter:
+          type: string
+          description: Outbound integration filter to apply
+        headers:
+          type: object
+          description: Outbound integration headers to send; mapping of key/value pairs
+          additionalProperties:
+            type: string
+        create_body:
+          type: string
+          description: Outbound integration create body template
+        updates_enabled:
+          type: boolean
+          description: Update notification enabled
+          default: false
+        update_body:
+          type: string
+          description: Outbound integration update body template (optional)
+        integration:
+          $ref: '#/components/schemas/WebhookIntegrationDto'
+        credentials:
+          $ref: '#/components/schemas/WebhookCredentialsDto'
+          description: Outbound integration credentials
+        urls:
+          $ref: '#/components/schemas/WebhookUrls'
+          description: Outbound integration HTTP URLs
+        triggers:
+          $ref: '#/components/schemas/WebhookTriggerDto'
+          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
+        external_link_url:
+          type: string
+          description: Outbound URL definition for linking to external records
+        create_mappings:
+          type: object
+          description: Data mappings for create requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        update_mappings:
+          type: object
+          description: Data mappings for update requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        onDemandOnly:
+          type: boolean
+          description: Use on_demand_only instead
+          x-deprecated: true
+        createBody:
+          type: string
+          description: Use create_body instead
+          x-deprecated: true
+        updatesEnabled:
+          type: boolean
+          description: Use updates_enabled instead
+          x-deprecated: true
+        updateBody:
+          type: string
+          description: Use update_body instead
+          x-deprecated: true
+        externalLinkUrl:
+          type: string
+          description: Use external_link_url instead
+          x-deprecated: true
+        createMappings:
+          type: object
+          description: Use create_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        updateMappings:
+          type: object
+          description: Use update_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/WebhookStatus'
+        created_by:
+          type: string
+        last_updated_by:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+        last_result:
+          $ref: '#/components/schemas/WebhookTestDto'
+        metrics:
+          $ref: '#/components/schemas/WebhookMetrics'
+        createdBy:
+          type: string
+          description: Use created_by instead
+          x-deprecated: true
+        lastUpdatedBy:
+          type: string
+          description: Use last_updated_by instead
+          x-deprecated: true
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+          description: Use last_updated instead
+        lastResult:
+          $ref: '#/components/schemas/WebhookTestDto'
+          description: Use last_result instead
+      required:
+        - type
+        - create_body
+        - urls
+    WebhookIntegrationDto:
+      type: object
+      title: Webhook Integration Dto
+      description: Outbound Integration Profile Definition
+      properties:
+        type:
+          type: string
+          description: Integration type
+          default: none
+        ticket_id_regex:
+          type: string
+          description: Regex for identifying external_id
+        ticket_name_regex:
+          type: string
+          description: Regex for identifying external_name
+        ticketIdRegex:
+          type: string
+          description: Use ticket_id_regex instead
+          x-deprecated: true
+        ticketNameRegex:
+          type: string
+          description: Use ticket_name_regex instead
+          x-deprecated: true
+      required:
+        - type
+    WebhookCredentialsDto:
+      type: object
+      title: Webhook Credentials Dto
+      description: Outbound Integration Credentials Definition
+      properties:
+        type:
+          $ref: '#/components/schemas/CredentialsType1'
+          description: Credentials type
+        name:
+          type: string
+          description: Credentials name
+      required:
+        - type
+    CredentialsType1:
+      type: string
+      enum:
+        - BEARER
+        - BASIC
+        - OAUTH
+        - OAUTH_CLIENT_CREDENTIALS
+      title: Credentials Type1
+      description: Credentials Type
+    WebhookUrls:
+      type: object
+      title: Webhook Urls
+      description: Outbound integration URL information
+      properties:
+        create:
+          $ref: '#/components/schemas/UrlDefinition'
+          description: Outbound integration URL definition for creates
+        update:
+          $ref: '#/components/schemas/UrlDefinition'
+          description: Outbound integration URL definition for updates
+      required:
+        - create
+    UrlDefinition:
+      type: object
+      title: Url Definition
+      properties:
+        verb:
+          $ref: '#/components/schemas/WebhookVerb'
+          description: Outbound integration HTTP verb
+        url:
+          type: string
+          description: Outbound integration target URL
+          pattern: \S
+      required:
+        - verb
+        - url
+    WebhookVerb:
+      type: string
+      enum:
+        - POST
+        - PATCH
+        - PUT
+        - DELETE
+      title: Webhook Verb
+      description: HTTP Verb
+    WebhookTriggerDto:
+      type: object
+      title: Webhook Trigger Dto
+      properties:
+        created:
+          $ref: '#/components/schemas/CreatedTriggerConfig'
+        status_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        description_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        service_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        assignee_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        assigned_groups_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        severity_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        class_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        type_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        tags_change:
+          $ref: '#/components/schemas/TagsChangeTriggerConfig'
+        external_id_change:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+        statusChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use status_change instead
+        descriptionChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use description_change instead
+        serviceChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use service_change instead
+        assigneeChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use assignee_change instead
+        assignedGroupsChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use assigned_groups_change instead
+        severityChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use severity_change instead
+        classChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use class_change instead
+        typeChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use type_change instead
+        tagsChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use tags_change instead
+        externalIdChange:
+          $ref: '#/components/schemas/BaseTriggerConfig'
+          description: Use external_id_change instead
+      required:
+        - created
+        - status_change
+        - description_change
+        - service_change
+        - assignee_change
+        - assigned_groups_change
+        - severity_change
+        - class_change
+        - type_change
+        - tags_change
+        - external_id_change
+    CreatedTriggerConfig:
+      type: object
+      title: Created Trigger Config
+      properties:
+        enabled:
+          type: boolean
+          description: Trigger is enabled or not
+          default: false
+      required:
+        - enabled
+    BaseTriggerConfig:
+      type: object
+      title: Base Trigger Config
+      properties:
+        enabled:
+          type: boolean
+          description: Trigger is enabled or not
+          default: false
+      required:
+        - enabled
+    TagsChangeTriggerConfig:
+      type: object
+      title: Tags Change Trigger Config
+      properties:
+        enabled:
+          type: boolean
+          description: Trigger is enabled or not
+          default: false
+      required:
+        - enabled
+    WebhookDataMapping:
+      type: object
+      title: Webhook Data Mapping
+      description: Data mapping definition
+      properties:
+        type:
+          $ref: '#/components/schemas/WebhookDataType'
+          description: Output data mapping to perform on the field
+        as_list:
+          type: boolean
+          description: 'Flag indicating whether to coerce the value into a list, or make a scalar'
+          default: false
+        custom_mapping:
+          type: object
+          description: Custom mapping of input value to output value
+          additionalProperties:
+            type: string
+        asList:
+          type: boolean
+          description: Use as_list instead
+          x-deprecated: true
+        customMapping:
+          type: object
+          description: Use custom_mapping instead
+          additionalProperties:
+            type: string
+          x-deprecated: true
+      required:
+        - type
+    WebhookDataType:
+      type: string
+      enum:
+        - STRING
+        - NUMBER
+        - BOOLEAN
+        - DATE_EPOCH
+        - DATE_FORMATTED
+      title: Webhook Data Type
+      description: 'Webhook Data Type, used for data output mapping'
+    WebhookStatus:
+      type: string
+      enum:
+        - DISABLED
+        - RUNNING
+        - PROVISIONED
+        - INVALID_URL
+        - BAD_AUTH
+        - BAD_FILTER
+        - PAGE_NOT_FOUND
+        - BAD_RESPONSE
+        - SOCKET_TIMEOUT
+        - IO_ERROR
+        - TICKET_PARSE_FAILURE
+        - MOOG_ERROR
+      title: Webhook Status
+      description: Webhook Status
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    WebhookTestDto:
+      type: object
+      title: Webhook Test Dto
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+        action:
+          $ref: '#/components/schemas/WebhookAction'
+        status:
+          $ref: '#/components/schemas/WebhookStatus'
+        request:
+          $ref: '#/components/schemas/WebhookRequest'
+        response:
+          $ref: '#/components/schemas/WebhookResponse'
+        additional_info:
+          type: object
+        data:
+          type: object
+        message:
+          type: string
+        additionalInfo:
+          type: object
+          description: Use additional_info instead
+          x-deprecated: true
+    WebhookAction:
+      type: string
+      enum:
+        - IGNORE
+        - CREATE
+        - UPDATE
+        - DELETE
+      title: Webhook Action
+    WebhookRequest:
+      type: object
+      title: Webhook Request
+      properties:
+        url:
+          $ref: '#/components/schemas/UrlDefinition'
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+      required:
+        - body
+    WebhookResponse:
+      type: object
+      title: Webhook Response
+      properties:
+        code:
+          type: integer
+          format: int32
+        code_reason:
+          type: string
+        body:
+          type: string
+        duration_ms:
+          type: integer
+          format: int64
+        attempts:
+          type: integer
+          format: int32
+        codeReason:
+          type: string
+          description: Use code_reason instead
+          x-deprecated: true
+        durationMs:
+          type: integer
+          description: Use duration_ms instead
+          format: int64
+    WebhookMetrics:
+      type: object
+      title: Webhook Metrics
+      properties:
+        errors:
+          type: integer
+          format: int64
+        successes:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+    MoogFailureResponse:
+      type: object
+      description: Webhook API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Webhook API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    BaseWebhookDto:
+      type: object
+      title: BaseWebhook
+      properties:
+        description:
+          type: string
+          description: Webhook description
+        enabled:
+          type: boolean
+          description: Enable/disable Outbound integration
+          default: true
+        on_demand_only:
+          type: boolean
+          description: Enable/disable On-Demand only webhooks
+          default: false
+        name:
+          type: string
+          description: Outbound integration name
+        type:
+          $ref: '#/components/schemas/WebhookType'
+          description: Outbound integration type
+        filter:
+          type: string
+          description: Outbound integration filter to apply
+        headers:
+          type: object
+          description: Outbound integration headers to send; mapping of key/value pairs
+          additionalProperties:
+            type: string
+        create_body:
+          type: string
+          description: Outbound integration create body template
+        updates_enabled:
+          type: boolean
+          description: Update notification enabled
+          default: false
+        update_body:
+          type: string
+          description: Outbound integration update body template (optional)
+        integration:
+          $ref: '#/components/schemas/WebhookIntegrationDto'
+        credentials:
+          $ref: '#/components/schemas/WebhookCredentialsDto'
+          description: Outbound integration credentials
+        urls:
+          $ref: '#/components/schemas/WebhookUrls'
+          description: Outbound integration HTTP URLs
+        triggers:
+          $ref: '#/components/schemas/WebhookTriggerDto'
+          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
+        external_link_url:
+          type: string
+          description: Outbound URL definition for linking to external records
+        create_mappings:
+          type: object
+          description: Data mappings for create requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        update_mappings:
+          type: object
+          description: Data mappings for update requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        onDemandOnly:
+          type: boolean
+          description: Use on_demand_only instead
+          x-deprecated: true
+        createBody:
+          type: string
+          description: Use create_body instead
+          x-deprecated: true
+        updatesEnabled:
+          type: boolean
+          description: Use updates_enabled instead
+          x-deprecated: true
+        updateBody:
+          type: string
+          description: Use update_body instead
+          x-deprecated: true
+        externalLinkUrl:
+          type: string
+          description: Use external_link_url instead
+          x-deprecated: true
+        createMappings:
+          type: object
+          description: Use create_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        updateMappings:
+          type: object
+          description: Use update_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+      required:
+        - type
+        - create_body
+        - urls
+    MoogResponseWebhookDto:
+      type: object
+      title: Moog Response Webhook Dto
+      description: Webhook API WebhookDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WebhookDto'
+      required:
+        - status
+        - data
+    PatchWebhookDto:
+      type: object
+      title: PatchWebhook
+      description: Patch body for Webhook. Any non-null values are used to patch the webhook
+      properties:
+        description:
+          type: string
+          description: Webhook description
+        enabled:
+          type: boolean
+          description: Enable/disable Outbound integration
+          default: true
+        on_demand_only:
+          type: boolean
+          description: Enable/disable On-Demand only webhooks
+          default: false
+        name:
+          type: string
+          description: Outbound integration name
+        type:
+          $ref: '#/components/schemas/WebhookType'
+          description: Outbound integration type
+        filter:
+          type: string
+          description: Outbound integration filter to apply
+        headers:
+          type: object
+          description: Outbound integration headers to send; mapping of key/value pairs
+          additionalProperties:
+            type: string
+        create_body:
+          type: string
+          description: Outbound integration create body template
+        updates_enabled:
+          type: boolean
+          description: Update notification enabled
+          default: false
+        update_body:
+          type: string
+          description: Outbound integration update body template (optional)
+        integration:
+          $ref: '#/components/schemas/WebhookIntegrationDto'
+        credentials:
+          $ref: '#/components/schemas/WebhookCredentialsDto'
+          description: Outbound integration credentials
+        urls:
+          $ref: '#/components/schemas/WebhookUrls'
+          description: Outbound integration HTTP URLs
+        triggers:
+          $ref: '#/components/schemas/WebhookTriggerDto'
+          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
+        external_link_url:
+          type: string
+          description: Outbound URL definition for linking to external records
+        create_mappings:
+          type: object
+          description: Data mappings for create requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        update_mappings:
+          type: object
+          description: Data mappings for update requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        onDemandOnly:
+          type: boolean
+          description: Use on_demand_only instead
+          x-deprecated: true
+        createBody:
+          type: string
+          description: Use create_body instead
+          x-deprecated: true
+        updatesEnabled:
+          type: boolean
+          description: Use updates_enabled instead
+          x-deprecated: true
+        updateBody:
+          type: string
+          description: Use update_body instead
+          x-deprecated: true
+        externalLinkUrl:
+          type: string
+          description: Use external_link_url instead
+          x-deprecated: true
+        createMappings:
+          type: object
+          description: Use create_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        updateMappings:
+          type: object
+          description: Use update_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+      required:
+        - type
+        - create_body
+        - urls
+    MoogResponseListOfWebhookTestDto:
+      type: object
+      title: Moog Response List Of Webhook Test Dto
+      description: Webhook API WebhookTestDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookTestDto'
+      required:
+        - status
+        - data
+    MoogResponseWebhookMetrics:
+      type: object
+      title: Moog Response Webhook Metrics
+      description: Webhook API WebhookMetrics response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WebhookMetrics'
+      required:
+        - status
+        - data
+security:
+  - ApiKeyAuth: []

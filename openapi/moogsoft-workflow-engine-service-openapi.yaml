@@ -1,0 +1,1862 @@
+openapi: 3.1.0
+info:
+  version: 1.3.0
+  title: Workflow Engine API
+  description: This API enables you to create and manage workflows
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v1/test-workflows/bulk:
+    post:
+      tags:
+        - test-workflows
+      summary: Test multiple workflows synchronously.
+      description: Test multiple workflows synchronously.
+      operationId: testWorkflows
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkTestWorkflowDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfBulkTestWorkflowResultsDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value: []
+  '/v1/workflows/{id}/metrics/exceptions':
+    get:
+      tags:
+        - workflows
+      summary: Returns the exceptions for the specified workflow.
+      description: Returns the exceptions for the specified workflow.
+      operationId: getWorkflowMetricsExceptions
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowMetricsExceptionWrapperDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+  /v1/test-workflows:
+    post:
+      tags:
+        - test-workflows
+      summary: Test a workflow synchronously.
+      description: Test a workflow synchronously.
+      operationId: testWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowTestWrapperDto'
+      responses:
+        '200':
+          description: Test workflow validated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowTestResultDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value: []
+  /v1/workflows-bulk:
+    patch:
+      tags:
+        - workflows
+      summary: Modifies workflows.
+      description: Modifies workflows.
+      operationId: modifyWorkflows
+      requestBody:
+        description: Modified workflow definitions
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/WorkflowUpdateWrapperDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWorkflowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+  /v1/workflows-dependent-on:
+    get:
+      tags:
+        - workflow-dependent-on
+      summary: Retrieve workflows dependent on resource
+      description: Fetches a list of workflows that are dependent on the specified resource
+      operationId: getWorkflowsDependentOnResource
+      parameters:
+        - name: resource_name
+          in: query
+          description: The name of the resource for which dependencies are to be found
+          required: true
+          schema:
+            type: string
+            pattern: \S
+        - name: resource_type
+          in: query
+          description: The type of the resource for which dependencies are to be found
+          required: true
+          schema:
+            $ref: '#/components/schemas/ResourceType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWorkflowDependentOnResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value: []
+  '/v1/workflows/{id}':
+    patch:
+      tags:
+        - workflows
+      summary: Modifies a workflow.
+      description: Modifies a workflow.
+      operationId: modifyWorkflow
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Modified workflow definition
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseWorkflowDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+    get:
+      tags:
+        - workflows
+      summary: Returns the workflow with the given ID.
+      description: Returns the workflow with the given ID.
+      operationId: getWorkflow
+      parameters:
+        - name: validate
+          in: query
+          description: Indicates whether validation is to be performed on the workflow
+          schema:
+            type: boolean
+            default: false
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+    delete:
+      tags:
+        - workflows
+      summary: Deletes the workflow with the given ID.
+      description: Deletes the workflow with the given ID.
+      operationId: deleteWorkflow
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+  '/v1/workflows/{id}/status':
+    patch:
+      tags:
+        - workflows
+      summary: Modifies the status for a specific workflow.
+      description: Modifies the status for a specific workflow.
+      operationId: setWorkflowStatus
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The desired workflow status
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowStatusWrapperDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+    get:
+      tags:
+        - workflows
+      summary: Returns the status for a specific workflow.
+      description: Returns the status for a specific workflow.
+      operationId: getWorkflowStatus
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowStatusWrapperDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+  '/v1/workflows/{id}/metrics':
+    get:
+      tags:
+        - workflows
+      summary: Returns the metrics for the workflow with the given ID.
+      description: Returns the metrics for the workflow with the given ID.
+      operationId: getWorkflowMetrics
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowMetricsDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+  /v1/standalone-workflows/usage:
+    get:
+      tags:
+        - standalone-workflows
+      summary: Get Workflow Usage By Id
+      operationId: getWorkflowUsageById
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfStandaloneWorkflowUsageInfo'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+  /v1/workflow-actions:
+    get:
+      tags:
+        - workflow-actions
+      summary: Returns all possible actions for use in workflows.
+      description: Returns all possible actions for use in workflows.
+      operationId: getActions
+      parameters:
+        - name: type
+          in: query
+          description: Optional workflow type to retrieve
+          schema:
+            $ref: '#/components/schemas/WorkflowType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfActionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+  '/v1/workflows/{id}/test':
+    get:
+      tags:
+        - workflows
+      summary: Returns the result of the last async test run.
+      description: Returns the result of the last async test run.
+      operationId: getWorkflowTest
+      parameters:
+        - name: id
+          in: path
+          description: ID of the workflow
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowTestResultDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+  /v1/workflows-bulk/priority:
+    patch:
+      tags:
+        - workflows
+      summary: Modifies the priority for multiple workflows.
+      description: Modifies the priority for multiple workflows.
+      operationId: setWorkflowPriorities
+      requestBody:
+        description: Modified workflow priorities
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/WorkflowPriorityWrapperDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+  /v1/workflows:
+    get:
+      tags:
+        - workflows
+      summary: Returns all workflows.
+      description: Returns all workflows.
+      operationId: getWorkflows
+      parameters:
+        - name: status
+          in: query
+          description: Status filter for the returned workflows
+          schema:
+            $ref: '#/components/schemas/WorkflowStatus'
+        - name: type
+          in: query
+          description: Workflow type filter for the returned workflows
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/WorkflowType'
+              - default: EVENT
+        - name: validate
+          in: query
+          description: Indicates whether validation is to be performed on the workflow
+          schema:
+            type: boolean
+            default: false
+        - name: workflowName
+          in: query
+          description: A string to match against workflow names.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWorkflowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:view'
+    post:
+      tags:
+        - workflows
+      summary: Creates a new workflow.
+      description: Creates a new workflow.
+      operationId: createWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WorkflowCreateWrapperDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseWorkflowDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'workflows:edit'
+tags:
+  - name: standalone-workflows
+    description: Information about independently invokable workflows.
+  - name: test-workflows
+    description: Synchronous workflow testing
+  - name: workflow-actions
+    description: Actions available for use in workflows
+  - name: workflow-dependent-on
+    description: Resources associated with workflows
+  - name: workflows
+    description: Workflows for processing and transformation
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Workflow Engine API
+      name: apiKey
+      in: header
+  schemas:
+    BulkTestWorkflowDto:
+      type: object
+      title: Bulk Test Workflow Dto
+      description: A bulk test workflow representing multiple workflows and test inputs.
+      properties:
+        triggerType:
+          $ref: '#/components/schemas/WorkflowTriggerType'
+          description: The workflow trigger type
+        workflows:
+          type: array
+          description: The list of workflows to test with
+          items:
+            $ref: '#/components/schemas/WorkflowDto'
+        inputs:
+          type: array
+          description: The list of inputs for the bulk workflow test
+          items:
+            type: object
+      required:
+        - triggerType
+        - workflows
+        - inputs
+    WorkflowTriggerType:
+      type: string
+      enum:
+        - EVENT_CREATED
+        - ALERT_CREATED
+        - ALERT_UPDATED
+        - ALERT_DEDUPLICATED
+        - INCIDENT_CREATED
+        - INCIDENT_UPDATED
+        - ALERT_CREATED_OR_UPDATED
+        - ALERT_CREATED_OR_DEDUPLICATED
+        - INCIDENT_CREATED_OR_UPDATED
+        - ALERT_INVOKED
+        - INCIDENT_INVOKED
+      title: Workflow Trigger Type
+    WorkflowDto:
+      type: object
+      title: Workflow Dto
+      description: Workflow with base and generated attributes.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+        id:
+          type: string
+          description: ID of the workflow
+          readOnly: true
+        createdBy:
+          type: string
+          description: Creator of the workflow
+          readOnly: true
+        lastUpdatedBy:
+          type: string
+          description: Creator of the workflow
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/WorkflowStatus'
+          description: Status of the workflow
+        metrics:
+          $ref: '#/components/schemas/WorkflowMetricsDto'
+          description: Metrics about the running workflow
+        test:
+          $ref: '#/components/schemas/WorkflowTestResultDto'
+          description: The last asynchronous test results for the workflow
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+          description: The last updated time in milliseconds
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: The created time in milliseconds
+        valid:
+          type: boolean
+          description: Indicates if the workflow-actions are valid
+          readOnly: true
+      required:
+        - name
+        - trigger
+        - type
+        - priority
+        - steps
+    WorkflowTriggerDto:
+      type: object
+      title: Workflow Trigger Dto
+      description: The trigger definition for a workflow.
+      properties:
+        type:
+          $ref: '#/components/schemas/WorkflowTriggerType'
+          description: The workflow trigger type
+        entryFilter:
+          type: string
+          description: Entry filter for the workflow (can be empty)
+      required:
+        - type
+    WorkflowType:
+      type: string
+      enum:
+        - EVENT
+        - ALERT
+        - INCIDENT
+        - ALERT_STANDALONE
+        - INCIDENT_STANDALONE
+      title: Workflow Type
+    WorkflowActionDto:
+      type: object
+      title: Workflow Action Dto
+      description: A configured action.
+      properties:
+        actionName:
+          type: string
+          description: Computer name of the action
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Description of the configured action
+        configuration:
+          type: object
+          description: Configuration for the action
+        error:
+          type: string
+          description: Error message associated with the configured action
+          readOnly: true
+        valid:
+          type: boolean
+          description: Indicates if the workflow action is valid
+          readOnly: true
+      required:
+        - actionName
+        - configuration
+    WorkflowStatus:
+      type: string
+      enum:
+        - DELETED
+        - NOT_RUNNING
+        - RUNNING
+      title: Workflow Status
+    WorkflowMetricsDto:
+      type: object
+      title: Workflow Metrics Dto
+      description: Metrics about a running workflow.
+      properties:
+        processed:
+          type: integer
+          description: Number processed
+          format: int64
+        errors:
+          type: integer
+          description: Number processed with error
+          format: int64
+        skipped:
+          type: integer
+          description: Number of events ignored
+          format: int64
+        discarded:
+          type: integer
+          description: Number of events discarded
+          format: int64
+        filterMetrics:
+          $ref: '#/components/schemas/FilterMetricsDto'
+          description: The metrics for the workflow filter
+        actionMetricsMap:
+          type: object
+          description: Map of the action name to action metrics
+          additionalProperties:
+            $ref: '#/components/schemas/ActionMetricsDto'
+        highWatermarkProcessingDurationMillis:
+          type: integer
+          description: The highest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        averageProcessingDurationMillis:
+          type: integer
+          description: The average processing duration (0 indicates less then 1ms)
+          format: int64
+        lowWatermarkProcessingDurationMillis:
+          type: integer
+          description: The lowest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        lastException:
+          type: string
+          description: A description of the last exception that occurred any where in the workflow
+        lastExceptionMillis:
+          type: integer
+          description: The time in millis when the exception occurred
+          format: int64
+        generalError:
+          type: string
+          description: A general error that occurred outside of the workflow
+        generalErrorMillis:
+          type: integer
+          description: The time in millis when the general error occurred
+          format: int64
+    FilterMetricsDto:
+      type: object
+      title: Filter Metrics Dto
+      description: Metrics about a running filter.
+      properties:
+        included:
+          type: integer
+          description: Number included in the workflow
+          format: int64
+        excluded:
+          type: integer
+          description: Number excluded from the workflow
+          format: int64
+        errors:
+          type: integer
+          description: Number processed with error
+          format: int64
+        processed:
+          type: integer
+          description: Number processed
+          format: int64
+        highWatermarkProcessingDurationMillis:
+          type: integer
+          description: The highest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        averageProcessingDurationMillis:
+          type: integer
+          description: The average processing duration (0 indicates less then 1ms)
+          format: int64
+        lowWatermarkProcessingDurationMillis:
+          type: integer
+          description: The lowest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+    ActionMetricsDto:
+      type: object
+      title: Action Metrics Dto
+      description: Metrics about a running action.
+      properties:
+        actionName:
+          type: string
+          description: The computer name for the action
+        processed:
+          type: integer
+          description: Number processed
+          format: int64
+        errors:
+          type: integer
+          description: Number processed with error
+          format: int64
+        highWatermarkProcessingDurationMillis:
+          type: integer
+          description: The highest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        averageProcessingDurationMillis:
+          type: integer
+          description: The average processing duration (0 indicates less then 1ms)
+          format: int64
+        lowWatermarkProcessingDurationMillis:
+          type: integer
+          description: The lowest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        skipped:
+          type: integer
+          description: Number of events skipped
+          format: int64
+        discarded:
+          type: integer
+          description: Number of events discarded
+          format: int64
+    WorkflowTestResultDto:
+      type: object
+      title: Workflow Test Result Dto
+      description: Test results for a workflow.
+      properties:
+        status:
+          $ref: '#/components/schemas/WorkflowTestStatus'
+          description: Status of the test
+        input:
+          type: object
+          description: Input for the workflow test
+        output:
+          type: object
+          description: Output of the workflow test
+        startMillis:
+          type: integer
+          description: Start time in millis of the workflow test
+          format: int64
+        endMillis:
+          type: integer
+          description: End time in millis of the workflow test
+          format: int64
+        filterTest:
+          $ref: '#/components/schemas/FilterTestDto'
+          description: Test results for the filter
+        actionsTestList:
+          type: array
+          description: List of test results for each action
+          items:
+            $ref: '#/components/schemas/ActionTestDto'
+        exception:
+          type: string
+          description: Description of any exceptions that occurred
+        generalError:
+          type: string
+          description: Description of any error that occurred outside of the workflow
+        skipped:
+          type: boolean
+          description: Input was skipped by one of the workflow actions
+        discarded:
+          type: boolean
+          description: Input was discarded by one of the workflow actions
+    WorkflowTestStatus:
+      type: string
+      enum:
+        - RUNNING
+        - FAILED
+        - SUCCESS
+      title: Workflow Test Status
+    FilterTestDto:
+      type: object
+      title: Filter Test Dto
+      description: Test results for a filter.
+      properties:
+        input:
+          type: object
+          description: Input for the filter
+        startMillis:
+          type: integer
+          description: Start time in millis of the filter
+          format: int64
+        endMillis:
+          type: integer
+          description: End time in millis of the filter
+          format: int64
+        result:
+          type: boolean
+          description: Boolean result of running the filter
+        exception:
+          type: string
+          description: Description of any exceptions that occurred
+    ActionTestDto:
+      type: object
+      title: Action Test Dto
+      description: Test results for an action.
+      properties:
+        actionName:
+          type: string
+          description: The computer name of the action
+        input:
+          type: object
+          description: Input for the action
+        output:
+          type: object
+          description: Output from the action
+        startMillis:
+          type: integer
+          description: Start time in millis of the workflow action
+          format: int64
+        endMillis:
+          type: integer
+          description: End time in millis of the workflow action
+          format: int64
+        exception:
+          type: string
+          description: Description of any exceptions that occurred
+        skipped:
+          type: boolean
+          description: Input was skipped by the workflow action
+        discarded:
+          type: boolean
+          description: Input was discarded by the workflow action
+        outputViolations:
+          type: array
+          description: Validation error messages generated while validating the action output
+          items:
+            type: string
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    MoogResponseListOfBulkTestWorkflowResultsDto:
+      type: object
+      title: Moog Response List Of Bulk Test Workflow Results Dto
+      description: Workflow Engine API BulkTestWorkflowResultsDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkTestWorkflowResultsDto'
+      required:
+        - status
+        - data
+    BulkTestWorkflowResultsDto:
+      type: object
+      title: Bulk Test Workflow Results Dto
+      description: A bulk test workflow results.
+      properties:
+        input:
+          type: object
+          description: Original input provided to the workflows under test
+        workflows:
+          type: array
+          description: Workflow status and test results for each workflow tested
+          items:
+            $ref: '#/components/schemas/WorkflowDto'
+    MoogFailureResponse:
+      type: object
+      description: Workflow Engine API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Workflow Engine API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogResponseWorkflowMetricsExceptionWrapperDto:
+      type: object
+      title: Moog Response Workflow Metrics Exception Wrapper Dto
+      description: Workflow Engine API WorkflowMetricsExceptionWrapperDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WorkflowMetricsExceptionWrapperDto'
+      required:
+        - status
+        - data
+    WorkflowMetricsExceptionWrapperDto:
+      type: object
+      title: Workflow Metrics Exception Wrapper Dto
+      description: An object containing just the workflow exception information.
+      properties:
+        lastException:
+          type: string
+          description: A description of the last exception that occurred any where in the workflow
+        lastExceptionMillis:
+          type: integer
+          description: The time in millis when the exception occurred
+          format: int64
+        generalError:
+          type: string
+          description: A general error that occurred outside of the workflow
+        generalErrorMillis:
+          type: integer
+          description: The time in millis when the general error occurred
+          format: int64
+    WorkflowTestWrapperDto:
+      type: object
+      title: Workflow Test Wrapper Dto
+      description: A test workflow representing a workflow and test input.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+        id:
+          type: string
+          description: ID of the workflow if it has already been saved
+        input:
+          type: array
+          description: The input or list of inputs for the workflow test
+          minItems: 1
+          items:
+            type: object
+      required:
+        - name
+        - trigger
+        - type
+        - priority
+        - steps
+        - input
+    MoogResponseWorkflowTestResultDto:
+      type: object
+      title: Moog Response Workflow Test Result Dto
+      description: Workflow Engine API WorkflowTestResultDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WorkflowTestResultDto'
+      required:
+        - status
+        - data
+    WorkflowUpdateWrapperDto:
+      type: object
+      title: Workflow Update Wrapper Dto
+      description: Workflow update workflow attributes.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+        id:
+          type: string
+          description: ID of the workflow
+      required:
+        - name
+        - trigger
+        - type
+        - priority
+        - steps
+        - id
+    MoogResponseListOfWorkflowDto:
+      type: object
+      title: Moog Response List Of Workflow Dto
+      description: Workflow Engine API WorkflowDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowDto'
+      required:
+        - status
+        - data
+    ResourceType:
+      const: CATALOG
+      title: Resource Type
+      description: Representing different types of resources used by workflow action
+    MoogResponseListOfWorkflowDependentOnResponseDto:
+      type: object
+      title: Moog Response List Of Workflow Dependent On Response Dto
+      description: Workflow Engine API WorkflowDependentOnResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowDependentOnResponseDto'
+      required:
+        - status
+        - data
+    WorkflowDependentOnResponseDto:
+      type: object
+      title: Workflow Dependent On Response Dto
+      description: Response DTO used to represent workflow that is dependent on resources
+      properties:
+        id:
+          type: string
+          description: ID of the workflow
+        name:
+          type: string
+          description: Name of the workflow
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow
+    BaseWorkflowDto:
+      type: object
+      title: Base Workflow Dto
+      description: Base workflow attributes.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+      required:
+        - name
+        - trigger
+        - type
+        - priority
+        - steps
+    MoogResponseWorkflowDto:
+      type: object
+      title: Moog Response Workflow Dto
+      description: Workflow Engine API WorkflowDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WorkflowDto'
+      required:
+        - status
+        - data
+    WorkflowStatusWrapperDto:
+      type: object
+      title: Workflow Status Wrapper Dto
+      description: An object containing just the workflow status.
+      properties:
+        status:
+          $ref: '#/components/schemas/WorkflowStatus'
+          description: The workflow status
+      required:
+        - status
+    MoogResponseWorkflowStatusWrapperDto:
+      type: object
+      title: Moog Response Workflow Status Wrapper Dto
+      description: Workflow Engine API WorkflowStatusWrapperDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WorkflowStatusWrapperDto'
+      required:
+        - status
+        - data
+    MoogResponseWorkflowMetricsDto:
+      type: object
+      title: Moog Response Workflow Metrics Dto
+      description: Workflow Engine API WorkflowMetricsDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/WorkflowMetricsDto'
+      required:
+        - status
+        - data
+    MoogResponseListOfStandaloneWorkflowUsageInfo:
+      type: object
+      title: Moog Response List Of Standalone Workflow Usage Info
+      description: Workflow Engine API StandaloneWorkflowUsageInfo response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandaloneWorkflowUsageInfo'
+      required:
+        - status
+        - data
+    StandaloneWorkflowUsageInfo:
+      type: object
+      title: Standalone Workflow Usage Info
+      description: Information about where a given standalone workflow is used.
+      properties:
+        workflow_id:
+          type: string
+          description: The workflow id that is in-use.
+        incident_workflows:
+          type: array
+          description: The id/name pairs for each incident workflow that is using the identified workflow.
+          items:
+            $ref: '#/components/schemas/NameIdPair'
+        alert_workflows:
+          type: array
+          description: The id/name pairs for each alert workflow that is using the identified workflow.
+          items:
+            $ref: '#/components/schemas/NameIdPair'
+        menu_actions:
+          type: array
+          description: The id/name pairs for each menu action that is using the identified workflow.
+          items:
+            $ref: '#/components/schemas/NameIdPair'
+    NameIdPair:
+      type: object
+      title: Name Id Pair
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+    MoogResponseListOfActionDto:
+      type: object
+      title: Moog Response List Of Action Dto
+      description: Workflow Engine API ActionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionDto'
+      required:
+        - status
+        - data
+    ActionDto:
+      type: object
+      title: Action Dto
+      description: Definition of a workflow action.
+      properties:
+        name:
+          type: string
+          description: Computer name of the action
+        displayName:
+          type: string
+          description: Display name of the action
+        description:
+          type: string
+          description: Description of the action
+        schema:
+          $ref: '#/components/schemas/ActionConfigurationSchemaDto'
+          description: The configuration schema (expected fields and types) that this action requires
+        workflowTypes:
+          type: array
+          description: Types of workflows the action can be used in
+          items:
+            $ref: '#/components/schemas/WorkflowType'
+    ActionConfigurationSchemaDto:
+      type: object
+      title: Action Configuration Schema Dto
+      description: A list of schema for all the fields of an action.
+      properties:
+        fields:
+          type: array
+          description: A list of any required schema for each action (can be empty if no config required)
+          items:
+            $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
+      required:
+        - fields
+    ActionConfigurationFieldSchemaDto:
+      type: object
+      title: Action Configuration Field Schema Dto
+      description: Schema for a field of an action.
+      properties:
+        name:
+          type: string
+          description: Computer name of the action field
+        displayName:
+          type: string
+          description: Display name of the action field
+        description:
+          type: string
+          description: Description of the action field
+        type:
+          type: string
+          description: Type of the action field (Special pre-defined types)
+    WorkflowPriorityWrapperDto:
+      type: object
+      title: Workflow Priority Wrapper Dto
+      description: Workflow update workflow priority.
+      properties:
+        id:
+          type: string
+          description: ID of the workflow
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+      required:
+        - id
+        - priority
+    WorkflowCreateWrapperDto:
+      type: object
+      title: Workflow Create Wrapper Dto
+      description: Workflow create workflow attributes.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+        status:
+          $ref: '#/components/schemas/WorkflowStatus'
+          description: The workflow status
+      required:
+        - name
+        - trigger
+        - type
+        - priority
+        - steps
+security:
+  - ApiKeyAuth: []

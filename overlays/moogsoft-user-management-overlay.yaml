@@ -1,0 +1,28 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Moogsoft User Management API
+  version: 1.0.0
+extends: openapi/moogsoft-user-management-openapi.yaml
+x-generated: '2026-08-29'
+x-method: generated
+x-source: derived from repo artifacts; the original contract is never mutated
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      profile: https://apis.io/provider/moogsoft/
+      harvested: '2026-08-29'
+      source: https://api.stoplight.io/projects/cHJqOjMxODM0MQ/branches/main/export/user-management.yaml
+      artifacts:
+        authentication: authentication/moogsoft-authentication.yml
+        conventions: conventions/moogsoft-conventions.yml
+        errors: errors/moogsoft-problem-types.yml
+        lifecycle: lifecycle/moogsoft-lifecycle.yml
+        rate_limits: rate-limits/moogsoft-rate-limits.yml
+        data_model: data-model/moogsoft-data-model.yml
+      x-agent-notes:
+        idempotency: none — no Idempotency-Key header anywhere in this contract
+        pagination: start/limit, search_after cursor on alerts and incidents; 1000-record cap per GET
+        error_envelope: '{status, message, additional[]} as application/json; not RFC 9457'
+        rate_limit_headers: none declared
+        deprecation: prose policy only — versions supported up to 6 months; no Sunset/Deprecation headers

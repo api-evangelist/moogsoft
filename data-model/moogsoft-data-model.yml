@@ -1,0 +1,266 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/ (components.schemas and id-reference fields across all 17 Moogsoft contracts)
+note: 'Derived from the published contracts. Moogsoft models a single pipeline: events arrive from collectors
+  and inbound integrations, are deduplicated into alerts, alerts are correlated into incidents by correlation
+  definitions, and incidents drive on-call notification and outbound webhooks. 133 schemas with four or
+  more properties are declared across the 17 specs.'
+entities:
+- name: Event
+  schema: WebEventDto / EventTimelineDto
+  identifier: event_id
+  key_fields:
+  - source
+  - check
+  - severity
+  - description
+  - deduplication_key
+  - time
+  - services
+  - class
+  - manager
+  source_spec: openapi/moogsoft-events-integration-openapi.yaml
+- name: Alert
+  schema: AlertDto
+  identifier: alert_id
+  key_fields:
+  - status
+  - severity
+  - severity_high_water
+  - assignee
+  - assigned_groups
+  - first_event_time
+  - last_event_time
+  - description
+  - tags
+  source_spec: openapi/moogsoft-alerts-incidents-openapi.yaml
+- name: Incident
+  schema: IncidentDto
+  identifier: incident_id
+  key_fields:
+  - status
+  - severity
+  - assignee
+  - assigned_groups
+  - description
+  - priority
+  - impact
+  - urgency
+  source_spec: openapi/moogsoft-alerts-incidents-openapi.yaml
+- name: IncidentComment
+  schema: IncidentCommentDto
+  identifier: comment_id
+  key_fields:
+  - incident_id
+  - comment
+  - user
+  - is_edited
+  - type
+  - created_at
+- name: CorrelationDefinition
+  schema: Correlation Definition API object
+  identifier: id
+  source_spec: openapi/moogsoft-config-openapi.yaml
+- name: CorrelationGroup
+  identifier: id
+  source_spec: openapi/moogsoft-config-openapi.yaml
+- name: Catalog
+  schema: Catalog object
+  identifier: id
+  source_spec: openapi/moogsoft-config-openapi.yaml
+- name: CatalogDocument
+  schema: Catalog Document object
+  identifier: documentId
+- name: MaintenanceWindow
+  identifier: id
+  source_spec: openapi/moogsoft-config-openapi.yaml
+- name: MaintenanceWindowOccurrence
+  schema: MaintenanceWindowStatDto
+  identifier: occurrence_id
+- name: Collector
+  schema: CollectorDto
+  identifier: id
+  key_fields:
+  - tenant
+  - version
+  - vector_version
+  - uptime
+  - host
+  - os
+  - enabled_plugin_count
+  source_spec: openapi/moogsoft-collectors-openapi.yaml
+- name: PluginConfig
+  identifier: id
+  source_spec: openapi/moogsoft-collectors-openapi.yaml
+- name: Workflow
+  schema: WorkflowDto
+  identifier: id
+  key_fields:
+  - name
+  - trigger
+  - type
+  - priority
+  - steps
+  - status
+  - metrics
+  source_spec: openapi/moogsoft-workflow-engine-service-openapi.yaml
+- name: Webhook
+  schema: webhooksV2 config
+  identifier: id
+  source_spec: openapi/moogsoft-webhook-service-v2-openapi.yaml
+- name: CustomIntegrationEndpoint
+  schema: Endpoint
+  identifier: id
+  key_fields:
+  - endpointName
+  - authRequired
+  - endpointUrl
+  - draftConfigV2
+  - liveConfigV2
+  - type
+  - integration
+  source_spec: openapi/moogsoft-byo-api-service-openapi.yaml
+- name: CloudWatchIntegration
+  schema: CloudwatchConfigDto
+  identifier: id
+- name: AppInsightsIntegration
+  schema: AppInsightsIntegration
+  identifier: id
+- name: PagerDutyIntegration
+  identifier: id
+- name: MetricsPolicy
+  identifier: id
+  source_spec: openapi/moogsoft-metrics-integration-openapi.yaml
+- name: User
+  schema: User API object
+  identifier: id
+  source_spec: openapi/moogsoft-user-management-openapi.yaml
+- name: Group
+  identifier: id
+- name: Role
+  identifier: id
+- name: ApiKey
+  schema: API Key object
+  identifier: keyId
+- name: View
+  identifier: id
+- name: NotificationPolicy
+  schema: notification policy object
+  identifier: id
+  source_spec: openapi/moogsoft-incident-responder-openapi.yaml
+- name: OnCallSchedule
+  schema: schedule object
+  identifier: id
+- name: AutoClosePolicy
+  schema: AutoClosePolicyDto
+  identifier: id
+- name: ExternalSystemLink
+  schema: ExternalSystemDto
+  key_fields:
+  - integration_id
+  - external_name
+  - external_id
+  - external_link
+  - integration_name
+  - integration_type
+relationships:
+- from: Alert
+  to: Event
+  type: has_many
+  via: deduplication_key
+  note: Events dedupe into a single alert on the dedupe key.
+- from: Incident
+  to: Alert
+  type: has_many
+  via: correlation
+  note: Correlation definitions group alerts into an incident.
+- from: Incident
+  to: IncidentComment
+  type: has_many
+  via: incident_id
+- from: IncidentComment
+  to: User
+  type: belongs_to
+  via: user.id
+- from: Incident
+  to: User
+  type: belongs_to
+  via: assignee
+- from: Incident
+  to: Group
+  type: has_many
+  via: assigned_groups
+- from: Alert
+  to: User
+  type: belongs_to
+  via: assignee
+- from: Alert
+  to: ExternalSystemLink
+  type: has_many
+  via: integration_id
+- from: Incident
+  to: ExternalSystemLink
+  type: has_many
+  via: integration_id
+- from: CorrelationGroup
+  to: CorrelationDefinition
+  type: has_many
+  via: identifier
+- from: Catalog
+  to: CatalogDocument
+  type: has_many
+  via: catalog id
+- from: MaintenanceWindow
+  to: MaintenanceWindowOccurrence
+  type: has_many
+  via: window_id
+- from: Collector
+  to: PluginConfig
+  type: has_many
+  via: collector id
+- from: Workflow
+  to: WorkflowAction
+  type: has_many
+  via: steps
+- from: User
+  to: ApiKey
+  type: has_many
+  via: userId
+- from: User
+  to: Group
+  type: has_many
+  via: group membership
+- from: Group
+  to: Role
+  type: has_many
+  via: role assignment
+- from: ApiKey
+  to: User
+  type: belongs_to
+  via: creating user
+  note: A key can never carry more permission than its creator.
+- from: OnCallSchedule
+  to: User
+  type: has_many
+  via: schedule rotation
+- from: NotificationPolicy
+  to: OnCallSchedule
+  type: has_many
+  via: escalation steps
+- from: Webhook
+  to: Incident
+  type: belongs_to
+  via: trigger
+  note: Outbound webhooks fire on incident and alert lifecycle changes.
+- from: CustomIntegrationEndpoint
+  to: Event
+  type: has_many
+  via: mapping config
+- from: MetricsPolicy
+  to: Alert
+  type: has_many
+  via: anomaly detection
+identifier_conventions:
+  note: Identifiers are opaque and unprefixed. Alerts use alert_id, incidents incident_id, everything
+    else a bare id. Field naming is inconsistent across services — the Alerts/Incidents API mixes snake_case
+    (comment_id, incident_id) and camelCase (commentId, incidentId) aliases in the same schema.

@@ -1,0 +1,531 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: UI Services API
+  description: APIs for handling features requests and some UI driven queries.
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/moogsoft-cloud/en/apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Moogsoft Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v2/features:
+    get:
+      summary: Features
+      description: Get all feature flags per user.
+      parameters:
+        - name: authorization
+          in: header
+          description: Leave this value blank. For internal use only.
+          schema:
+            type: string
+        - name: role
+          in: query
+          description: View the feature flags for this user type.
+          required: true
+          schema:
+            type: string
+            example: operator
+          examples:
+            default:
+              value: operator
+        - name: license
+          in: query
+          description: User license type.
+          required: true
+          schema:
+            $ref: '#/components/schemas/LicenseType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeaturesResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSplitResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+  /v1/audits:
+    get:
+      description: Get audit log entries for individual services or items by their ID
+      parameters:
+        - name: startTime
+          in: query
+          schema:
+            type: string
+        - name: endTime
+          in: query
+          schema:
+            type: string
+        - name: offset
+          in: query
+          schema:
+            type: string
+        - name: serviceName
+          in: query
+          description: Service to retrieve logs for.
+          schema:
+            $ref: '#/components/schemas/ServiceName'
+        - name: recordId
+          in: query
+          description: recordId/uuid of individual item to pull audits for. Can be alert/incident ID or uuid of a config item.
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: number of items to return per query
+          schema:
+            type: string
+        - name: sortOrder
+          in: query
+          description: sort order by timestamp
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+  /v1/event-deltas:
+    get:
+      description: 'For a given alert ID or a dedupe key, retrieve a breakdown of the different events. '
+      parameters:
+        - name: alertId
+          in: query
+          description: The alert ID to pull events for.
+          schema:
+            type: string
+        - name: dedupeKey
+          in: query
+          description: The dedupe key for all events to filter on.
+          schema:
+            type: string
+        - name: startTime
+          in: query
+          description: The timestamp (in epoch time) marking the beginning of the range to retrieve events for.
+          schema:
+            type: string
+            default: The last 24 hours
+            example: 1720083965000
+          examples:
+            default:
+              value: 1720083965000
+        - name: endTime
+          in: query
+          description: The timestamp (in epoch time) marking the end of the range to retrieve events for.
+          schema:
+            type: string
+            example: 1720083965000
+          examples:
+            default:
+              value: 1720083965000
+        - name: direction
+          in: query
+          description: The order to use when returning the events.
+          schema:
+            $ref: '#/components/schemas/SortOrder'
+        - name: skip
+          in: query
+          description: The number of events to skip before returning the results.
+          schema:
+            type: string
+            default: 0
+        - name: limit
+          in: query
+          description: The maximum number of events to return.
+          schema:
+            type: string
+            default: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDeltasResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeoutResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+  /v2/license/info:
+    get:
+      description: Returns the current license info for the instance of Apex AIOps Incident Management
+      responses:
+        '200':
+          description: Succesful return of license
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Team Trial
+                      class:
+                        type: string
+                        example: trial
+                      expiry:
+                        type: object
+                        properties:
+                          daysLeft:
+                            type: number
+                            example: 10
+                          expirationDate:
+                            type: string
+                            example: '2024-07-01'
+                xml:
+                  name: main
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Team Trial
+                      class:
+                        type: string
+                        example: trial
+                      expiry:
+                        type: object
+                        properties:
+                          daysLeft:
+                            type: number
+                            example: 10
+                          expirationDate:
+                            type: string
+                            example: '2024-07-01'
+                xml:
+                  name: main
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Unable to find record in SalesForce
+                xml:
+                  name: main
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Unable to find record in SalesForce
+                xml:
+                  name: main
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+tags:
+  - name: User
+    description: Endpoints
+externalDocs:
+  url: 'https://docs.moogsoft.com/moogsoft-cloud/en/apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+  schemas:
+    LicenseType:
+      type: string
+      enum:
+        - enterprise
+        - team
+        - free
+      xml:
+        name: LicenseType
+    FeaturesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            Feature1:
+              type: string
+              example: 'off'
+            Feature2:
+              type: string
+              example: 'on'
+      xml:
+        name: FeaturesResponse
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    NoSplitResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: failure
+        message:
+          type: string
+          example: Split not initialised
+      xml:
+        name: NoSplitResponse
+    ServiceName:
+      type: string
+      enum:
+        - prc-model
+        - prc-features
+        - prc-training
+        - prc-labels
+        - automation
+        - ums-user
+        - ums-apikey
+        - ums-sso
+        - ums-role
+        - ums-group
+        - appinsights
+        - cloudwatch
+        - datadog
+        - sig_alert_history
+        - maintenance-windows
+        - alerts
+        - incidents
+        - incident-watchers
+        - catalogs
+        - workflows
+        - correlation-engine
+        - correlation-engine-webserver
+        - webhooks
+        - notification-policies
+        - on-call-schedules
+        - on-call-notifications-sent
+        - on-call-notifications-acknowledged
+        - on-call-open-issues
+        - pagerduty
+        - byoapi
+        - metrics-policies
+      xml:
+        name: ServiceName
+    SortOrder:
+      type: string
+      enum:
+        - asc
+        - desc
+      xml:
+        name: SortOrder
+    AuditResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+            result:
+              type: array
+              items:
+                type: object
+                properties:
+                  recordId:
+                    type: string
+                    example: automation-config
+                  service:
+                    type: string
+                    example: automation
+                  description:
+                    type: string
+                    example: Updating Auto-Close Automation configuration
+                  updatedValues:
+                    type: object
+                    properties:
+                      closeResolvedIncidentsInSeconds:
+                        type: number
+                        example: 3600
+                      closeAlertsWhenAllIncidentsClosed:
+                        type: boolean
+                        example: true
+                      closeIncidentsInSeconds:
+                        type: number
+                        example: 604800
+                      closeAlertsInSeconds:
+                        type: number
+                        example: 259200
+                      closeResolvedAlertsInSeconds:
+                        type: number
+                        example: 1800
+                  details: {}
+                  tenant:
+                    type: string
+                    example: palpatine
+                  timestamp:
+                    type: number
+                    example: 1687357919086
+                  username:
+                    type: string
+                    example: System
+                  originalValues: {}
+      xml:
+        name: AuditResponse
+    EventDeltasResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+            result:
+              type: array
+              items:
+                type: object
+                properties:
+                  contentType:
+                    type: string
+                    example: incremental
+                  alertId:
+                    type: number
+                    example: 2436002
+                  content:
+                    type: object
+                    properties:
+                      time:
+                        type: number
+                        example: 1723585970835
+                      tags:
+                        type: object
+                        properties:
+                          cluster:
+                            type: string
+                            example: eks-toolington-us-west-2-01
+                          service:
+                            type: string
+                            example: Provzilla
+                          LogStream:
+                            type: string
+                            example: 'https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252Fcirm-dev-dev-metrics'
+                          env:
+                            type: string
+                            example: toolington
+                          integration_type:
+                            type: string
+                            example: eventapi
+                  eventTime:
+                    type: number
+                    example: 1723585970835
+                  dedupeKey:
+                    type: string
+                    example: 'provzilla::cirm-dev-dev-metrics::provzillaerrorthrown'
+      xml:
+        name: EventDeltasResponse
+    TimeoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Timeout Error
+      xml:
+        name: TimeoutResponse
+security:
+  - ApiKeyAuth: []

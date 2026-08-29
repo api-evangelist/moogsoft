@@ -1,0 +1,473 @@
+openapi: 3.1.0
+info:
+  version: 3.0.25-5d76381-134
+  title: service API
+servers:
+  - url: 'http://localhost:3030'
+    description: Auto generated value
+  - url: 'http://0.0.0.0:3030'
+    description: Auto generated value
+paths:
+  /datum-index-suggestions:
+    get:
+      tags:
+        - Datum Index Suggestions Resource
+      summary: Get possible autocomplete suggestions for the particular field and value
+      description: Get possible autocomplete suggestions for the particular field and value
+      parameters:
+        - name: limit
+          in: query
+          description: The maximum number of suggestions to return (by default this is 10)
+          schema:
+            type: integer
+            format: int32
+            default: '10'
+        - name: name
+          in: query
+          description: 'The field name you want to autocomplete the value for (fully_qualified_moob, metric, source). The default is fully_qualified_moob'
+          required: true
+          schema:
+            type: string
+            pattern: \S
+            default: fully_qualified_moob
+        - name: value
+          in: query
+          description: The value that you want to try and autocomplete
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+      servers:
+        - url: 'http://localhost:3030'
+          description: Auto generated value
+        - url: 'http://0.0.0.0:3030'
+          description: Auto generated value
+  /datum-indexes:
+    post:
+      tags:
+        - Datum Indexes Resource
+      summary: Get a series of datums in time order based to the input filters (POST because filter can be very long)
+      description: Get a series of datums in time order based on the input filters (POST because filter can be very long)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatumIndexRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+        '400':
+          description: Bad Request
+      servers:
+        - url: 'http://localhost:3030'
+          description: Auto generated value
+        - url: 'http://0.0.0.0:3030'
+          description: Auto generated value
+    get:
+      tags:
+        - Datum Indexes Resource
+      summary: Get a series of datums in time order based to the input filters.
+      description: Get a series of datums in time order based to the input filters.
+      parameters:
+        - name: direction
+          in: query
+          description: The direction you want to sort (ASC or DESC)
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/SortByDirection'
+              - default: DESC
+        - name: filter
+          in: query
+          description: The filter to use
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The maximum number of rollups to return
+          schema:
+            type: integer
+            format: int32
+            default: '100'
+        - name: sortBy
+          in: query
+          description: 'Parameter to specify if you want to sort by number of datums (DATUMS), metric name (METRIC) or last updated (LAST_UPDATED)'
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/DatumIndexSortBy'
+              - default: DATUMS
+        - name: start
+          in: query
+          description: The offset of results to skip
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+      servers:
+        - url: 'http://localhost:3030'
+          description: Auto generated value
+        - url: 'http://0.0.0.0:3030'
+          description: Auto generated value
+  /datums:
+    get:
+      tags:
+        - Datums Resource
+      summary: Get a series of datums in time order based to the input filters
+      description: Get a series of datums in time order based to the input filters
+      parameters:
+        - name: User-Agent
+          in: header
+          schema:
+            type: string
+        - name: end_time
+          in: query
+          description: 'The UTC end time of rollups to filter on, in ms or s. Default is the current time'
+          schema:
+            type: integer
+            format: int64
+        - name: fully_qualified_moob
+          in: query
+          description: 'The full name of the managed object associated with a metric. The full name is in the format <i>namespace:managed-object:archive</i>'
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: query
+          description: The key name to filter on
+          schema:
+            type: string
+        - name: metric
+          in: query
+          description: The metric name to filter on
+          required: true
+          schema:
+            type: string
+        - name: sampled
+          in: query
+          description: Return sampled or raw metric data
+          schema:
+            type: boolean
+            default: 'true'
+        - name: source
+          in: query
+          description: The source name to filter on
+          required: true
+          schema:
+            type: string
+        - name: start_time
+          in: query
+          description: 'The UTC start time of rollups to filter on, in ms or s. Default is one hour before the current time'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimDatumResultsDto'
+      servers:
+        - url: 'http://localhost:3030'
+          description: Auto generated value
+        - url: 'http://0.0.0.0:3030'
+          description: Auto generated value
+  /rollups:
+    get:
+      tags:
+        - Rollup Resource
+      summary: Get a series of metric rollups in time order based on the input filters
+      description: Get a series of metric rollups in time order based on the input filters
+      parameters:
+        - name: end_time
+          in: query
+          description: 'The UTC end time of rollups to filter on, in ms or s. Default is the current time'
+          schema:
+            type: integer
+            format: int64
+        - name: fully_qualified_moob
+          in: query
+          description: 'The full name of the managed object associated with a metric. The full name is in the format <i>namespace:managed-object:archive</i>'
+          required: true
+          schema:
+            type: string
+        - name: granularity
+          in: query
+          description: 'The granularity level to aggregate on. You can specify <b>minute</b>, <b>hour</b>, <b>day</b>, <b>week</b>, or <b>year</b>. The granularity should be smaller than the total time window.<br>If you want to get raw data points, use <b>GET datums</b> in the Rollup API'
+          required: true
+          schema:
+            $ref: '#/components/schemas/Granularity'
+        - name: key
+          in: query
+          description: The key name to filter on
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: The maximum number of rollups to return. Defaults to 100.
+          schema:
+            type: integer
+            format: int32
+            default: '100'
+        - name: metric
+          in: query
+          description: The metric name to filter on
+          required: true
+          schema:
+            type: string
+        - name: source
+          in: query
+          description: The source name to filter on
+          required: true
+          schema:
+            type: string
+        - name: start_time
+          in: query
+          description: 'The UTC start time of rollups to filter on, in ms or s. Default is one hour before the current time'
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimRollupResultsDto'
+      servers:
+        - url: 'http://localhost:3030'
+          description: Auto generated value
+        - url: 'http://0.0.0.0:3030'
+          description: Auto generated value
+components:
+  schemas:
+    DatumIndexRequestDto:
+      type: object
+      properties:
+        sortBy:
+          $ref: '#/components/schemas/DatumIndexSortBy'
+        direction:
+          $ref: '#/components/schemas/SortByDirection'
+        limit:
+          type: integer
+          format: int32
+        start:
+          type: integer
+          format: int32
+        filter:
+          type: string
+    DatumIndexSortBy:
+      type: string
+      enum:
+        - DATUMS
+        - METRIC
+        - LAST_UPDATED
+    SortByDirection:
+      type: string
+      enum:
+        - ASC
+        - DESC
+    GetSlimDatumIndexResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumIndexDto'
+        total:
+          type: integer
+          format: int64
+        source:
+          type: string
+        alternateResults:
+          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+    SlimDatumIndexDto:
+      type: object
+      properties:
+        fully_qualified_moob:
+          type: string
+          x-deprecated: true
+        metric:
+          type: string
+        source:
+          type: string
+          x-deprecated: true
+        key:
+          type: string
+          x-deprecated: true
+        tags:
+          type: object
+        label:
+          type: string
+        detector:
+          type: string
+        uuid:
+          type: string
+          x-deprecated: true
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+    Instant:
+      type: string
+      format: date-time
+      examples:
+        - '2022-03-10T16:15:50Z'
+    GetSlimDatumResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumDto'
+        total:
+          type: integer
+          format: int64
+    SlimDatumDto:
+      type: object
+      properties:
+        tags:
+          type: object
+        engine:
+          $ref: '#/components/schemas/Engine'
+        data: {}
+        instance:
+          type: string
+        timed_at_ms:
+          type: integer
+          format: int64
+        unit:
+          type: string
+        uuid:
+          type: string
+        additional_data:
+          type: object
+        datasource:
+          type: string
+    Engine:
+      type: object
+      properties:
+        median:
+          type: number
+          format: double
+        highSigma:
+          type: number
+          format: double
+        lowSigma:
+          type: number
+          format: double
+        highThreshold:
+          type: number
+          format: double
+        lowThreshold:
+          type: number
+          format: double
+        confidence:
+          type: number
+          format: double
+        severity:
+          type: integer
+          format: int64
+        learning:
+          type: boolean
+        DETECTOR_CLASS:
+          type: string
+        holdfor:
+          type: integer
+          format: int32
+        vector:
+          type: integer
+          format: int32
+        sigma:
+          type: number
+          format: double
+        stateful:
+          type: boolean
+    Granularity:
+      type: string
+      enum:
+        - RAW
+        - MINUTE
+        - HOUR
+        - DAY
+        - WEEK
+        - MONTH
+        - YEAR
+    GetSlimRollupResultsDto:
+      type: object
+      properties:
+        fully_qualified_moob:
+          type: string
+          x-deprecated: true
+        metric:
+          type: string
+        source:
+          type: string
+          x-deprecated: true
+        key:
+          type: string
+          x-deprecated: true
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        lastTimestamp:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimRollupDto'
+        total:
+          type: integer
+          format: int64
+    SlimRollupDto:
+      type: object
+      properties:
+        mean:
+          type: number
+          format: double
+        count:
+          type: integer
+          format: int64
+        sigma:
+          type: number
+          format: double
+        median:
+          type: number
+          format: double
+        low:
+          type: number
+          format: double
+        high:
+          type: number
+          format: double
+        quartile_1:
+          type: number
+          format: double
+        quartile_3:
+          type: number
+          format: double
+        median_absolute_deviation:
+          type: number
+          format: double
+        timed_at_ms:
+          type: integer
+          format: int64
+        datasource:
+          type: string

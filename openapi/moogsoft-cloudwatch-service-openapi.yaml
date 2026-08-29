@@ -1,0 +1,1360 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Apex AIOps Incident Management Cloudwatch API
+  description: API for Apex AIOps Incident Management Cloudwatch Service
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  /v2/integrations/aws:
+    get:
+      tags:
+        - cloudwatch
+      summary: List all existing cloudwatch integrations
+      description: List all existing cloudwatch integrations that have been setup
+      operationId: listCloudwatchV2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCloudwatchConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+    post:
+      tags:
+        - cloudwatch
+      summary: Create a new cloudwatch integration
+      description: Create a new cloudwatch integration
+      operationId: createCloudwatchV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseCloudwatchConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchConfigDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  /v2/integrations/aws/account:
+    get:
+      tags:
+        - cloudwatch
+      summary: Get Moogsoft AWS accountID
+      description: Get Moogsoft AWS accountID for setting up a cloudwatch integration
+      operationId: cloudwatchAccountIdV2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchAccountDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  /v2/integrations/aws/credentials/test:
+    post:
+      tags:
+        - cloudwatch
+      summary: Test cloudwatch credentials
+      description: Test if the AWS credentianls are valid for the regions
+      operationId: testCloudwatchV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudwatchTestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchTestResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v2/integrations/aws/{id}':
+    patch:
+      tags:
+        - cloudwatch
+      summary: Update a cloudwatch integration
+      description: Update an existing cloudwatch integration
+      operationId: updateCloudwatchV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseCloudwatchConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    delete:
+      tags:
+        - cloudwatch
+      summary: Delete a cloudwatch integration
+      description: Delete an existing cloudwatch integration
+      operationId: deleteCloudwatchV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v2/integrations/aws/{id}/detectors':
+    post:
+      tags:
+        - cloudwatch
+      summary: Update cloudwatch detector configuration
+      description: Update detector configuration for cloudwatch collected metrics
+      operationId: updateCloudwatchDetectorsV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricConfigDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    get:
+      tags:
+        - cloudwatch
+      summary: Get cloudwatch detector configuration
+      description: Get a list of detector configuration for cloudwatch collected metrics
+      operationId: getCloudwatchDetectorsV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCloudwatchDetectorConfig'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v2/integrations/aws/{id}/status':
+    get:
+      tags:
+        - cloudwatch
+      summary: Status for a cloudwatch integration
+      description: Get the status for an existing cloudwatch integration
+      operationId: getCloudwatchStatusV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchStatusDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v1/integrations/aws/{name}':
+    patch:
+      tags:
+        - cloudwatch
+      summary: Update a cloudwatch integration
+      description: Update an existing cloudwatch integration
+      operationId: updateCloudwatch
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseCloudwatchConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    delete:
+      tags:
+        - cloudwatch
+      summary: Delete a cloudwatch integration
+      description: Delete an existing cloudwatch integration
+      operationId: deleteCloudwatch
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v1/integrations/aws/{name}/status':
+    get:
+      tags:
+        - cloudwatch
+      summary: Status for a cloudwatch integration
+      description: Get the status for an existing cloudwatch integration
+      operationId: getCloudwatchStatus
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchStatusDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  /v1/integrations/aws/account:
+    get:
+      tags:
+        - cloudwatch
+      summary: Get Moogsoft AWS accountID
+      description: Get Moogsoft AWS accountID for setting up a cloudwatch integration
+      operationId: cloudwatchAccountId
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchAccountDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  /v1/integrations/aws:
+    get:
+      tags:
+        - cloudwatch
+      summary: List all existing cloudwatch integrations
+      description: List all existing cloudwatch integrations that have been setup
+      operationId: listCloudwatch
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCloudwatchConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+    post:
+      tags:
+        - cloudwatch
+      summary: Create a new cloudwatch integration
+      description: Create a new cloudwatch integration
+      operationId: createCloudwatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseCloudwatchConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchConfigDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v1/integrations/aws/{name}/detectors':
+    post:
+      tags:
+        - cloudwatch
+      summary: Update cloudwatch detector configuration
+      description: Update detector configuration for cloudwatch collected metrics
+      operationId: updateCloudwatchDetectors
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetricConfigDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    get:
+      tags:
+        - cloudwatch
+      summary: Get cloudwatch detector configuration
+      description: Get a list of detector configuration for cloudwatch collected metrics
+      operationId: getCloudwatchDetectors
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCloudwatchDetectorConfig'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  /v1/integrations/aws/credentials/test:
+    post:
+      tags:
+        - cloudwatch
+      summary: Test cloudwatch credentials
+      description: Test if the AWS credentianls are valid for the regions
+      operationId: testCloudwatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudwatchTestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCloudwatchTestResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+tags:
+  - name: cloudwatch
+    description: Endpoints relating to cloudwatch operations
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Apex AIOps Incident Management Cloudwatch API
+      name: apiKey
+      in: header
+  schemas:
+    MoogResponseListOfCloudwatchConfigDto:
+      type: object
+      title: Moog Response List Of Cloudwatch Config Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchConfigDto'
+      required:
+        - status
+        - data
+    CloudwatchConfigDto:
+      type: object
+      title: CloudwatchConfig
+      properties:
+        name:
+          type: string
+        aws_credential_name:
+          type: string
+          pattern: \S
+        aws_regions:
+          type: array
+          items:
+            type: string
+        service_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchServices'
+        cw_custom_metrics:
+          type: boolean
+        cw_alarms:
+          type: boolean
+        cw_source_prepend:
+          type: boolean
+        id:
+          type: string
+          description: Unique ID of the configuration
+          readOnly: true
+        status:
+          type: string
+          description: Status of the configuration
+          readOnly: true
+        created_by:
+          type: string
+          description: User ID who created the configuration
+          readOnly: true
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the configuration was created
+        updated_by:
+          type: string
+          description: User ID who last updated the configuration
+          readOnly: true
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+          description: When the configuration was last updated
+      required:
+        - aws_credential_name
+        - aws_regions
+        - service_list
+    CloudwatchServices:
+      type: string
+      enum:
+        - Cassandra
+        - ApiGateway
+        - AppStream
+        - AppSync
+        - Athena
+        - Billing
+        - Chatbot
+        - ACMPrivateCA
+        - CloudFront
+        - CloudHSM
+        - CloudSearch
+        - Logs
+        - CodeBuild
+        - Cognito
+        - Connect
+        - DataSync
+        - DMS
+        - DX
+        - DocDB
+        - DynamoDB
+        - EC2
+        - EC2Spot
+        - AutoScaling
+        - ElasticBeanstalk
+        - EBS
+        - ECS
+        - EFS
+        - ElasticInference
+        - ApplicationELB
+        - ELB
+        - NetworkELB
+        - ElasticTranscoder
+        - ElastiCache
+        - ES
+        - ElasticMapReduce
+        - MediaConnect
+        - MediaConvert
+        - MediaPackage
+        - MediaTailor
+        - Events
+        - FSx
+        - GameLift
+        - Glue
+        - GroundStation
+        - Inspector
+        - IoT
+        - IoTAnalytics
+        - ThingsGraph
+        - KMS
+        - KinesisAnalytics
+        - Firehose
+        - Kinesis
+        - KinesisVideo
+        - Lambda
+        - Lex
+        - ML
+        - Kafka
+        - AmazonMQ
+        - Neptune
+        - OpsWorks
+        - Polly
+        - QLDB
+        - Redshift
+        - RDS
+        - Robomaker
+        - Route53
+        - SageMaker
+        - SDKMetrics
+        - ServiceCatalog
+        - DDoSProtection
+        - SES
+        - SNS
+        - SQS
+        - S3
+        - SWF
+        - States
+        - StorageGateway
+        - Textract
+        - Transfer
+        - Translate
+        - TrustedAdvisor
+        - NATGateway
+        - TransitGateway
+        - VPN
+        - WAF
+        - WorkMail
+        - WorkSpaces
+        - SSM-RunCommand
+        - S3/Storage-Lens
+      title: Cloudwatch Services
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: Apex AIOps Incident Management Cloudwatch API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Apex AIOps Incident Management Cloudwatch API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    BaseCloudwatchConfigDto:
+      type: object
+      title: Base Cloudwatch Config Dto
+      properties:
+        name:
+          type: string
+        aws_credential_name:
+          type: string
+          pattern: \S
+        aws_regions:
+          type: array
+          items:
+            type: string
+        service_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchServices'
+        cw_custom_metrics:
+          type: boolean
+        cw_alarms:
+          type: boolean
+        cw_source_prepend:
+          type: boolean
+      required:
+        - aws_credential_name
+        - aws_regions
+        - service_list
+    MoogResponseCloudwatchConfigDto:
+      type: object
+      title: Moog Response Cloudwatch Config Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/CloudwatchConfigDto'
+      required:
+        - status
+        - data
+    MoogResponseCloudwatchAccountDto:
+      type: object
+      title: Moog Response Cloudwatch Account Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchAccountDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/CloudwatchAccountDto'
+      required:
+        - status
+        - data
+    CloudwatchAccountDto:
+      type: object
+      title: Cloudwatch Account Dto
+      properties:
+        accountId:
+          type: string
+    CloudwatchTestDto:
+      type: object
+      title: Cloudwatch Test Dto
+      properties:
+        aws_credential_name:
+          type: string
+          pattern: \S
+        aws_regions:
+          type: array
+          items:
+            type: string
+      required:
+        - aws_credential_name
+        - aws_regions
+    MoogResponseCloudwatchTestResponse:
+      type: object
+      title: Moog Response Cloudwatch Test Response
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchTestResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/CloudwatchTestResponse'
+      required:
+        - status
+        - data
+    CloudwatchTestResponse:
+      type: object
+      title: Cloudwatch Test Response
+      properties:
+        success:
+          type: boolean
+        err:
+          $ref: '#/components/schemas/CloudwatchTestError'
+        validationResult:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        warning:
+          type: string
+    CloudwatchTestError:
+      type: object
+      title: Cloudwatch Test Error
+      properties:
+        msg:
+          type: string
+        regions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchRegionError'
+    CloudwatchRegionError:
+      type: object
+      title: Cloudwatch Region Error
+      properties:
+        region:
+          type: string
+        exists:
+          type: boolean
+        msg:
+          type: string
+    MetricConfigDto:
+      type: object
+      title: Metric Config Dto
+      properties:
+        uuid:
+          type: string
+        fqm:
+          type: string
+        metric:
+          type: string
+        detector:
+          type: string
+        config:
+          type: object
+      required:
+        - metric
+        - config
+    MoogResponseListOfCloudwatchDetectorConfig:
+      type: object
+      title: Moog Response List Of Cloudwatch Detector Config
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchDetectorConfig response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchDetectorConfig'
+      required:
+        - status
+        - data
+    CloudwatchDetectorConfig:
+      type: object
+      title: Cloudwatch Detector Config
+      properties:
+        metric:
+          type: string
+        fully_qualified_moob:
+          type: string
+        uuid:
+          type: string
+        version:
+          type: string
+        detector:
+          type: object
+    MoogResponseCloudwatchStatusDto:
+      type: object
+      title: Moog Response Cloudwatch Status Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchStatusDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/CloudwatchStatusDto'
+      required:
+        - status
+        - data
+    CloudwatchStatusDto:
+      type: object
+      title: Cloudwatch Status Dto
+      properties:
+        name:
+          type: string
+        regions:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/CloudwatchRegionStatus'
+    CloudwatchRegionStatus:
+      type: object
+      title: Cloudwatch Region Status
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+security:
+  - ApiKeyAuth: []

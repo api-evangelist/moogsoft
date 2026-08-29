@@ -1,0 +1,95 @@
+generated: '2026-08-29'
+method: searched
+source: https://docs.moogsoft.com/moogsoft-cloud/en/what-s-new.html
+url: https://docs.moogsoft.com/moogsoft-cloud/en/what-s-new.html
+scheme: dated feature notices grouped by year and month, each row linking to the documentation topic
+format: html
+machine_readable: false
+note: Moogsoft publishes a dated "What's new" product-notices page rather than a per-API changelog. Entries
+  are feature-level and link to docs topics; they do not name the API version or the endpoints affected,
+  so an integrator cannot tell from the changelog whether a contract changed. The most recent entry is
+  2025-05-30 — no product notice has been added in the 15 months since.
+current_versions:
+  note: Contract versions are declared per service in info.version.
+  services:
+    alerts-incidents: 3.0.0
+    config: 4.0.0
+    collector: 1.1.0
+    webhook: 2.0.0
+    pagerduty: 2.0.0
+    metrics: 1.3.1
+    workflow-engine: 1.3.0
+    user-management: 1.0.0
+    azure-app-insights: 1.0.1
+    cloudwatch: 1.0.0
+    events-integration: 1.0.0
+    on-call: 1.0.0
+    probable-root-cause: 1.0.0
+    similar-incidents: 1.0.0
+    ui-services: 1.0.0
+    create-your-own-integration: 1.0.0
+    rollup-service: 3.0.25-5d76381-134
+entries:
+- date: '2025-05-30'
+  title: Updates to determining list similarity in correlation
+  breaking: false
+  api_affected: Config API (correlation definitions)
+- date: '2025-05-01'
+  title: Standalone Workflows — run standalone workflows with the API and from an Actions Menu action
+  breaking: false
+  api_affected: Workflow Engine API
+- date: '2025-04-29'
+  title: Support for OAuth 2.0 Client Credentials in the external credential store
+  breaking: false
+  api_affected: Config API (credentials)
+- date: '2025-04-29'
+  title: Range and regex matching for the Query Catalog workflow action
+  breaking: false
+  api_affected: Workflow Engine API
+- date: '2025-04-17'
+  title: Workflow actions no longer escape control characters
+  breaking: true
+  api_affected: Workflow Engine API
+  note: Behaviour change in existing workflow actions.
+- date: '2025-03-19'
+  title: Updated inbound integrations flow
+  breaking: false
+- date: '2025-03-13'
+  title: System-generated API keys shown in API Key Management
+  breaking: false
+  api_affected: User Management API
+- date: '2025-01-28'
+  title: Auto-Close Policies
+  breaking: false
+  api_affected: Alerts/Incidents API (autoclose-policy, autoclose-config)
+- date: '2025-01-28'
+  title: Incident resolution flow
+  breaking: false
+  api_affected: Alerts/Incidents API
+- date: '2025-01-28'
+  title: Probable Root Cause
+  breaking: false
+  api_affected: Probable Root Cause API
+- date: '2025-01-16'
+  title: Replace data catalogs seamlessly
+  breaking: false
+  api_affected: Config API (catalogs)
+- date: '2025-01-15'
+  title: Change in functionality of the IN operator and introduction of LIKE
+  breaking: true
+  api_affected: filter expressions across Alerts/Incidents and Config
+- date: '2024-11-18'
+  title: Exclusive support for OAuth 2.0 password grant type in webhook endpoints
+  breaking: true
+  api_affected: Webhook API
+- date: '2024-05-21'
+  title: Application rebranding — Moogsoft becomes APEX AIOps Incident Management
+  breaking: false
+- date: '2024-04-25'
+  title: Alert Workflow, Webhook Endpoints and Workflow Changes filter
+  breaking: false
+  api_affected: Workflow Engine API, Webhook API
+- date: '2023-12-13'
+  title: Assign permissions to API keys
+  breaking: false
+  api_affected: User Management API

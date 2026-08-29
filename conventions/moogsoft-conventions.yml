@@ -1,0 +1,148 @@
+generated: '2026-08-29'
+method: searched
+source: https://api.docs.moogsoft.com/docs/latest/branches/main/f86595eca2b25-request-requirements, https://api.docs.moogsoft.com/docs/latest/branches/main/8ae0406b4fb96-authentication,
+  https://api.docs.moogsoft.com/docs/latest/branches/main/1sy0hr6odnj10-incident-management-api-documentation,
+  https://api.docs.moogsoft.com/docs/latest/branches/main/eb1492ed9496e-api-license-and-disclaimer, and
+  openapi/
+base_url:
+  production: https://api.moogsoft.ai
+  development: https://api.dev.moogsoft.cloud
+  note: Both hosts are declared in servers[] on 16 of the 17 contracts. The Rollup Service contract ships
+    development servers (http://localhost:3030) instead — a publishing defect on Moogsoft's side, not
+    a different product.
+auth:
+  style: api-key-header
+  header: apiKey
+  scheme_name: ApiKeyAuth
+  alternative: Basic-style credentials embedded in the URL as username:api_key@host, documented on the
+    Authentication page.
+  permissions: Keys inherit the creating user's role and permissions and cannot exceed them. GET needs
+    Read Only; POST, PATCH and DELETE need Full Access on the feature area.
+  see: authentication/moogsoft-authentication.yml
+operation_classes:
+  source: https://api.docs.moogsoft.com/docs/latest/branches/main/1sy0hr6odnj10-incident-management-api-documentation
+  safe: All GET operations.
+  advanced: POST, PATCH and DELETE. Moogsoft warns these immediately change data and platform behaviour
+    — for example PATCHing or DELETEing a correlation definition immediately changes how the instance
+    correlates alerts and creates incidents.
+  note: This is a provider-published action-class taxonomy and maps cleanly onto agent consequence tiers.
+idempotency:
+  supported: false
+  header: null
+  evidence: No Idempotency-Key header, no idempotency key parameter, and no idempotency language in any
+    of the 17 contracts or in the documentation.
+  implication: A retried POST can create a duplicate integration, workflow, catalog document, user or
+    API key. Agents must de-duplicate client-side before retrying a write.
+pagination:
+  style: offset-and-cursor
+  params:
+  - name: start
+    description: Zero-based offset into the result set.
+  - name: limit
+    description: Page size.
+  - name: offset
+    description: Used on some collector and config list operations.
+  - name: search_after
+    description: Cursor for deep paging on alerts and incidents (ListAlertsRequest / ListIncidentsRequest).
+  response_fields:
+  - result
+  - count
+  - search_after
+  hard_cap:
+    records: 1000
+    quote: Incident Management Engineering has adopted a policy of limiting GET requests to a maximum
+      of 1000 records. You can retrieve all records, but you should use multiple iterative requests to
+      retrieve large data sets.
+    docs: https://api.docs.moogsoft.com/docs/latest/branches/main/1sy0hr6odnj10-incident-management-api-documentation
+filtering:
+  styles:
+  - JSON filter objects (json_filter)
+  - SQL-like filter expressions
+  - keyword search
+  validation_endpoints:
+  - POST /v1/alert-filters/validate style validate operations on alerts, events and workflows
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/6834d6bf15098-filter-alerts-and-incidents-using-sql-like-filters
+field_selection:
+  supported: true
+  param: fields
+  note: Alerts and incidents list requests accept a fields array to project a subset of columns.
+dry_run_mode:
+  supported: true
+  operations:
+  - testEventWorkflow
+  - testEventWorkflows
+  - validateEventWorkflow
+  - validateEventFilter
+  - testWebhookV2
+  - previewWebhookV2
+  - testCloudwatch
+  - test-workflows operations in the Workflow Engine API
+  note: Moogsoft ships real rehearsal endpoints for the two highest-consequence write surfaces — workflows
+    and outbound webhooks — so an agent can evaluate a change before applying it.
+reversibility:
+  grade: documented
+  summary: Some destructive actions have an explicit reversal path and some have none. Scheduled maintenance
+    windows can be cancelled or skipped per occurrence, and API keys can be revoked. Deletes of catalogs,
+    catalog documents, correlation definitions, correlation groups, workflows, integrations, webhooks,
+    users, groups, roles and views have NO restore, undo, trash or soft-delete endpoint anywhere in the
+    17 contracts and no retention window is stated in the documentation.
+  surfaces:
+  - action: Scheduled maintenance window occurrence
+    reversal: cancelOccurrence
+    operation: PUT /v1/maintenance/occurrences/{id}/cancelled
+    window: Before the occurrence starts — the docs describe it as cancelling an UPCOMING occurrence.
+    window_stated: true
+    docs: https://api.docs.moogsoft.com/docs/latest/branches/main/4b120c1a04624-example-cancel-an-upcoming-maintenance-window-occurrence
+  - action: Scheduled maintenance window occurrence
+    reversal: skipOccurrence
+    operation: PUT /v1/maintenance/occurrences/{id}/skipped
+    window: Before the occurrence starts.
+    window_stated: true
+    docs: https://api.docs.moogsoft.com/docs/latest/branches/main/6b4658c252fbb-example-skip-a-scheduled-maintenance-window-occurrence
+  - action: API key
+    reversal: Revoke (UI) / deleteApiKey (DELETE /v2/users/{userId}/keys/{keyId})
+    window: Not reversible. Revocation takes effect in about five minutes, after which the key is permanently
+      unusable and cannot be re-issued.
+    window_stated: true
+    docs: https://api.docs.moogsoft.com/docs/latest/branches/main/6553f9391961d-manage-api-keys
+  - action: Alert / incident external ID
+    reversal: Re-POST the external ID after deleteAlertExternalId / deleteIncidentExternalId
+    window: No stated window; the record can be recreated by the caller.
+    window_stated: false
+  - action: Catalog, catalog document, correlation definition, correlation group, workflow, integration,
+      webhook, user, group, role, view
+    reversal: null
+    window: null
+    window_stated: false
+    note: No restore/undo endpoint exists and the documentation states no retention period. Treat every
+      DELETE on these resources as permanent.
+  agent_guidance: Before any DELETE on a config resource, GET the object first and keep the payload —
+    recreating it by POST is the only recovery path and identifiers will change. Deleting a correlation
+    definition changes incident formation immediately.
+error_envelope:
+  shape: '{status, message, additional[]}'
+  media_type: application/json
+  rfc9457: false
+  see: errors/moogsoft-problem-types.yml
+rate_limit_signaling:
+  headers: []
+  status_code: null
+  note: No rate-limit response headers are declared in any contract and none were observed on live unauthenticated
+    responses. See rate-limits/moogsoft-rate-limits.yml.
+request_tracing:
+  header: null
+  note: No request-id or correlation-id header is declared in the contracts. A traceId field appears inside
+    the bring-your-own-integration RecentPayload body, but it is payload data, not a response header.
+versioning:
+  style: per-service path major version
+  see: lifecycle/moogsoft-lifecycle.yml
+content_type:
+  default: application/json
+  note: The docs warn that some endpoints expect a different content type (for example CSV upload when
+    creating a catalog from a file) and to check per operation.
+cross_links:
+  errors: errors/moogsoft-problem-types.yml
+  lifecycle: lifecycle/moogsoft-lifecycle.yml
+  authentication: authentication/moogsoft-authentication.yml
+  rate_limits: rate-limits/moogsoft-rate-limits.yml
+  data_model: data-model/moogsoft-data-model.yml

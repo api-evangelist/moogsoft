@@ -1,0 +1,87 @@
+generated: '2026-08-29'
+method: searched
+source: https://api.docs.moogsoft.com/docs/latest/branches/main/8ae0406b4fb96-authentication, https://api.docs.moogsoft.com/docs/latest/branches/main/6553f9391961d-manage-api-keys,
+  https://api.docs.moogsoft.com/docs/latest/branches/main/b16f03ec715a2-user-roles-and-permissions, https://api.docs.moogsoft.com/docs/latest/branches/main/f86595eca2b25-request-requirements,
+  and openapi/ (17 contracts)
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+schemes:
+- name: ApiKeyAuth
+  type: apiKey
+  in: header
+  parameter: apiKey
+  description: API Key for accessing Alerts/Incidents API
+  sources:
+  - openapi/moogsoft-alerts-incidents-openapi.yaml
+  - openapi/moogsoft-azure-service-openapi.yaml
+  - openapi/moogsoft-byo-api-service-openapi.yaml
+  - openapi/moogsoft-cloudwatch-service-openapi.yaml
+  - openapi/moogsoft-collectors-openapi.yaml
+  - openapi/moogsoft-config-openapi.yaml
+  - openapi/moogsoft-events-integration-openapi.yaml
+  - openapi/moogsoft-incident-responder-openapi.yaml
+  - openapi/moogsoft-metrics-integration-openapi.yaml
+  - openapi/moogsoft-pagerduty-service-openapi.yaml
+  - openapi/moogsoft-probable-rootcause-openapi.yaml
+  - openapi/moogsoft-similar-incidents-openapi.yaml
+  - openapi/moogsoft-ui-services-openapi.yaml
+  - openapi/moogsoft-user-management-openapi.yaml
+  - openapi/moogsoft-webhook-service-v2-openapi.yaml
+  - openapi/moogsoft-workflow-engine-service-openapi.yaml
+docs: https://api.docs.moogsoft.com/docs/latest/branches/main/8ae0406b4fb96-authentication
+model:
+  primary:
+    style: API key in a request header
+    header: apiKey
+    example: 'curl https://api.moogsoft.ai/v1/integrations/events -H ''Content-Type: application/json''
+      -H ''apiKey: <your-API-key>'''
+    declared_in: components.securitySchemes.ApiKeyAuth on all 17 contracts
+  alternative:
+    style: credentials embedded in the URL
+    form: https://<username>:<api_key>@api.moogsoft.ai/...
+    note: Documented on the Authentication page as "basic token authentication". A bearer-token variant
+      is present in the docs source but commented out and therefore not offered.
+  oauth2:
+    supported_for_inbound_api: false
+    note: OAuth 2.0 appears in Moogsoft only for credentials Moogsoft uses to call OUT — webhook endpoint
+      auth (password grant, exclusive since 2024-11-18) and the external credential store (client credentials,
+      added 2025-04-29). There are no inbound OAuth scopes, so no scopes/ artifact is emitted.
+  console_sso:
+    issuer: https://auth.moogsoft.ai/
+    platform: Auth0
+    discovery: well-known/moogsoft-auth-openid-configuration.json
+    note: Governs sign-in to app.moogsoft.ai only. SAML/SSO configuration for the tenant is managed through
+      the SSO endpoints of the User Management API.
+key_management:
+  creation: Settings > API Key Management in the console, or createApiKey (POST /v2/users/{userId}/keys).
+  ownership: A key always belongs to the user who created it, even when another person uses it.
+  ceiling: A key can never be granted more permission than its creating user holds through roles and group
+    membership.
+  visibility: The secret is shown once at creation and is never retrievable afterwards.
+  revocation: Revoke in the console or delete via the API. Takes effect in about five minutes and cannot
+    be undone.
+  default: Users have no API key by default; one must be created explicitly.
+  orphans: Keys created by a deleted user remain active after that user is deleted.
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/6553f9391961d-manage-api-keys
+authorization:
+  model: role and permission based, enforced per feature area
+  default_roles:
+  - Operator (read-only, plus alert/incident status and ownership updates)
+  - Administrator (read and write)
+  - Owner (read and write)
+  custom_roles: true
+  group_roles: true
+  method_mapping:
+    GET: Read Only
+    POST: Full Access
+    PATCH: Full Access
+    DELETE: Full Access
+  note: Permission failures can present as 404 rather than 403 on some resources.
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/b16f03ec715a2-user-roles-and-permissions
+transport:
+  https_only: true
+  tls: TLSv1.3 observed on www.moogsoft.com
+  mtls: false

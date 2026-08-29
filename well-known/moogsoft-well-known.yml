@@ -1,0 +1,83 @@
+generated: '2026-08-29'
+method: probed
+source: live GET of /.well-known/* on every Moogsoft host named in apis.yml and in the OpenAPI servers[]
+  blocks
+note: Only auth.moogsoft.ai (the Auth0 tenant behind the app.moogsoft.ai console sign-in) serves a well-known
+  document. The API host api.moogsoft.ai answers every /.well-known/* path with its standard JSON 404
+  envelope, the marketing site returns the WordPress 404 page, and the two docs hosts return their own
+  404 templates. No security.txt, no api-catalog, no agent card anywhere.
+hosts:
+- host: auth.moogsoft.ai
+  documents:
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: well-known/moogsoft-auth-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: well-known/moogsoft-auth-oauth-authorization-server.json
+- host: api.moogsoft.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: app.moogsoft.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: www.moogsoft.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 504
+    note: Cloudflare 504 from the origin, not a served document
+  - path: /.well-known/ai-plugin.json
+    status: 504
+  - path: /.well-known/agent-card.json
+    status: 504
+  - path: /.well-known/agent.json
+    status: 404
+- host: docs.moogsoft.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: api.docs.moogsoft.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+    note: Stoplight SPA returns its 404 HTML shell, not a card
+  - path: /.well-known/agent.json
+    status: 404

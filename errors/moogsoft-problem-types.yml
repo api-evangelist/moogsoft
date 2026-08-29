@@ -1,0 +1,62 @@
+generated: '2026-08-29'
+method: derived
+source: openapi/ 4xx and 5xx responses across all 17 contracts; envelope confirmed against a live unauthenticated
+  GET https://api.moogsoft.ai/ (HTTP 401)
+format: proprietary-json
+media_type: application/json
+note: Moogsoft does not publish an error-code registry and does not use RFC 9457 problem+json. Every error
+  is the same three-field envelope; the discriminating information is the HTTP status plus the free-text
+  message. The 4XX and 5XX wildcard responses declared on 355 of 364 operations are unmodelled catch-alls,
+  which means an agent cannot enumerate failure modes from the contract.
+envelope:
+  schema: MoogErrorResponse / MoogFailureResponse
+  fields:
+  - name: status
+    type: string
+    description: Always the literal "error" (or "failure" on the failure schema).
+  - name: message
+    type: string
+    description: Human-readable error message. Not a stable machine identifier.
+  - name: additional
+    type: array[string]
+    description: Optional extra detail lines.
+  example:
+    status: error
+    message: API Key required
+problem_types:
+- status: 400
+  title: Invalid parameters or data validation violation
+  occurrences: 359
+  remediation: Validate the request body and query parameters against the operation schema before retrying.
+    Repeating the same request will fail identically.
+- status: 401
+  title: API Key required / invalid API key
+  occurrences: 1
+  observed: GET https://api.moogsoft.ai/ returns {"status":"error","message":"API Key required"}
+  remediation: Send the apiKey header. Keys are created per user in Settings > API Key Management and
+    inherit that user's permissions.
+- status: 404
+  title: Resource not found
+  occurrences: 355
+  remediation: The identifier does not exist, or the API key lacks read permission on that feature area
+    — Moogsoft returns 404 rather than 403 for some permission failures.
+- status: 408
+  title: Request timeout
+  occurrences: 1
+- status: 500
+  title: Internal server error
+  occurrences: 4
+  remediation: Retry with exponential backoff. Safe (GET) operations may be retried freely; POST/PATCH/DELETE
+    are not idempotent and a blind retry can duplicate work.
+- status: 4XX
+  title: Unmodelled client error (wildcard)
+  occurrences: 355
+  note: Declared as a catch-all with no schema on nearly every operation.
+- status: 5XX
+  title: Unmodelled server error (wildcard)
+  occurrences: 355
+  note: Declared as a catch-all with no schema on nearly every operation.
+gaps:
+- No documented error-code registry.
+- No machine-readable error type/code field — only HTTP status and prose.
+- No Retry-After or rate-limit headers declared anywhere in the contracts.

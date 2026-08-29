@@ -1,0 +1,82 @@
+generated: '2026-08-29'
+method: searched
+source: https://registry.npmjs.org + https://github.com/moogsoft
+note: 'Every first-party Moogsoft client library on a public registry targets the LEGACY on-prem products
+  — the Graze REST API of Moogsoft AIOps/Enterprise and the Collector MAR runtime — not the 17 OpenAPI
+  services published for Moogsoft Cloud / Dell APEX AIOps Incident Management on api.moogsoft.ai. The
+  newest first-party release is more than five years old. There is no first-party SDK for the current
+  Cloud API in any registry: npm, PyPI, RubyGems, crates.io and Packagist were all checked and only the
+  packages below are published by the vendor.'
+packages:
+- name: '@moogsoft/mars-sdk'
+  registry: npm
+  official: true
+  language: JavaScript
+  url: https://www.npmjs.com/package/@moogsoft/mars-sdk
+  repository: https://github.com/moogsoft/mars-sdk
+  version: 0.1.3
+  published: '2021-02-05'
+  description: Utilities for building MARs (Moogsoft Add-on Runtimes) for the Moogsoft Collector.
+  covers: Collector plugin authoring — not the Cloud REST API.
+- name: moog-bulkconfig
+  registry: npm
+  official: true
+  language: JavaScript
+  url: https://www.npmjs.com/package/moog-bulkconfig
+  repository: https://github.com/moogsoft/moog-bulkconfig
+  version: 0.9.6
+  published: '2020-05-28'
+  description: CLI utility for making bulk configuration changes through the Moogsoft Config service API.
+- name: node-moog
+  registry: npm
+  official: true
+  language: JavaScript
+  url: https://www.npmjs.com/package/node-moog
+  repository: https://github.com/moogsoft/node-moog
+  version: 1.2.9
+  published: '2018-07-01'
+  description: Node.js helper for publishing events to the legacy MOOG AIOps REST LAM.
+- name: moog-graze
+  registry: npm
+  official: true
+  language: JavaScript
+  url: https://www.npmjs.com/package/moog-graze
+  repository: https://github.com/moogsoft/moog-graze
+  version: 0.2.3
+  published: '2017-07-17'
+  description: Node.js client for the legacy Moogsoft AIOps Graze (REST) API.
+third_party:
+- name: '@itentialopensource/adapter-moogsoft'
+  registry: npm
+  official: false
+  version: 1.0.9
+  published: '2026-08-03'
+  publisher: Itential
+  url: https://www.npmjs.com/package/@itentialopensource/adapter-moogsoft
+- name: '@itentialopensource/adapter-moogsoft_saas'
+  registry: npm
+  official: false
+  version: 1.0.9
+  published: '2026-08-03'
+  publisher: Itential
+  url: https://www.npmjs.com/package/@itentialopensource/adapter-moogsoft_saas
+- name: node-red-contrib-moog
+  registry: npm
+  official: false
+  version: 1.0.2
+  published: '2017-01-18'
+  publisher: community (moog-stephen)
+  url: https://www.npmjs.com/package/node-red-contrib-moog
+registries_checked:
+- registry: npm
+  result: 4 first-party packages under the moogsoft GitHub org
+- registry: PyPI
+  result: no first-party package (moogsoft, moogsoft-api, pymoogsoft all 404)
+- registry: RubyGems
+  result: no first-party gem (404)
+- registry: crates.io
+  result: no results for moogsoft
+- registry: Packagist
+  result: no first-party package
+- registry: Maven Central
+  result: no first-party artifact found

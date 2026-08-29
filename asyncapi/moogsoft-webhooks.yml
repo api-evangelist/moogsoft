@@ -1,0 +1,92 @@
+generated: '2026-08-29'
+method: searched
+source: openapi/moogsoft-webhook-service-v2-openapi.yaml, openapi/moogsoft-byo-api-service-openapi.yaml,
+  https://api.docs.moogsoft.com/docs/latest/branches/main/91d1d59087227-outbound-webhooks-api-overview,
+  https://api.docs.moogsoft.com/docs/latest/branches/main/052c9e3d3a4f2-outbound-integrations-api-overview
+asyncapi_spec: null
+note: 'Moogsoft publishes no AsyncAPI document. It does have a real, contract-backed bidirectional event
+  surface: outbound webhooks that Moogsoft POSTs to a customer endpoint on alert and incident lifecycle
+  changes, and inbound webhook endpoints that customers POST events to. Both are managed through OpenAPI
+  operations rather than described as an event schema, so the PAYLOAD shape of an outbound webhook delivery
+  is not published in a machine-readable form.'
+outbound:
+  direction: Moogsoft -> customer endpoint
+  management_api: openapi/moogsoft-webhook-service-v2-openapi.yaml
+  docs: https://api.docs.moogsoft.com/docs/latest/branches/main/91d1d59087227-outbound-webhooks-api-overview
+  operations:
+  - operationId: getWebhooksV2
+    method: GET
+    path: /v2/integrations/webhooks/items
+    summary: List configured outbound webhooks
+  - operationId: createWebhookV2
+    method: POST
+    path: /v2/integrations/webhooks/items
+    summary: Create an outbound webhook
+  - operationId: getWebhookV2
+    method: GET
+    path: /v2/integrations/webhooks/items/{id}
+  - operationId: patchWebhookV2
+    method: PATCH
+    path: /v2/integrations/webhooks/items/{id}
+  - operationId: modifyWebhookV2
+    method: PUT
+    path: /v2/integrations/webhooks/items/{id}
+  - operationId: deleteWebhookV2
+    method: DELETE
+    path: /v2/integrations/webhooks/items/{id}
+  - operationId: testWebhookV2
+    method: POST
+    path: /v2/integrations/webhooks/test
+    summary: Fire a test delivery without saving
+  - operationId: previewWebhookV2
+    method: POST
+    path: /v2/integrations/webhooks/preview
+    summary: Render the payload a webhook would send
+  - operationId: getWebhookLogs
+    method: GET
+    path: /v2/integrations/webhooks/logs/{id}
+    summary: Delivery log for one webhook
+  - operationId: deleteWebhookLogs
+    method: DELETE
+    path: /v2/integrations/webhooks/logs/{id}
+  - operationId: getWebhookMetrics
+    method: GET
+    path: /v2/integrations/webhooks/metrics/{id}
+    summary: Delivery metrics for one webhook
+  - operationId: deleteWebhookMetrics
+    method: DELETE
+    path: /v2/integrations/webhooks/metrics/{id}
+  triggers:
+  - Incident lifecycle changes (create, update, assignee change, status change)
+  - Alert lifecycle changes
+  - Workflow Engine "Send to Endpoint" and webhook menu actions
+  auth_to_customer_endpoint:
+    supported:
+    - OAuth 2.0 password grant
+    - OAuth 2.0 client credentials
+    - basic
+    - header token
+    note: Since 2024-11-18 the webhook endpoint OAuth support is the password grant exclusively; client
+      credentials arrived in the credential store on 2025-04-29.
+    docs: https://docs.moogsoft.com/moogsoft-cloud/en/what-s-new.html
+  observability: Per-webhook delivery logs and metrics are retrievable and deletable through the API.
+  payload_schema_published: false
+inbound:
+  direction: customer / third party -> Moogsoft
+  management_api: openapi/moogsoft-byo-api-service-openapi.yaml
+  ingest_operations:
+  - operationId: postEvents
+    method: POST
+    path: /v1/integrations/events
+    spec: openapi/moogsoft-events-integration-openapi.yaml
+    summary: Post one or more events into the pipeline
+  - operationId: createCustomEndpoint
+    path: /v1/integrations/byoapi
+    summary: Create a Bring-Your-Own-Integration webhook endpoint with its own URL and payload mapping
+  payload_schema_published: true
+  payload_schema: WebEventDto (source, check, severity, description, deduplication_key, time, services,
+    alias, utc_offset, manager, class)
+gaps:
+- No AsyncAPI or CloudEvents description of the outbound delivery payload.
+- No published signing or verification scheme for outbound webhook deliveries.
+- No documented retry/backoff policy for failed deliveries.

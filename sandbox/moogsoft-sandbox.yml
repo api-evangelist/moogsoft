@@ -1,0 +1,68 @@
+generated: '2026-08-29'
+method: probed
+source: https://stoplight.io/mocks/moogsoft/latest/139547353 (live probe) and the mock_url links published
+  on every service node of the provider's own Stoplight project at https://api.docs.moogsoft.com
+provider_operated_sandbox: false
+note: Moogsoft operates no customer sandbox, no test mode, no test keys and no free tier — the product
+  is contact-sales only and app.moogsoft.ai is sign-in only. What DOES exist, and is callable right now
+  with no credentials, is a Prism mock server that Stoplight generates from Moogsoft's own published API
+  project. Every one of the 17 service nodes exposes a mock_url. It is hosted by Stoplight, not Moogsoft,
+  and it returns the example values declared in the provider contracts — useful for building and testing
+  a client against the real schemas before buying, and honestly labelled here as spec-derived rather than
+  provider-operated.
+mock_servers:
+  platform: Stoplight Prism
+  auth: any non-empty apiKey header is accepted; omitting it returns the contract 401 example
+  verified:
+    url: https://stoplight.io/mocks/moogsoft/latest/139547353/v2/alerts/columns
+    status: 200
+    request: 'GET with headers Accept: application/json and apiKey: <any value>'
+    checked: '2026-08-29'
+  endpoints:
+  - service: Alerts/Incidents API
+    url: https://stoplight.io/mocks/moogsoft/latest/139547353
+  - service: Config API
+    url: https://stoplight.io/mocks/moogsoft/latest/504189
+  - service: User Management API
+    url: https://stoplight.io/mocks/moogsoft/latest/21989341
+  - service: Collector V2 API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066469
+  - service: Events Integration
+    url: https://stoplight.io/mocks/moogsoft/latest/137066477
+  - service: Metrics API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066484
+  - service: Webhook API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066494
+  - service: Workflow Engine API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066495
+  - service: On-Call API
+    url: https://stoplight.io/mocks/moogsoft/latest/156776904
+  - service: Create Your Own Integration API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066464
+  - service: Amazon CloudWatch API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066467
+  - service: Azure Application Insights API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066463
+  - service: PagerDuty API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066485
+  - service: Probable Root Cause API
+    url: https://stoplight.io/mocks/moogsoft/latest/260670568
+  - service: Similar Incidents API
+    url: https://stoplight.io/mocks/moogsoft/latest/139547381
+  - service: UI Services API
+    url: https://stoplight.io/mocks/moogsoft/latest/214271658
+  - service: Rollup Service API
+    url: https://stoplight.io/mocks/moogsoft/latest/137066483
+development_host:
+  url: https://api.dev.moogsoft.cloud
+  note: Declared as the second server on 16 of 17 contracts and used in the docs cURL examples. This is
+    Moogsoft's own development environment, not a customer-accessible sandbox — it requires a real API
+    key on that instance.
+test_values:
+  published: false
+  note: No test keys, magic identifiers, fixtures or simulator values are published.
+dry_run:
+  available: true
+  see: conventions/moogsoft-conventions.yml#dry_run_mode
+  note: The API itself ships rehearsal endpoints — test/preview a webhook, test/validate an event workflow,
+    test a CloudWatch integration — which are the closest thing to a provider-operated test mode.

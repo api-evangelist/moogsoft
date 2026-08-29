@@ -1,0 +1,1581 @@
+openapi: 3.1.0
+info:
+  version: 1.0.0
+  title: Create Your Own Integration API
+  description: This API enables you to create and manage custom endpoints for inbound integrations.
+  termsOfService: 'https://www.moogsoft.com/legal-information/express-terms-conditions/'
+  contact:
+    name: API Support
+    url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+    email: support@moogsoft.com
+  license:
+    url: 'https://www.moogsoft.com/legal-information'
+    name: Apex AIOps Incident Management Proprietary
+servers:
+  - url: 'https://api.moogsoft.ai'
+  - url: 'https://api.dev.moogsoft.cloud'
+paths:
+  '/v2/integrations/byoapi/{endpointId}/config/draft':
+    put:
+      tags:
+        - custom-integration-configs
+      summary: Updates the draft config for an endpoint
+      description: Updates the draft config for an endpoint
+      operationId: updateDraftEndpointConfig
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The updated config
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointConfigDto'
+      responses:
+        '200':
+          description: Successfully updated draft config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpointConfigDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    get:
+      tags:
+        - custom-integration-configs
+      summary: Gets the draft config for a particular endpoint
+      description: Gets the unpublished config for an endpoint. This draft is not being applied to payloads sent to the endpoint
+      operationId: getDraftEndpointConfig
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the draft config for the endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpointConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v2/integrations/byoapi/{endpointId}/config/live':
+    put:
+      tags:
+        - custom-integration-configs
+      summary: Updates the live config for an endpoint
+      description: Updates the live config for an endpoint
+      operationId: updateLiveEndpointConfig
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The updated config
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EndpointConfigDto'
+      responses:
+        '200':
+          description: Successfully updated live config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpointConfigDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    get:
+      tags:
+        - custom-integration-configs
+      summary: Gets the live config for a particular endpoint
+      description: Gets the live or published config that an endpoint is currently applying to incoming requests
+      operationId: getLiveEndpointConfig
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved the live config for the endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpointConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v2/integrations/byoapi/{endpointId}/config/test':
+    post:
+      tags:
+        - custom-integration-configs
+      summary: Tests the provided config for an endpoint against a provided series of json payloads
+      description: Tests the provided config for an endpoint against a provided series of json payloads
+      operationId: testEndpointConfig
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The test config and test payloads
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestConfigAndPayloads'
+      responses:
+        '200':
+          description: Successfully tested the config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseTestResult'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v1/integrations/byoapi/{endpointId}/traffic/payloads/{id}':
+    get:
+      tags:
+        - custom-integration-traffic
+      summary: Get a specific payload sent to an endpoint
+      description: Gets a recent payload sent to an endpoint by id
+      operationId: getRecentPayload
+      parameters:
+        - name: endpointId
+          in: path
+          description: the unique id of the endpoint
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: the unique id of the recent payload
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved recent payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseRecentPayload'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v1/integrations/byoapi/{endpointId}/errors':
+    get:
+      tags:
+        - custom-integration-error-logs
+      summary: Reads custom endpoint processing errors from the DB.
+      description: 'Reads custom endpoint processing errors from the DB, in reverse chronological order.'
+      operationId: getProcessingErrors
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfByoErrorLogDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+    delete:
+      tags:
+        - custom-integration-error-logs
+      summary: Deletes custom endpoint processing errors from the DB.
+      description: Deletes custom endpoint processing errors from the DB.
+      operationId: deleteProcessingErrors
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  /v1/integrations/byoapi:
+    get:
+      tags:
+        - custom-integration-endpoints
+      summary: Get all configured custom endpoints
+      description: Gets all configured custom endpoints
+      operationId: getAllEndpoints
+      parameters:
+        - name: integration
+          in: query
+          schema:
+            $ref: '#/components/schemas/IntegrationType'
+      responses:
+        '200':
+          description: Successfully retrieved all custom endpoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfEndpoint'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+    post:
+      tags:
+        - custom-integration-endpoints
+      summary: Create new custom endpoint
+      description: Create a new custom endpoint
+      operationId: createCustomEndpoint
+      requestBody:
+        description: The config for the new endpoint
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEndpoint'
+      responses:
+        '200':
+          description: Successfully created a new endpoint
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpoint'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v1/integrations/byoapi/{endpointId}':
+    put:
+      tags:
+        - custom-integration-endpoints
+      summary: Update a custom endpoint
+      description: Updates a configured custom endpoint
+      operationId: updateCustomEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: the endpoint config to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseEndpointDto'
+      responses:
+        '200':
+          description: Updated endpoint successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpoint'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+    get:
+      tags:
+        - custom-integration-endpoints
+      summary: 'Get a custom endpoint '
+      description: Gets a custom endpoint by id
+      operationId: getCustomEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieved endpoint successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEndpoint'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+    delete:
+      tags:
+        - custom-integration-endpoints
+      summary: Delete a custom endpoint
+      description: Deletes a custom endpoint by id
+      operationId: deleteCustomEndpoint
+      parameters:
+        - name: endpointId
+          in: path
+          description: The unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted endpoint successfully
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:edit'
+  '/v1/integrations/byoapi/{endpointId}/traffic/summary':
+    get:
+      tags:
+        - custom-integration-traffic
+      summary: Get a summary of traffic volume and outcomes for a custom endpoint
+      description: Returns statistics about traffic to a given endpoint
+      operationId: getTrafficSummary
+      parameters:
+        - name: endpointId
+          in: path
+          description: the unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved endpoint summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseTrafficSummaryDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  /v1/integrations/byoapi-integrations:
+    get:
+      tags:
+        - byoapi-integration-endpoints
+      summary: Get all configured integrations endpoints
+      description: Gets all configured integrations endpoints
+      operationId: getAllIntegrations
+      responses:
+        '200':
+          description: Successfully retrieved all custom endpoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfEndpoint'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+  '/v1/integrations/custom/{integrationId}':
+    post:
+      tags:
+        - custom-integration-endpoints
+      summary: Post payload to a custom endpoint
+      description: Post a payload to a user defined endpoint
+      operationId: postPayloadOnIntegrationId
+      parameters:
+        - name: x-forward-for
+          in: header
+          schema: {}
+        - name: integrationId
+          in: path
+          description: The id of the integration
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: User json/xml
+        required: true
+        content:
+          'application/json, application/xml':
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Successfully processed Json
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value: []
+  '/v1/integrations/custom/{uuid}/{endpointName}':
+    post:
+      tags:
+        - custom-integration-endpoints
+      summary: Post urlencoded form-data payload to a custom endpoint
+      description: Post a urlencoded form-data payload to a user defined endpoint
+      operationId: postFormPayload
+      parameters:
+        - name: x-forward-for
+          in: header
+          schema: {}
+        - name: endpointName
+          in: path
+          description: The name of the endpoint
+          required: true
+          schema:
+            type: string
+        - name: uuid
+          in: path
+          description: The unique id generated for your Moogsoft instance
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: 'User url-encoded form data, containing form parameter "paylod"'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                payload:
+                  type: string
+              required:
+                - payload
+      responses:
+        '200':
+          description: Successfully processed url-encoded form
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value: []
+  '/v1/integrations/byoapi/{endpointId}/traffic/payloads':
+    get:
+      tags:
+        - custom-integration-traffic
+      summary: Get recent payloads sent to an endpoint
+      description: 'Gets recent payloads sent to an endpoint. Typically, the most recent 1,000 payloads are retained, but that limit may vary subject to system configuration.'
+      operationId: getAllRecentPayloads
+      parameters:
+        - name: maxResults
+          in: query
+          description: the max number of recent payloads to return
+          required: true
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: endpointId
+          in: path
+          description: the unique id of the endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved recent payloads
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfRecentPayload'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+        - ApiKeyAuth: []
+      servers:
+        - url: 'https://api.moogsoft.ai'
+        - url: 'https://api.dev.moogsoft.cloud'
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+          - 'integrations:view'
+tags:
+  - name: byoapi-integration-endpoints
+  - name: custom-integration-configs
+    description: Operations for custom integration configs
+  - name: custom-integration-endpoints
+    description: Operations for custom integration endpoints
+  - name: custom-integration-error-logs
+    description: Operations for custom integration error logs
+  - name: custom-integration-traffic
+    description: Operations for custom integration traffic
+  - name: pre-configured-integration-endpoints
+    description: Operations for pre-configured integration endpoints
+externalDocs:
+  url: 'https://docs.moogsoft.com/en/moogsoft-apis.html'
+  description: Find out more about Apex AIOps Incident Management
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Create Your Own Integration API
+      name: apiKey
+      in: header
+  schemas:
+    EndpointConfigDto:
+      type: object
+      title: Endpoint Config Dto
+      description: Create your own endpoint configuration.
+      properties:
+        batchKey:
+          type: string
+          description: Optional batch key
+        mappings:
+          type: array
+          description: List of the mappings.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Mapping'
+      required:
+        - mappings
+    Mapping:
+      type: object
+      title: Mapping
+    MoogResponseEndpointConfigDto:
+      type: object
+      title: Moog Response Endpoint Config Dto
+      description: Create Your Own Integration API EndpointConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/EndpointConfigDto'
+      required:
+        - status
+        - data
+    MoogFailureResponse:
+      type: object
+      description: Create Your Own Integration API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+            - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+            - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+        - status
+        - message
+    TestConfigAndPayloads:
+      type: object
+      title: Test Config And Payloads
+      description: The test config and json payloads required to run a test
+      properties:
+        testConfig:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        testPayloads:
+          type: array
+          minItems: 1
+          items:
+            type: object
+      required:
+        - testConfig
+        - testPayloads
+    MoogResponseTestResult:
+      type: object
+      title: Moog Response Test Result
+      description: Create Your Own Integration API TestResult response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/TestResult'
+      required:
+        - status
+        - data
+    TestResult:
+      type: object
+      title: Test Result
+      description: The results of testing an endpoint config
+      properties:
+        mappingResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestMappingResultDto'
+        dedupeKeyStatus:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DedupeKeyStatus'
+    TestMappingResultDto:
+      type: object
+      title: Test Mapping Result Dto
+      properties:
+        payloadProcessingResult:
+          type: string
+        errorMessage:
+          type: string
+        dedupeKeyErrors:
+          type: object
+          additionalProperties:
+            type: string
+        event:
+          $ref: '#/components/schemas/WebEventDto'
+        metric: {}
+    WebEventDto:
+      type: object
+      title: Event
+      properties:
+        source:
+          type: string
+          description: The source that generated the event
+          maxLength: 32500
+          examples:
+            - www.your-source.com
+        check:
+          type: string
+          description: The check that triggered the event
+          examples:
+            - cpu load
+        severity:
+          $ref: '#/components/schemas/Severity'
+          description: The relative severity of the event
+        description:
+          type: string
+          description: A human-readable description of the event
+          maxLength: 32500
+          examples:
+            - CPU spike to 75%
+        deduplication_key:
+          type: string
+          description: Custom event deduplication key value
+          examples:
+            - 'my-service::user-response-time'
+        time:
+          $ref: '#/components/schemas/Timestamp'
+          description: 'Time of event, seconds or milliseconds since Jan 1, 1970 UTC. If not specified, arrival time is used.'
+        services:
+          type: array
+          description: One or more services that gathered the event or are associated with it
+          examples:
+            - - retail
+              - support
+          items:
+            type: string
+        alias:
+          type: string
+          description: The alias for the event source
+        utc_offset:
+          type: string
+          description: 'An offset to apply to the provided event time, as an abbreviation such as "PST", a full name such as "America/Los_Angeles", or offset form such as "GMT-8:00"'
+          examples:
+            - UTC
+        manager:
+          type: string
+          description: 'A general identifier of the event generator or intermediary, such as AppDynamics, NewRelic, etc.'
+          examples:
+            - CloudWatchEC2
+        manager_id:
+          type: string
+          description: ID for the external manager or tool that sent the event
+          examples:
+            - '1234'
+        class:
+          type: string
+          description: The high-level category of the resource that generated the fault or performance event
+          examples:
+            - Application
+        namespace:
+          type: string
+          description: The namespace value related to the event
+        type:
+          type: string
+          description: The high-level category of the issue that generated the fault or performance event
+          examples:
+            - Capacity
+        tags:
+          type: object
+          description: Tags cannot contain embedded objects; nor lists other than a "labels" list
+        location:
+          $ref: '#/components/schemas/LocationDto'
+          description: A set of key-value pairs that specific the physical or virtual location where the event occurred
+        policyId:
+          type: string
+          description: The policy id representing the policy associated with the moog detector
+      required:
+        - source
+        - check
+        - severity
+        - description
+    Severity:
+      type: string
+      enum:
+        - clear
+        - unknown
+        - warning
+        - minor
+        - major
+        - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: 'Number of milliseconds since Jan 1, 1970 UTC'
+      format: int64
+    LocationDto:
+      type: object
+      title: Location
+      properties:
+        street:
+          type: string
+        building:
+          type: string
+        suite:
+          type: integer
+          format: int32
+        floor:
+          type: string
+        city:
+          type: string
+        state_or_province:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+        geo_coordinates:
+          $ref: '#/components/schemas/GeoLocationDto'
+        rack:
+          type: string
+        aisle:
+          type: string
+        u_position:
+          type: string
+        region:
+          type: string
+        data_center:
+          type: string
+        availability_zone:
+          type: string
+        geo_coordinates_lat:
+          type: integer
+          format: int32
+        geo_coordinates_long:
+          type: integer
+          format: int32
+    GeoLocationDto:
+      type: object
+      title: GeoLocation
+      properties:
+        lat:
+          type: number
+          format: float
+        long:
+          type: number
+          format: float
+    DedupeKeyStatus:
+      type: string
+      enum:
+        - SUCCESS
+        - PARTIAL
+        - FAILURE
+      title: Dedupe Key Status
+    MoogResponseRecentPayload:
+      type: object
+      title: Moog Response Recent Payload
+      description: Create Your Own Integration API RecentPayload response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/RecentPayload'
+      required:
+        - status
+        - data
+    RecentPayload:
+      type: object
+      title: Recent Payload
+      description: Recent payloads recieved by an endpoint
+      properties:
+        payloadProcessingResult:
+          type: string
+        errorMessage:
+          type: string
+        id:
+          type: string
+        sourceIp:
+          type: string
+        traceId:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+        payload:
+          type: array
+          items:
+            type: object
+        _raw:
+          type: string
+    MoogResponseListOfByoErrorLogDto:
+      type: object
+      title: Moog Response List Of Byo Error Log Dto
+      description: Create Your Own Integration API ByoErrorLogDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ByoErrorLogDto'
+      required:
+        - status
+        - data
+    ByoErrorLogDto:
+      type: object
+      title: Byo Error Log Dto
+      properties:
+        integrationId:
+          type: string
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+        errors:
+          type: array
+          items:
+            type: string
+        reason:
+          type: string
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+        - '2022-03-10T16:15:50Z'
+    IntegrationType:
+      type: string
+      enum:
+        - SPLUNK
+        - ANSIBLE_TOWER
+        - PROMETHEUS
+        - APPDYNAMICS
+        - PINGDOM
+        - DYNATRACE
+        - NEWRELIC
+        - ZABBIX
+        - AZURE
+        - NAGIOS
+        - SCOM
+      title: Integration Type
+    MoogResponseListOfEndpoint:
+      type: object
+      title: Moog Response List Of Endpoint
+      description: Create Your Own Integration API Endpoint response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+      required:
+        - status
+        - data
+    Endpoint:
+      type: object
+      title: Endpoint
+      description: A configured endpoint
+      properties:
+        endpointName:
+          type: string
+          pattern: '^[^\s]+$'
+          minLength: 1
+          maxLength: 127
+        authRequired:
+          type: boolean
+        description:
+          type: string
+          maxLength: 500
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/EndpointStatus'
+        endpointUrl:
+          type: string
+        draftConfigV2:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        liveConfigV2:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        type:
+          $ref: '#/components/schemas/Type'
+        integration:
+          $ref: '#/components/schemas/IntegrationType'
+        createdBy:
+          type: string
+        lastUpdatedBy:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+      required:
+        - endpointName
+        - authRequired
+    EndpointStatus:
+      type: string
+      enum:
+        - PROVISIONED
+        - ACTIVE
+        - INACTIVE
+        - ERROR
+      title: Endpoint Status
+    Type:
+      type: string
+      enum:
+        - EVENT
+        - METRIC
+      title: Type
+    CreateEndpoint:
+      type: object
+      title: Create Endpoint
+      description: Information required to create an endpoint
+      properties:
+        endpointName:
+          type: string
+          pattern: '^[^\s]+$'
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          maxLength: 500
+        type:
+          $ref: '#/components/schemas/Type'
+        integration:
+          $ref: '#/components/schemas/IntegrationType'
+      required:
+        - endpointName
+        - type
+    MoogResponseEndpoint:
+      type: object
+      title: Moog Response Endpoint
+      description: Create Your Own Integration API Endpoint response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/Endpoint'
+      required:
+        - status
+        - data
+    BaseEndpointDto:
+      type: object
+      title: Base Endpoint Dto
+      properties:
+        endpointName:
+          type: string
+          pattern: '^[^\s]+$'
+          minLength: 1
+          maxLength: 127
+        authRequired:
+          type: boolean
+        description:
+          type: string
+          maxLength: 500
+      required:
+        - endpointName
+        - authRequired
+    MoogResponseTrafficSummaryDto:
+      type: object
+      title: Moog Response Traffic Summary Dto
+      description: Create Your Own Integration API TrafficSummaryDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          $ref: '#/components/schemas/TrafficSummaryDto'
+      required:
+        - status
+        - data
+    TrafficSummaryDto:
+      type: object
+      title: Traffic Summary Dto
+      description: Traffic summary.
+      properties:
+        numPayloadsHandled:
+          type: integer
+          description: The number of payloads handled.
+          format: int64
+        numPayloadsFailed:
+          type: integer
+          description: The number of payloads failed.
+          format: int64
+    MoogResponseListOfRecentPayload:
+      type: object
+      title: Moog Response List Of Recent Payload
+      description: Create Your Own Integration API RecentPayload response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+            - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentPayload'
+      required:
+        - status
+        - data
+security:
+  - ApiKeyAuth: []

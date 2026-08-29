@@ -1,0 +1,33 @@
+generated: '2026-08-29'
+method: generated
+source: openapi/ (operationIds verified against the 17 published Moogsoft contracts) + conventions/moogsoft-conventions.yml
+  + errors/moogsoft-problem-types.yml
+note: Moogsoft publishes no Agent Skills and no AGENTS.md — searched moogsoft.com, docs.moogsoft.com,
+  api.docs.moogsoft.com and the moogsoft GitHub org. These six are API Evangelist-authored, grounded in
+  real operationIds from the provider contracts and in the provider's own safe-versus-advanced operation
+  taxonomy. Every operationId referenced was checked to exist.
+skills:
+- name: moogsoft-ingest-events
+  file: skills/moogsoft-ingest-events.md
+  api: Events Integration API
+  operations: 4
+- name: moogsoft-triage-incident
+  file: skills/moogsoft-triage-incident.md
+  api: Alerts/Incidents API + Probable Root Cause API + Similar Incidents API
+  operations: 9
+- name: moogsoft-manage-maintenance-windows
+  file: skills/moogsoft-manage-maintenance-windows.md
+  api: Config API
+  operations: 10
+- name: moogsoft-manage-api-keys
+  file: skills/moogsoft-manage-api-keys.md
+  api: User Management API
+  operations: 6
+- name: moogsoft-configure-outbound-webhooks
+  file: skills/moogsoft-configure-outbound-webhooks.md
+  api: Webhook API
+  operations: 9
+- name: moogsoft-tune-correlation
+  file: skills/moogsoft-tune-correlation.md
+  api: Config API
+  operations: 9
