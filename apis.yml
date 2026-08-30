@@ -71,6 +71,16 @@ apis:
   - Incident Management
   - alert-filters
   - alert-workflows
+  - Alerts
+  - Alerts Search
+  - autoclose-config
+  - autoclose-policy
+  - automation-config
+  tags_raw:
+  - AIOps
+  - Incident Management
+  - alert-filters
+  - alert-workflows
   - alerts
   - alerts-search
   - autoclose-config
@@ -135,6 +145,10 @@ apis:
   tags:
   - AIOps
   - Incident Management
+  - CloudWatch
+  tags_raw:
+  - AIOps
+  - Incident Management
   - cloudwatch
   properties:
   - type: OpenAPI
@@ -151,6 +165,16 @@ apis:
   humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - AIOps
+  - Incident Management
+  - collector-installer
+  - Collectors
+  - manual-collector-config
+  - plugin-config
+  - Plugins
+  - Product Feedback
+  - support-files
+  tags_raw:
   - AIOps
   - Incident Management
   - collector-installer
@@ -176,6 +200,17 @@ apis:
   humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - AIOps
+  - Incident Management
+  - Menu action categories
+  - Menu actions
+  - Catalogs
+  - Config
+  - correlation-definitions
+  - correlation-groups
+  - Maintenance Windows
+  - Watchers
+  tags_raw:
   - AIOps
   - Incident Management
   - Menu action categories
@@ -223,6 +258,13 @@ apis:
   tags:
   - AIOps
   - Incident Management
+  - Notification Policies
+  - on-call open issues
+  - on-call schedule occurrences
+  - On-Call Schedules
+  tags_raw:
+  - AIOps
+  - Incident Management
   - notification policies
   - on-call open issues
   - on-call schedule occurrences
@@ -263,6 +305,11 @@ apis:
   tags:
   - AIOps
   - Incident Management
+  - Metrics
+  - Policies
+  tags_raw:
+  - AIOps
+  - Incident Management
   - metrics
   - policies
   properties:
@@ -280,6 +327,11 @@ apis:
   humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - AIOps
+  - Incident Management
+  - PagerDuty
+  - pagerduty-test
+  tags_raw:
   - AIOps
   - Incident Management
   - pagerduty
@@ -358,6 +410,17 @@ apis:
   tags:
   - AIOps
   - Incident Management
+  - APIKeys
+  - Apikeys-users
+  - Group
+  - InstanceType
+  - Roles
+  - SSO
+  - User
+  - apiurl
+  tags_raw:
+  - AIOps
+  - Incident Management
   - Apikeys
   - Apikeys-users
   - Groups
@@ -383,6 +446,12 @@ apis:
   tags:
   - AIOps
   - Incident Management
+  - Webhooks (v2)
+  - webhooksV2 Logs
+  - webhooksV2 Metrics
+  tags_raw:
+  - AIOps
+  - Incident Management
   - webhooksV2
   - webhooksV2 Logs
   - webhooksV2 Metrics
@@ -401,6 +470,14 @@ apis:
   humanURL: https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - AIOps
+  - Incident Management
+  - standalone-workflows
+  - Test Workflows
+  - workflow-actions
+  - workflow-dependent-on
+  - Workflows
+  tags_raw:
   - AIOps
   - Incident Management
   - standalone-workflows
