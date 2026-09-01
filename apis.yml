@@ -329,7 +329,7 @@ apis:
   tags:
   - AIOps
   - Incident Management
-  - PagerDuty
+  - pagerduty
   - pagerduty-test
   tags_raw:
   - AIOps
@@ -474,7 +474,6 @@ apis:
   - Incident Management
   - standalone-workflows
   - Test Workflows
-  - workflow-actions
   - workflow-dependent-on
   - Workflows
   tags_raw:
