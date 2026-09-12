@@ -2,34 +2,35 @@
   "repo": "moogsoft",
   "feeds": [
     {
-      "source": "https://moogsoft.com/feed/",
-      "feed_url": "https://moogsoft.com/feed/",
+      "source": "https://www.moogsoft.com/resources/blog/",
+      "feed_url": "https://www.moogsoft.com/resources/blog/feed/",
       "title": "",
       "saved": 0,
-      "method": "feed",
-      "nature": "undetermined",
-      "nature_basis": null
+      "method": "discovered"
     },
     {
       "source": "https://www.moogsoft.com/support/",
       "feed_url": "https://www.moogsoft.com/feed/",
       "title": "",
       "saved": 0,
-      "method": "discovered",
-      "nature": "undetermined",
-      "nature_basis": null
+      "method": "discovered"
     },
     {
-      "source": "https://www.moogsoft.com/resources/blog/",
+      "source": "https://moogsoft.com/feed/",
+      "feed_url": "https://moogsoft.com/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://www.moogsoft.com/feed/",
       "feed_url": "https://www.moogsoft.com/feed/",
       "title": "",
       "saved": 0,
-      "method": "discovered",
-      "nature": "undetermined",
-      "nature_basis": null
+      "method": "feed"
     }
   ],
-  "fetched": "2026-08-30T22:33:40Z",
+  "fetched": "2026-09-06T19:17:18Z",
   "post_count": 14,
   "feed_nature": "undetermined",
   "feed_nature_basis": null,
