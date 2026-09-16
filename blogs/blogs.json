@@ -16,8 +16,8 @@
       "method": "discovered"
     },
     {
-      "source": "https://moogsoft.com/feed/",
-      "feed_url": "https://moogsoft.com/feed/",
+      "source": "https://www.moogsoft.com/resources/blog/feed/",
+      "feed_url": "https://www.moogsoft.com/resources/blog/feed/",
       "title": "",
       "saved": 0,
       "method": "feed"
@@ -28,9 +28,16 @@
       "title": "",
       "saved": 0,
       "method": "feed"
+    },
+    {
+      "source": "https://moogsoft.com/feed/",
+      "feed_url": "https://moogsoft.com/feed/",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
     }
   ],
-  "fetched": "2026-09-06T19:17:18Z",
+  "fetched": "2026-09-13T13:00:00Z",
   "post_count": 14,
   "feed_nature": "undetermined",
   "feed_nature_basis": null,
