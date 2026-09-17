@@ -379,59 +379,6 @@ apis:
   - type: APIReference
     url: >-
       https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
-- aid: moogsoft:moogsoft-apikeys-api
-  name: Moogsoft Apikeys API
-  description: Endpoints relating to API key operations
-  humanURL: >-
-    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  baseURL: https://api.moogsoft.ai
-  tags:
-  - Apikeys
-  properties:
-  - type: OpenAPI
-    url: openapi/moogsoft-apikeys-api-openapi.yml
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  - type: Documentation
-    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
 - aid: moogsoft:moogsoft-apikeys-users-api
   name: Moogsoft Apikeys Users API
   description: Endpoints relating to API key operations
@@ -2347,59 +2294,6 @@ apis:
   - type: APIReference
     url: >-
       https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
-- aid: moogsoft:moogsoft-instancetype-api
-  name: Moogsoft Instance Type API
-  description: Endpoints relating to instance types
-  humanURL: >-
-    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  baseURL: https://api.moogsoft.ai
-  tags:
-  - InstanceType
-  properties:
-  - type: OpenAPI
-    url: openapi/moogsoft-instancetype-api-openapi.yml
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  - type: Documentation
-    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
 - aid: moogsoft:moogsoft-license-api
   name: Moogsoft License API
   description: The License API from Moogsoft — 1 operation(s) for license.
@@ -3996,59 +3890,6 @@ apis:
   - type: APIReference
     url: >-
       https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
-- aid: moogsoft:moogsoft-webhooksv2-api
-  name: Moogsoft Webhooks V2 API
-  description: The webhooksV2 API from Moogsoft — 4 operation(s) for webhooksv2.
-  humanURL: >-
-    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  baseURL: https://api.moogsoft.ai
-  tags:
-  - webhooksV2
-  properties:
-  - type: OpenAPI
-    url: openapi/moogsoft-webhooksv2-api-openapi.yml
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
-  - type: Documentation
-    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
-  - type: APIReference
-    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
-  - type: APIReference
-    url: >-
-      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
 - aid: moogsoft:moogsoft-webhooksv2-logs-api
   name: Moogsoft webhooksV2 Logs API
   description: The webhooksV2 Logs API from Moogsoft — 1 operation(s) for webhooksv2 logs.
@@ -4272,6 +4113,165 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/moogsoft-workflows-api-openapi.yml
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
+- aid: moogsoft:moogsoft-api-keys-api
+  name: Moogsoft API Keys API
+  description: Endpoints relating to API key operations
+  humanURL: >-
+    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - API Keys
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-api-keys-api-openapi.yml
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
+- aid: moogsoft:moogsoft-instance-type-api
+  name: Moogsoft Instance Type API
+  description: Endpoints relating to instance types
+  humanURL: >-
+    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - Instance Type
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-instance-type-api-openapi.yml
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  - type: Documentation
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/07cc903e08dc7-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/98cab8f6ded6e-create-your-own-integration-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/b97257c4537e0-apex-ai-ops-incident-management-cloudwatch-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/16cc8392c9c10-collector-v2-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/a2faf5e9de2e7-config-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/872078c341608-events-integration
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/97383d5459cfb-on-call-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/7d9c8544a63bc-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/0f37a18e12cae-metrics-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/6295a1a5fa988-pager-duty-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/1328bccd943e6-probable-root-cause-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/8a70ecaa6cb8f-similar-incidents-service-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/02e00ab7d09f7-ui-services-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/af91225840fe8-user-api
+  - type: APIReference
+    url: https://api.docs.moogsoft.com/docs/latest/branches/main/22b7ec881443b-webhook-api
+  - type: APIReference
+    url: >-
+      https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
+- aid: moogsoft:moogsoft-webhooks-v2-api
+  name: Moogsoft Webhooks V2 API
+  description: The Webhooks V2 API from Moogsoft — 4 operation(s) for webhooks v2.
+  humanURL: >-
+    https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
+  baseURL: https://api.moogsoft.ai
+  tags:
+  - Webhooks V2
+  properties:
+  - type: OpenAPI
+    url: openapi/moogsoft-webhooks-v2-api-openapi.yml
   - type: APIReference
     url: >-
       https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
