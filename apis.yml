@@ -227,6 +227,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Alert Workflows
+  tags_raw:
   - alert-workflows
   properties:
   - type: OpenAPI
@@ -280,6 +282,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Alerts
+  tags_raw:
   - alerts
   properties:
   - type: OpenAPI
@@ -333,6 +337,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Alerts Search
+  tags_raw:
   - alerts-search
   properties:
   - type: OpenAPI
@@ -492,6 +498,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Audit
+  tags_raw:
   - Audits
   properties:
   - type: OpenAPI
@@ -758,6 +766,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Catalog
+  tags_raw:
   - catalogs
   properties:
   - type: OpenAPI
@@ -811,6 +821,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - CloudWatch
+  tags_raw:
   - cloudwatch
   properties:
   - type: OpenAPI
@@ -972,6 +984,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Collectors
+  tags_raw:
   - collectors
   properties:
   - type: OpenAPI
@@ -1343,7 +1357,8 @@ apis:
   humanURL: >-
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
-  tags:
+  tags: []
+  tags_raw:
   - dashboardSummaryPost
   properties:
   - type: OpenAPI
@@ -1877,6 +1892,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Group
+  tags_raw:
   - Groups
   properties:
   - type: OpenAPI
@@ -2195,6 +2212,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Incident Workflows
+  tags_raw:
   - incident-workflows
   properties:
   - type: OpenAPI
@@ -2248,6 +2267,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Incidents
+  tags_raw:
   - incidents
   properties:
   - type: OpenAPI
@@ -2354,6 +2375,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Maintenance Windows
+  tags_raw:
   - maintenance windows
   properties:
   - type: OpenAPI
@@ -2568,6 +2591,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Metrics
+  tags_raw:
   - metrics
   properties:
   - type: OpenAPI
@@ -2621,6 +2646,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Notification Policies
+  tags_raw:
   - notification policies
   properties:
   - type: OpenAPI
@@ -2727,6 +2754,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - On-Call Schedules
+  tags_raw:
   - on-call schedules
   properties:
   - type: OpenAPI
@@ -2779,7 +2808,8 @@ apis:
   humanURL: >-
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
-  tags:
+  tags: []
+  tags_raw:
   - operationalStats
   properties:
   - type: OpenAPI
@@ -2832,7 +2862,8 @@ apis:
   humanURL: >-
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
-  tags:
+  tags: []
+  tags_raw:
   - overviewStats
   properties:
   - type: OpenAPI
@@ -2992,6 +3023,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Permissions
+  tags_raw:
   - permissions
   properties:
   - type: OpenAPI
@@ -3098,6 +3131,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Plugins
+  tags_raw:
   - plugins
   properties:
   - type: OpenAPI
@@ -3154,6 +3189,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Policies
+  tags_raw:
   - policies
   properties:
   - type: OpenAPI
@@ -3207,6 +3244,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Product Feedback
+  tags_raw:
   - product-feedback
   properties:
   - type: OpenAPI
@@ -3366,6 +3405,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Root Cause
+  tags_raw:
   - root cause
   properties:
   - type: OpenAPI
@@ -3685,6 +3726,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Test Workflows
+  tags_raw:
   - test-workflows
   properties:
   - type: OpenAPI
@@ -3791,6 +3834,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Views
+  tags_raw:
   - views
   properties:
   - type: OpenAPI
@@ -3844,6 +3889,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Watchers
+  tags_raw:
   - watchers
   properties:
   - type: OpenAPI
@@ -4003,6 +4050,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - workflow Actions
+  tags_raw:
   - workflow-actions
   properties:
   - type: OpenAPI
@@ -4109,6 +4158,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Workflows
+  tags_raw:
   - workflows
   properties:
   - type: OpenAPI
@@ -4162,6 +4213,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -4215,6 +4268,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - InstanceType
+  tags_raw:
   - Instance Type
   properties:
   - type: OpenAPI
@@ -4268,6 +4323,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Webhooks (v2)
+  tags_raw:
   - Webhooks V2
   properties:
   - type: OpenAPI
