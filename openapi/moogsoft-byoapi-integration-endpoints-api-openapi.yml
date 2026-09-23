@@ -1,0 +1,226 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Create Your Own Integration Byoapi Integration Endpoints API
+  description: This API enables you to create and manage custom endpoints for inbound integrations.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: byoapi-integration-endpoints
+paths:
+  /v1/integrations/byoapi-integrations:
+    get:
+      tags:
+      - byoapi-integration-endpoints
+      summary: Get all configured integrations endpoints
+      description: Gets all configured integrations endpoints
+      operationId: getAllIntegrations
+      responses:
+        '200':
+          description: Successfully retrieved all custom endpoints
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfEndpoint'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:view
+components:
+  schemas:
+    IntegrationType:
+      type: string
+      enum:
+      - SPLUNK
+      - ANSIBLE_TOWER
+      - PROMETHEUS
+      - APPDYNAMICS
+      - PINGDOM
+      - DYNATRACE
+      - NEWRELIC
+      - ZABBIX
+      - AZURE
+      - NAGIOS
+      - SCOM
+      title: Integration Type
+    EndpointConfigDto:
+      type: object
+      title: Endpoint Config Dto
+      description: Create your own endpoint configuration.
+      properties:
+        batchKey:
+          type: string
+          description: Optional batch key
+        mappings:
+          type: array
+          description: List of the mappings.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Mapping'
+      required:
+      - mappings
+    MoogResponseListOfEndpoint:
+      type: object
+      title: Moog Response List Of Endpoint
+      description: Create Your Own Integration API Endpoint response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+      required:
+      - status
+      - data
+    EndpointStatus:
+      type: string
+      enum:
+      - PROVISIONED
+      - ACTIVE
+      - INACTIVE
+      - ERROR
+      title: Endpoint Status
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    Endpoint:
+      type: object
+      title: Endpoint
+      description: A configured endpoint
+      properties:
+        endpointName:
+          type: string
+          pattern: ^[^\s]+$
+          minLength: 1
+          maxLength: 127
+        authRequired:
+          type: boolean
+        description:
+          type: string
+          maxLength: 500
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/EndpointStatus'
+        endpointUrl:
+          type: string
+        draftConfigV2:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        liveConfigV2:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        type:
+          $ref: '#/components/schemas/Type'
+        integration:
+          $ref: '#/components/schemas/IntegrationType'
+        createdBy:
+          type: string
+        lastUpdatedBy:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+      required:
+      - endpointName
+      - authRequired
+    MoogFailureResponse:
+      type: object
+      description: Create Your Own Integration API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    Mapping:
+      type: object
+      title: Mapping
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    Type:
+      type: string
+      enum:
+      - EVENT
+      - METRIC
+      title: Type
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Create Your Own Integration API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

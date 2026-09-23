@@ -1,0 +1,158 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/Incidents Overview Stats API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: overviewStats
+paths:
+  /v2/stats/overview:
+    get:
+      tags:
+      - overviewStats
+      summary: Get overview statistics for dashboard
+      operationId: getOverviewStats
+      parameters:
+      - name: activeOnly
+        in: query
+        description: active only
+        schema:
+          type: boolean
+          default: 'false'
+      - name: end
+        in: query
+        description: end time
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      - name: start
+        in: query
+        description: time used to filter out the Opensearch data
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseOverviewWebResponse'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+components:
+  schemas:
+    MoogResponseOverviewWebResponse:
+      type: object
+      description: Alerts/Incidents API OverviewWebResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/OverviewWebResponse'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    OverviewWebResponse:
+      type: object
+      title: Overview Web Response
+      properties:
+        incident_count:
+          type: integer
+          format: int64
+        alert_count:
+          type: integer
+          format: int64
+        event_count:
+          type: integer
+          format: int64
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

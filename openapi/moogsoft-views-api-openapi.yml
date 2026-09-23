@@ -1,0 +1,475 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: User Views API
+  description: API for User Service
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Views
+  description: Endpoints related to incident views
+paths:
+  /v1/views/{id}:
+    patch:
+      tags:
+      - Views
+      summary: Update the view
+      operationId: updateView
+      parameters:
+      - name: id
+        in: path
+        description: Id of the view to be updated
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update payload for the view
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Views
+      summary: Get a View
+      description: Get a view by id if it is accessible to user
+      operationId: getViewById
+      parameters:
+      - name: id
+        in: path
+        description: View id of the view
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - Views
+      summary: Delete a View
+      description: Delete a view that already exists in the system
+      operationId: deleteView
+      parameters:
+      - name: id
+        in: path
+        description: View id of the view
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+  /v1/views:
+    get:
+      tags:
+      - Views
+      summary: Get all Views
+      description: Get all view that are accessible to user
+      operationId: getAllViews
+      parameters:
+      - name: view_type
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfViewConfigResponseDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - Views
+      summary: Create a View
+      description: Create a new view in the system
+      operationId: postView
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ViewConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseViewConfigResponseDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    MoogResponseViewConfigResponseDto:
+      type: object
+      description: User API ViewConfigResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ViewConfigResponseDto'
+      required:
+      - status
+      - data
+    ViewConfigType:
+      type: string
+      enum:
+      - INCIDENT
+      - ALERT
+      - METRIC
+      title: View Config Type
+      description: View types
+    ViewConfigResponseDto:
+      type: object
+      title: View Config Response Dto
+      description: Incident view definition
+      properties:
+        id:
+          type: string
+          description: Unique id of the view
+          readOnly: true
+        owner:
+          type: string
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
+          type: array
+          description: List of users this view is shared with (if any)
+          items:
+            type: string
+        shared_with_groups:
+          type: array
+          description: List of groups this view is shared with (if any)
+          items:
+            type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: View configuration data
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: View type
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    ViewConfigDto:
+      type: object
+      title: View Config Dto
+      description: Incident view definition
+      properties:
+        id:
+          type: string
+          description: Unique id of the view
+          readOnly: true
+        owner:
+          type: string
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
+          type: object
+          description: List of users this view is shared with (if any)
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        shared_with_groups:
+          type: object
+          description: List of groups this view is shared with (if any)
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: View configuration data, which is utilized by the UI
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: View type, indicates the type of view
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfViewConfigResponseDto:
+      type: object
+      description: User API ViewConfigResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ViewConfigResponseDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

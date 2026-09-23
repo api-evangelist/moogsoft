@@ -1,0 +1,1979 @@
+openapi: 3.2.0
+info:
+  version: 4.0.0
+  title: Config Catalogs API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu actions, and maintenance windows
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Catalogs
+  description: Catalog management
+paths:
+  /v2/catalogs:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns all catalogs
+      description: Returns all catalogs.
+      operationId: getCatalogsV2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    post:
+      tags:
+      - Catalogs
+      summary: Creates a new, empty catalog
+      description: Creates a new, empty catalog.
+      operationId: createNewEmptyCatalogV2
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Catalog'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v2/catalogs/settings:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns catalog settings
+      description: Returns catalogs settings.
+      operationId: getCatalogSettings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalogSettings'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+  /v2/catalogs/{id}:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns the catalog with the given id
+      description: Returns the catalog with the given id.
+      operationId: getCatalogV2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    delete:
+      tags:
+      - Catalogs
+      summary: Deletes the catalog and content documents (by catalog id)
+      operationId: deleteCatalogV2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v2/catalogs/{id}/batch:
+    post:
+      tags:
+      - Catalogs
+      summary: Adds a batch of new documents to the catalog
+      description: 'Adds a batch of new documents to the catalog. The documents should conform to the catalog schema.
+
+        Note — The document keys in your request are case-sensitive. They should match exactly the field names defined in the catalog schema.
+
+        Send a GET catalogs request to check the schema.'
+      operationId: addCatalogDocumentsV2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Add documents data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfstring'
+                __errors__:
+                  '#/components/schemas/MoogResponseListOfstring': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v2/catalogs/{id}/documents:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns the matching documents in the catalog
+      description: Returns the matching documents in the catalog.
+      operationId: queryCatalogDocumentsV2
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    post:
+      tags:
+      - Catalogs
+      summary: Adds a new document (row) to the catalog
+      description: 'Adds a new document (row) to the catalog. The document should conform to the catalog schema.
+
+        Note — The document keys in your request are case-sensitive. They should match exactly the field names defined in the catalog schema.
+
+        Send a GET catalogs request to check the schema.'
+      operationId: addCatalogDocumentV2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Add document data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfstring'
+                __errors__:
+                  '#/components/schemas/MoogResponseListOfstring': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v2/catalogs/{id}/documents/{documentId}:
+    put:
+      tags:
+      - Catalogs
+      summary: Replaces a document in the catalog
+      description: Replaces a document in the catalog.
+      operationId: replaceCatalogDocumentV2
+      parameters:
+      - name: documentId
+        in: path
+        description: The unique identifier of the document (row) in the catalog.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique identifier of the catalog where the document (row) is located.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update document data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+    patch:
+      tags:
+      - Catalogs
+      summary: Modifies a document in the catalog
+      description: Modifies a document in the catalog.
+      operationId: modifyCatalogDocumentV2
+      parameters:
+      - name: documentId
+        in: path
+        description: The unique identifier of the document (row) in the catalog.
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        description: The unique identifier of the catalog where the document (row) is located.
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update document data
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+    get:
+      tags:
+      - Catalogs
+      summary: Returns a document from the catalog
+      description: Returns a document from the catalog.
+      operationId: getCatalogDocumentV2
+      parameters:
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: Document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    delete:
+      tags:
+      - Catalogs
+      summary: Deletes a single document in a catalog (by catalog id)
+      description: Deletes a single document in a catalog (by catalog id).
+      operationId: deleteCatalogDocumentV2
+      parameters:
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v2/catalogs/{id}/search:
+    post:
+      tags:
+      - Catalogs
+      summary: Returns the matching documents in the catalog
+      description: Returns the matching documents in the catalog. This is a POST rather than a GET due to the JSON body.
+      operationId: searchCatalogDocumentsV2
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Dictionary of AND'ed key/column and value pairs to be searched. Values are treated as an exact match and if the queried value is a string, then it is case-insensitive.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+  /v3/catalogs/{catalogName}/search:
+    post:
+      tags:
+      - Catalogs
+      summary: Returns the matching documents in the catalog
+      description: Returns the matching documents in the catalog. This is a POST rather than a GET due to the JSON body.
+      operationId: searchCatalogDocumentsV3
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+          default: '50'
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: List of AND'ed SearchFieldDto to be searched. Values are treated as an exact match and if the queried value is a string, then it is case-insensitive.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchFieldsDto'
+      responses:
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+  /v1/catalogs/{catalogName}/documents/{documentId}:
+    patch:
+      tags:
+      - Catalogs
+      summary: Modifies a document in the catalog
+      description: Modifies a document in the catalog.
+      operationId: modifyCatalogDocument
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Updated documenet values.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+    delete:
+      tags:
+      - Catalogs
+      summary: Deletes a single document in a catalog (by catalog name)
+      description: Deletes a single document in a catalog (by catalog name).
+      operationId: deleteCatalogDocument
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalog-files/{name}:
+    patch:
+      tags:
+      - Catalogs
+      summary: Replaces a catalog with schema and documents based on the given CSV file
+      description: 'Replaces a catalog with schema and documents based on the given CSV file. For an example of the expected format, search for "enrichment CSV" in the API documentation.
+
+        Note — You need to add the catalog file to the form data in the PATCH command. Suppose you want to upload the file using cURL.
+
+        To do this, append a line to the auto-generated command that specifies the path and filename of the CSV you want to upload.
+
+        For example:
+
+
+        curl --request PATCH \
+
+        --url https://api.moogsoft.ai/v1/catalog-files/data-center \
+
+        --header ''Accept: application/json'' \
+
+        --header ''Content-Type: multipart/form-data; boundary=---011000010111000001101001'' \
+
+        --header ''apiKey: my-api-key'' \
+
+        --form name=data-center-enrichment \
+
+        --form description="Enrichment catalog for Data Center nodes" \
+
+        # append this line....
+
+        --form file=@/users/jane.smith/acme-catalogs/data-center.csv'
+      operationId: replaceCatalog
+      parameters:
+      - name: synchronous
+        in: query
+      - name: name
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                file:
+                  type: string
+                  contentMediaType: application/octet-stream
+              required:
+              - file
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalog-files:
+    post:
+      tags:
+      - Catalogs
+      summary: Creates a new catalog with schema and documents based on the given CSV file
+      description: 'Creates a new catalog with schema and documents based on the given CSV file. For an example of the expected format, search for "enrichment CSV" in the Moogsoft documentation.
+
+        Note — You need to add the catalog file to the form data in the POST command. Suppose you want to upload the file using cURL.
+
+        To do this, append a line to the auto-generated command that specifies the path and filename of the CSV you want to upload.
+
+        For example:
+
+
+        curl --request POST \
+
+        --url https://api.moogsoft.ai/v1/catalog-files \
+
+        --header ''Accept: application/json'' \
+
+        --header ''Content-Type: multipart/form-data; boundary=---011000010111000001101001'' \
+
+        --header ''apiKey: my-api-key'' \
+
+        # append this line....
+
+        --form file=@/users/jane.smith/moogsoft-catalogs/data-center.csv'
+      operationId: uploadNewCatalog
+      parameters:
+      - name: synchronous
+        in: query
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  pattern: ^(?!system\.)[a-zA-Z0-9]([\w \-.]*)$
+                  minLength: 1
+                  maxLength: 127
+                description:
+                  type: string
+                  pattern: \S
+                  minLength: 1
+                file:
+                  type: string
+                  contentMediaType: application/octet-stream
+              required:
+              - name
+              - description
+              - file
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalogs/{catalogName}/documents:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns the matching documents in the catalog
+      description: Returns the matching documents in the catalog.
+      operationId: queryCatalogDocuments
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: query
+        in: query
+        schema:
+          type: string
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    delete:
+      tags:
+      - Catalogs
+      summary: Deletes all the matching documents in the catalog
+      description: 'Deletes all documents (rows) from a data catalog which include the specified value.
+
+        Use the following example to model your API request. Include your API key,
+
+        and replace `groupsCatalog` with the name of your catalog. Replace `name` with the name of the column containing
+
+        the value, and replace `53` with your value.
+
+        For example:
+
+
+        curl --location --request DELETE ''https://api.dev.moogsoft.cloud/v1/catalogs/groupsCatalog/documents'' \
+
+        --header ''apiKey: API_KEY_HERE'' \
+
+        --header ''Content-Type: application/json'' \
+
+        --data ''{
+
+        "name": "53",
+
+        "uuid": "53basd12313"
+
+        }''
+
+        You can also delete documents by specifying the document id.
+
+        You can delete a single document by specifying a single id value, or delete multiple documents by providing an array of up to 10,000 IDs.
+
+        For example:
+
+
+        curl --location --request DELETE ''https://api.dev.moogsoft.cloud/v1/catalogs/groupsCatalog/documents'' \
+
+        --header ''apiKey: API_KEY_HERE'' \
+
+        --header ''Content-Type: application/json'' \
+
+        --data ''{
+
+        "_id": ["68c148122e2fa960380928d6", "68c148122e2fa960380928d5"]
+
+        }'''
+      operationId: deleteCatalogDocuments
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfstring'
+                __errors__:
+                  '#/components/schemas/MoogResponseListOfstring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+    post:
+      tags:
+      - Catalogs
+      summary: Adds a new document (row) to the catalog
+      description: 'Adds a new document (row) to the catalog. The document should conform to the catalog schema.
+
+        Note — The document keys in your request are case-sensitive. They should match exactly the field names defined in the catalog schema.
+
+        Send a GET catalogs request to check the schema.'
+      operationId: addCatalogDocument
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Add catalog document.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfstring'
+                __errors__:
+                  '#/components/schemas/MoogResponseListOfstring': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalogs/{catalogName}:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns the catalog with the given name
+      description: Returns the catalog with the given name.
+      operationId: getCatalog
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    delete:
+      tags:
+      - Catalogs
+      summary: Deletes the catalog and content documents (by catalog name)
+      description: Deletes the catalog and content documents (by catalog name).
+      operationId: deleteCatalog
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalogs/{catalogName}/search:
+    post:
+      tags:
+      - Catalogs
+      summary: Returns the matching documents in the catalog
+      description: Returns the matching documents in the catalog. This is a POST rather than a GET due to the JSON body.
+      operationId: searchCatalogDocuments
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          format: int32
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Dictionary of AND'ed key/column and value pairs to be searched. Values are treated as an exact match and if the queried value is a string, then it is case-insensitive.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfDocumentDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+  /v1/catalogs:
+    get:
+      tags:
+      - Catalogs
+      summary: Returns all catalogs
+      description: Returns all catalogs.
+      operationId: getCatalogs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCatalog'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:view
+    post:
+      tags:
+      - Catalogs
+      summary: Creates a new, empty catalog
+      description: Creates a new, empty catalog.
+      operationId: createNewEmptyCatalog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Catalog'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCatalog'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+  /v1/catalogs/{catalogName}/batch:
+    post:
+      tags:
+      - Catalogs
+      summary: Adds a batch of new documents to the catalog
+      description: 'Adds a batch of new documents to the catalog. The documents should conform to the catalog schema.
+
+        Note — The document keys in your request are case-sensitive. They should match exactly the field names defined in the catalog schema.
+
+        Send a GET catalogs request to check the schema.'
+      operationId: addCatalogDocuments
+      parameters:
+      - name: catalogName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Add documents data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfstring'
+                __errors__:
+                  '#/components/schemas/MoogResponseListOfstring': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - catalog:edit
+components:
+  schemas:
+    MoogResponseCatalogSettings:
+      type: object
+      description: Config API CatalogSettings response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CatalogSettings'
+      required:
+      - status
+      - data
+    ComparisonOperator:
+      type: string
+      enum:
+      - equals
+      - contains
+      title: Comparison Operator
+      description: Comparison operator type to use for the filter
+    MoogResponseDocumentDto:
+      type: object
+      description: Config API DocumentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/DocumentDto'
+      required:
+      - status
+      - data
+    CatalogFieldSchemaType:
+      type: string
+      enum:
+      - STRING
+      - NUMBER
+      - BOOLEAN
+      - JSON_OBJECT
+      - JSON_ARRAY
+      title: Catalog Field Schema Type
+    CatalogFieldSchema:
+      type: object
+      title: Catalog Field Schema
+      properties:
+        name:
+          type: string
+          pattern: ^[a-zA-Z\d-_]+$
+          minLength: 1
+        required:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/CatalogFieldSchemaType'
+      required:
+      - name
+      - required
+      - type
+    SearchMatchType:
+      type: string
+      enum:
+      - STRING
+      - REGEX
+      - RANGE
+      title: Search Match Type
+    SearchFieldsDto:
+      type: array
+      title: Search Fields Dto
+      items:
+        $ref: '#/components/schemas/SearchFieldDto'
+    MoogResponseListOfCatalog:
+      type: object
+      description: Config API Catalog response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Catalog'
+      required:
+      - status
+      - data
+    MoogResponseListOfDocumentDto:
+      type: object
+      description: Config API DocumentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDto'
+      required:
+      - status
+      - data
+    MoogResponseCatalog:
+      type: object
+      description: Config API Catalog response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - status
+      - data
+    CatalogSchema:
+      type: object
+      title: Catalog Schema
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogFieldSchema'
+      required:
+      - fields
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    CatalogSettings:
+      type: object
+      title: Catalog Settings
+      properties:
+        max_catalogs:
+          type: integer
+          description: Maximum number of allowed catalogs
+          format: int64
+          readOnly: true
+        num_catalogs:
+          type: integer
+          description: Current number of catalogs
+          format: int64
+          readOnly: true
+        maxCatalogs:
+          type: integer
+          description: Use max_catalogs instead
+          format: int64
+          readOnly: true
+        numCatalogs:
+          type: integer
+          description: Use num_catalogs instead
+          format: int64
+          readOnly: true
+    DocumentDto:
+      type: object
+      title: Document Dto
+      additionalProperties:
+        type: string
+    Catalog:
+      type: object
+      title: Catalog
+      properties:
+        id:
+          type: string
+          description: Unique id of the catalog
+          readOnly: true
+        name:
+          type: string
+          description: Unique name of the catalog
+          pattern: ^(?!system\.)[a-zA-Z0-9]([\w \-.]*)$
+        description:
+          type: string
+          description: Description of the catalog
+          pattern: \S
+          minLength: 1
+        schema:
+          $ref: '#/components/schemas/CatalogSchema'
+          description: Optional schema definition of the catalog
+        created_by:
+          type: string
+          description: User id who created the catalog
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: User id who last updated the catalog
+          readOnly: true
+        entries:
+          type: integer
+          description: Total number of entries in the catalog
+          format: int64
+          readOnly: true
+        version:
+          type: integer
+          description: Version of the catalog with regard to full catalog replace operations.
+          format: int64
+          readOnly: true
+        write_token:
+          type: string
+          description: Token to manage write access.
+          readOnly: true
+        last_updated:
+          type: integer
+          description: When the catalog was last updated
+          format: int64
+          readOnly: true
+        created:
+          type: integer
+          description: When the catalog was created
+          format: int64
+          readOnly: true
+        status:
+          type: string
+          description: Status of the catalog
+          readOnly: true
+        details:
+          type: object
+          description: Specific details regarding the catalog
+          readOnly: true
+        createdBy:
+          type: string
+          description: Use created_by instead
+          readOnly: true
+          x-deprecated: true
+        lastUpdatedBy:
+          type: string
+          description: Use last_updated_by instead
+          readOnly: true
+          x-deprecated: true
+        lastUpdated:
+          type: integer
+          description: Use last_updated instead
+          format: int64
+          readOnly: true
+      required:
+      - name
+      - description
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    SearchFieldDto:
+      type: object
+      title: Search Field Dto
+      properties:
+        field_name:
+          type: string
+          minLength: 1
+        match_type:
+          $ref: '#/components/schemas/SearchMatchType'
+          description: The type of match to use for the field.
+        match_value: {}
+        comparison_operator:
+          $ref: '#/components/schemas/ComparisonOperator'
+          description: The comparison operator to use for filtering. Note that this field only affects the search if the match_type is STRING. For other match types (RANGE, REGEX), this field is ignored.
+      required:
+      - field_name
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Config API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

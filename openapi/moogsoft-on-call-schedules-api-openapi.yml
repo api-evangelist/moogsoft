@@ -1,0 +1,1224 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: on-call schedules API
+  description: This API allows you to save and retrieve on-call schedules, escalation policies
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: On-Call Schedules
+  description: on-call scheduling
+paths:
+  /v1/on-call/schedules/{id}/preview:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Gets the final on-call scheduled occurrences based on start and end timestamps
+      operationId: getSchedulePreviewAlt
+      parameters:
+      - name: end
+        in: query
+        schema:
+          type: integer
+          description: Specifies the end date for schedule generation, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: start
+        in: query
+        schema:
+          type: integer
+          description: Specifies the start date for schedule generation, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseFinalScheduleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      deprecated: true
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/{id}/occurrences/ready:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Gets active and pending occurrences for the schedule
+      operationId: getActiveAndPending
+      parameters:
+      - name: end
+        in: query
+        schema:
+          type: integer
+          description: Specifies the max start date for the schedule occurrence start time, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: start
+        in: query
+        schema:
+          type: integer
+          description: Specifies the min start date for the schedule occurrence start time, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Retrieves all, existing on-call schedules
+      operationId: getSchedules
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the on-call schedules
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the on-call schedules
+          format: int32
+          minimum: 0
+          default: 0
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          enum:
+          - created
+          - lastUpdated
+          - name
+          - createdBy
+          - lastUpdatedBy
+          - start
+          description: Specifies the column to sort by when retrieving the on-call schedules
+          default: created
+      - name: sortOrder
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          description: Specifies the sorting order when retrieving the on-call schedules
+          default: desc
+      - name: user
+        in: query
+        schema:
+          type: string
+          description: Specifies schedules to retrieve that include this user email
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - On-Call Schedules
+      summary: Creates a new on-call schedule
+      operationId: createSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseScheduleDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:edit
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/preview:
+    post:
+      tags:
+      - On-Call Schedules
+      summary: Gets the final on-call scheduled occurrences based on start and end timestamps
+      operationId: getFinalSchedulePreview
+      parameters:
+      - name: end
+        in: query
+        schema:
+          type: integer
+          description: Specifies the end date for schedule generation, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: id
+        in: query
+        schema:
+          type: string
+          description: (optional) the id of the schedule being previewed, if previously saved
+      - name: start
+        in: query
+        schema:
+          type: integer
+          description: Specifies the start date for schedule generation, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseScheduleDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseFinalScheduleDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/{id}/overrides:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Gets list of Overrides
+      operationId: getOverrides
+      parameters:
+      - name: end
+        in: query
+        schema:
+          type: integer
+          description: Specifies the end date to search for schedule overrides, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: start
+        in: query
+        schema:
+          type: integer
+          description: Specifies the start date to search for schedule overrides, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - On-Call Schedules
+      summary: Creates an Override
+      operationId: createOverrides
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseScheduleOccurrenceDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/{id}/active-user:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Gets the user currently on call for a schedule
+      operationId: getCurrentOnCallUser
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/{id}:
+    patch:
+      tags:
+      - On-Call Schedules
+      summary: Updates an existing on-call schedule
+      operationId: updateSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseScheduleDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Retrieves the existing on-call schedule
+      operationId: getSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - On-Call Schedules
+      summary: Deletes an existing on-call schedule
+      operationId: deleteSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:edit
+        description: Required user permissions for this endpoint
+  /v1/on-call/schedules/{id}/occurrences:
+    get:
+      tags:
+      - On-Call Schedules
+      summary: Gets all occurrences for the schedule
+      operationId: getScheduleOccurrences
+      parameters:
+      - name: end
+        in: query
+        schema:
+          type: integer
+          description: Specifies the max start date for the schedule occurrence start time, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: start
+        in: query
+        schema:
+          type: integer
+          description: Specifies the min start date for the schedule occurrence start time, milliseconds since Jan 1, 1970 GMT
+          format: int64
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseScheduleOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+  /v1/on-call/occurrences/{id}/overrides:
+    delete:
+      tags:
+      - On-Call Schedules
+      summary: Deletes an Override
+      operationId: deleteOverrides
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - oncall:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    MoogResponseScheduleDto:
+      type: object
+      description: On-Call API ScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ScheduleDto'
+      required:
+      - status
+      - data
+    RotationType:
+      type: string
+      enum:
+      - days
+      - weeks
+      title: Rotation Type
+      description: On-call scheduling rotation type
+    MoogFailureResponse:
+      type: object
+      description: On-Call API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    ScheduleListDto:
+      type: object
+      title: Schedule List Dto
+      properties:
+        result:
+          type: array
+          description: List of on-call schedules, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/ScheduleDto'
+        count:
+          type: integer
+          description: Total number of on-call schedules that would have been returned in the absence of offset and limit
+          format: int64
+    FinalScheduleDto:
+      type: object
+      title: Final Schedule Dto
+      description: Definition for a specific occurrence of an on-call schedule
+      properties:
+        base_schedule:
+          type: array
+          description: the schedule created from the schedule configuration
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
+        final_schedule:
+          type: array
+          description: the schedule after applying overrides
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
+    OnCallStatus:
+      type: string
+      enum:
+      - pending
+      - active
+      - completed
+      - overridden
+      title: On Call Status
+      description: OnCall Occurrence Status
+    Restriction:
+      type: object
+      title: Restriction
+      properties:
+        type:
+          $ref: '#/components/schemas/RestrictionType'
+          description: the type of restriction - daily or weekly
+        start_day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: the day of week to start this restriction
+        end_day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: the day of week to end this restriction
+        start_time:
+          type: string
+          description: the start time of day, in the form HH:mm
+        end_time:
+          type: string
+          description: the end time of day, in the form HH:mm
+      required:
+      - type
+      - start_time
+      - end_time
+    Handoff:
+      type: object
+      title: Handoff
+      properties:
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: 'the day of week to handoff on-call responsibilities. (Note: is optional ONLY if Rotation.type is DAYS and Rotation.length is not 7)'
+        time:
+          type: string
+          description: the time of day, in the form HH:mm, to handoff on-call responsibilities
+      required:
+      - time
+    BaseScheduleOccurrenceDto:
+      type: object
+      title: Base Schedule Occurrence Dto
+      description: base definition for a schedule occurrence
+      properties:
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        end:
+          $ref: '#/components/schemas/Timestamp'
+          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        user:
+          type: string
+          description: The user "on-call" between this occurrence's start and end time
+          pattern: \S
+          readOnly: true
+      required:
+      - start
+      - end
+      - user
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    BaseScheduleDto:
+      type: object
+      title: Base Schedule Dto
+      description: definition for creating or updating a given on-call schedule
+      properties:
+        name:
+          type: string
+          description: name of the schedule
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: (optional) description of the schedule
+        user_groups:
+          type: array
+          description: (optional) list of user group ids
+          items:
+            type: string
+        users:
+          type: array
+          description: ordered list of users to rotate in the on-call schedule rotation
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ScheduleUserDto'
+        rotation:
+          $ref: '#/components/schemas/Rotation'
+          description: The type of rotation for this on-call schedule
+        handoff:
+          $ref: '#/components/schemas/Handoff'
+          description: when on-call responsibilities should rotate, milliseconds since Jan 1, 1970 GMT
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: when schedule takes effect, milliseconds since Jan 1, 1970 GMT
+        timezone:
+          type: string
+          description: (optional) timezone used of the schedule; used for display purposes
+          default: UTC - UTC
+        restrictions:
+          type: array
+          description: (optional) daily or weekly restrictions on the schedule
+          items:
+            $ref: '#/components/schemas/Restriction'
+      required:
+      - name
+      - users
+      - rotation
+      - handoff
+      - start
+    ScheduleUserDto:
+      type: object
+      title: Schedule User Dto
+      properties:
+        user:
+          type: string
+          description: the email of the moogsoft user
+          pattern: ^(.+)@(\S+)$
+          examples:
+          - username@domain.com
+        order:
+          type: integer
+          description: the order of the user in the schedule rotation
+          format: int32
+          examples:
+          - 3
+      required:
+      - user
+      - order
+    MoogResponseFinalScheduleDto:
+      type: object
+      description: On-Call API FinalScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/FinalScheduleDto'
+      required:
+      - status
+      - data
+    RestrictionType:
+      type: string
+      enum:
+      - daily
+      - weekly
+      title: Restriction Type
+      description: Type of Restriction on a Schedule
+    DayOfWeek:
+      type: string
+      enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+      title: Day Of Week
+      description: Day of Week
+    MoogResponseScheduleOccurrenceListDto:
+      type: object
+      description: On-Call API ScheduleOccurrenceListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ScheduleOccurrenceListDto'
+      required:
+      - status
+      - data
+    MoogResponseScheduleListDto:
+      type: object
+      description: On-Call API ScheduleListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ScheduleListDto'
+      required:
+      - status
+      - data
+    ScheduleOccurrenceListDto:
+      type: object
+      title: Schedule Occurrence List Dto
+      description: Definition for a list of on-call schedule occurrences
+      properties:
+        result:
+          type: array
+          description: List of on-call schedule occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
+        count:
+          type: integer
+          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
+          format: int64
+    Rotation:
+      type: object
+      title: Rotation
+      properties:
+        type:
+          $ref: '#/components/schemas/RotationType'
+          description: a repeating rotation type for the on-call schedule
+        length:
+          type: integer
+          description: the length of each on-call shift, based on rotation type
+          format: int32
+      required:
+      - type
+      - length
+    ScheduleDto:
+      type: object
+      title: Schedule Dto
+      description: definition for creating or updating a given on-call schedule
+      properties:
+        name:
+          type: string
+          description: name of the schedule
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: (optional) description of the schedule
+        user_groups:
+          type: array
+          description: (optional) list of user group ids
+          items:
+            type: string
+        users:
+          type: array
+          description: ordered list of users to rotate in the on-call schedule rotation
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ScheduleUserDto'
+        rotation:
+          $ref: '#/components/schemas/Rotation'
+          description: The type of rotation for this on-call schedule
+        handoff:
+          $ref: '#/components/schemas/Handoff'
+          description: when on-call responsibilities should rotate, milliseconds since Jan 1, 1970 GMT
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: when schedule takes effect, milliseconds since Jan 1, 1970 GMT
+        timezone:
+          type: string
+          description: (optional) timezone used of the schedule; used for display purposes
+          default: UTC - UTC
+        restrictions:
+          type: array
+          description: (optional) daily or weekly restrictions on the schedule
+          items:
+            $ref: '#/components/schemas/Restriction'
+        id:
+          type: string
+          description: unique id of the schedule
+          readOnly: true
+        on_call:
+          type: string
+          description: the user currently on call for this schedule. (only populated for bulk GET /schedules)
+          readOnly: true
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the schedule was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the schedule was last updated
+        created_by:
+          type: string
+          description: user who created the schedule
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: user who last updated the schedule
+          readOnly: true
+      required:
+      - name
+      - users
+      - rotation
+      - handoff
+      - start
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    ScheduleOccurrenceDto:
+      type: object
+      title: Schedule Occurrence Dto
+      description: Definition for a specific occurrence of an on-call schedule
+      properties:
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        end:
+          $ref: '#/components/schemas/Timestamp'
+          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        user:
+          type: string
+          description: The user "on-call" between this occurrence's start and end time
+          pattern: \S
+          readOnly: true
+        id:
+          type: string
+          description: The unique id of this on-call schedule occurrence
+          readOnly: true
+        schedule_id:
+          type: string
+          description: The unique id of the on-call schedule associated with this occurrence
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/OnCallStatus'
+          description: The status of this on-call occurrence
+        layer_type:
+          type: string
+          description: The schedule layer this occurrences belongs to
+          readOnly: true
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the on-call occurrence was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the on-call occurrence was last updated
+        created_by:
+          type: string
+          description: user who created the on-call occurrence
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: user who last updated the on-call occurrence
+          readOnly: true
+      required:
+      - start
+      - end
+      - user
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing On-Call API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

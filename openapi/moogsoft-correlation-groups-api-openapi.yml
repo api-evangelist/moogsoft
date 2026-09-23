@@ -1,0 +1,616 @@
+openapi: 3.2.0
+info:
+  version: 4.0.0
+  title: Config Correlation Groups API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu actions, and maintenance windows
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: correlation-groups
+paths:
+  /v2/correlation/groups:
+    get:
+      tags:
+      - correlation-groups
+      summary: Fetches all correlation groups
+      description: Fetches all correlation groups.
+      operationId: getAllCorrelationGroups
+      parameters:
+      - name: inline-definitions
+        in: query
+        schema:
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCorrelationGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:view
+    post:
+      tags:
+      - correlation-groups
+      summary: Creates a new correlation group record
+      description: Creates a new correlation group record. The record is identified by its name (given in the request body).The name cannot be changed in the future.
+      operationId: createCorrelationGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelationGroupDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCorrelationGroupDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:edit
+  /v2/correlation/groups/id/{identifier}:
+    patch:
+      tags:
+      - correlation-groups
+      summary: Edits the correlation group identified in the path parameter (either the id or…
+      description: Edits the correlation group identified in the path parameter (either the id or the name).
+      operationId: modifyCorrelationGroup2
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelationGroupDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCorrelationGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:edit
+    get:
+      tags:
+      - correlation-groups
+      summary: Fetches the correlation group identified in the path parameter (either the id…
+      description: Fetches the correlation group identified in the path parameter (either the id or the name).
+      operationId: getGroup2
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCorrelationGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:view
+    delete:
+      tags:
+      - correlation-groups
+      summary: Deletes the correlation group identified in the path parameter (either the id…
+      description: Deletes the correlation group identified in the path parameter (either the id or the name).
+      operationId: deleteCorrelationGroup2
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:edit
+  /v2/correlation/groups/{identifier}:
+    patch:
+      tags:
+      - correlation-groups
+      summary: Edits the correlation group identified in the path parameter (either the id or…
+      description: Edits the correlation group identified in the path parameter (either the id or the name).
+      operationId: modifyCorrelationGroup
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CorrelationGroupDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCorrelationGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:edit
+    get:
+      tags:
+      - correlation-groups
+      summary: Fetches the correlation group identified in the path parameter (either the id…
+      description: Fetches the correlation group identified in the path parameter (either the id or the name).
+      operationId: getGroup
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCorrelationGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:view
+    delete:
+      tags:
+      - correlation-groups
+      summary: Deletes the correlation group identified in the path parameter (either the id…
+      description: Deletes the correlation group identified in the path parameter (either the id or the name).
+      operationId: deleteCorrelationGroup
+      parameters:
+      - name: identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - correlation:edit
+components:
+  schemas:
+    DefinitionReferenceDto:
+      type: object
+      title: Definition Reference Dto
+      properties:
+        uuid:
+          type: string
+          description: The ID of a correlation definition
+        disabled:
+          type: boolean
+      required:
+      - uuid
+    MoogResponseListOfCorrelationGroupDto:
+      type: object
+      description: Config API CorrelationGroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CorrelationGroupDto'
+      required:
+      - status
+      - data
+    IncidentMergeThreshold:
+      type: string
+      enum:
+      - default
+      - any
+      - ten
+      - twenty
+      - thirty
+      - forty
+      - fifty
+      - sixty
+      - seventy
+      - eighty
+      - ninety
+      - never
+      title: Incident Merge Threshold
+    CorrelationGroupDto:
+      type: object
+      title: CorrelationDefinitionGroup
+      properties:
+        name:
+          type: string
+          description: The name of the correlation definition group. During an update, this field can be omitted to retain the existing value.
+          maxLength: 127
+          examples:
+          - Default Group
+        uuid:
+          type: string
+          description: Populated with the generated ID of the definition group. Not used when creating or updating a definition.
+          readOnly: true
+        disabled:
+          type: boolean
+          description: Allows for disabling correlation processing by this group and definitions referenced by it.
+          default: false
+        catch_all:
+          type: boolean
+          description: If set to true, an alert will always land in a catch all definition, if no other definitions match
+        definitions:
+          type: array
+          description: Ordered reference to the correlation definitions in this group
+          items:
+            $ref: '#/components/schemas/DefinitionReferenceDto'
+        incident_merge_threshold:
+          $ref: '#/components/schemas/IncidentMergeThreshold'
+          description: Specifies how many alerts the active and candidate incidents should have in common in order to be merged and/or superseded. During an update, this field can be omitted to retain the existing value.
+        short_circuit_evaluation:
+          type: boolean
+          description: If set to true, first matched definition stops any further definition evaluations
+        scope:
+          type:
+          - string
+          - 'null'
+          description: Optional alert filter to limit the scope of alerts to consider for this group. An empty can be set to disable the scope filter. During an update, this field can be omitted to retain the existing value.
+        created_by:
+          type: string
+          description: User ID or email of the creator
+          readOnly: true
+          examples:
+          - user@example.com
+        last_updated_by:
+          type: string
+          description: User ID or email of the last updater
+          readOnly: true
+          examples:
+          - user@example.com
+        created:
+          type:
+          - number
+          - 'null'
+          description: Read-only reference to the created time. Time is a UTC timestamp.
+          readOnly: true
+          anyOf:
+          - $ref: '#/components/schemas/Instant'
+          - type: 'null'
+        last_updated:
+          type:
+          - number
+          - 'null'
+          description: Read-only reference to the last updated time. Time is a UTC timestamp.
+          readOnly: true
+          anyOf:
+          - $ref: '#/components/schemas/Instant'
+          - type: 'null'
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseCorrelationGroupDto:
+      type: object
+      description: Config API CorrelationGroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CorrelationGroupDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Config API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

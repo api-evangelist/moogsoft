@@ -1,0 +1,165 @@
+openapi: 3.2.0
+info:
+  version: 3.0.25-5d76381-134
+  title: service Datum Indexes Resource API
+servers:
+- url: http://localhost:3030
+  description: Auto generated value
+- url: http://0.0.0.0:3030
+  description: Auto generated value
+tags:
+- name: Datum Indexes Resource
+paths:
+  /datum-indexes:
+    post:
+      tags:
+      - Datum Indexes Resource
+      summary: Get a series of datums in time order based to the input filters (POST because…
+      description: Get a series of datums in time order based on the input filters (POST because filter can be very long)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatumIndexRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+        '400':
+          description: Bad Request
+      servers:
+      - url: http://localhost:3030
+        description: Auto generated value
+      - url: http://0.0.0.0:3030
+        description: Auto generated value
+      operationId: postDatumIndexes
+      x-operation-id-source: derived
+    get:
+      tags:
+      - Datum Indexes Resource
+      summary: Get a series of datums in time order based to the input filters
+      description: Get a series of datums in time order based to the input filters.
+      parameters:
+      - name: direction
+        in: query
+        description: The direction you want to sort (ASC or DESC)
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/SortByDirection'
+          - default: DESC
+      - name: filter
+        in: query
+        description: The filter to use
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The maximum number of rollups to return
+        schema:
+          type: integer
+          format: int32
+          default: '100'
+      - name: sortBy
+        in: query
+        description: Parameter to specify if you want to sort by number of datums (DATUMS), metric name (METRIC) or last updated (LAST_UPDATED)
+        schema:
+          allOf:
+          - $ref: '#/components/schemas/DatumIndexSortBy'
+          - default: DATUMS
+      - name: start
+        in: query
+        description: The offset of results to skip
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+      servers:
+      - url: http://localhost:3030
+        description: Auto generated value
+      - url: http://0.0.0.0:3030
+        description: Auto generated value
+      operationId: getDatumIndexes
+      x-operation-id-source: derived
+components:
+  schemas:
+    SlimDatumIndexDto:
+      type: object
+      properties:
+        fully_qualified_moob:
+          type: string
+          x-deprecated: true
+        metric:
+          type: string
+        source:
+          type: string
+          x-deprecated: true
+        key:
+          type: string
+          x-deprecated: true
+        tags:
+          type: object
+        label:
+          type: string
+        detector:
+          type: string
+        uuid:
+          type: string
+          x-deprecated: true
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+    GetSlimDatumIndexResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumIndexDto'
+        total:
+          type: integer
+          format: int64
+        source:
+          type: string
+        alternateResults:
+          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+    DatumIndexSortBy:
+      type: string
+      enum:
+      - DATUMS
+      - METRIC
+      - LAST_UPDATED
+    Instant:
+      type: string
+      format: date-time
+      examples:
+      - '2022-03-10T16:15:50Z'
+    DatumIndexRequestDto:
+      type: object
+      properties:
+        sortBy:
+          $ref: '#/components/schemas/DatumIndexSortBy'
+        direction:
+          $ref: '#/components/schemas/SortByDirection'
+        limit:
+          type: integer
+          format: int32
+        start:
+          type: integer
+          format: int32
+        filter:
+          type: string
+    SortByDirection:
+      type: string
+      enum:
+      - ASC
+      - DESC

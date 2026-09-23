@@ -1,0 +1,256 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/Incidents Operational Stats API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: operationalStats
+paths:
+  /v1/operational-stats:
+    post:
+      tags:
+      - operationalStats
+      summary: Provides details for operational stats in executive summary
+      description: Returns incident trend and time to resolve chart details
+      operationId: getOperationalStats,
+      requestBody:
+        description: Operational stats request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OperationalStatsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseOperationalStatsWebResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    OperationalStatsWebResponse:
+      type: object
+      title: Operational Stats Web Response
+      description: Incident Operational stats response
+      properties:
+        time_to_resolve:
+          $ref: '#/components/schemas/TimeToResolveDto'
+          description: Time to resolve aggregated result of incidents
+        incident_trend:
+          type: array
+          description: Incident trend list by severity
+          items:
+            $ref: '#/components/schemas/IncidentTrendDto'
+        top_resources:
+          type: array
+          description: Incident top 20 resources list
+          items:
+            $ref: '#/components/schemas/IncidentTopResourcesDto'
+    TimeToResolveDto:
+      type: object
+      title: Time To Resolve Dto
+      description: Incidents resolution details
+      properties:
+        mttr_mins:
+          type: number
+          description: mean time to resolution(in minutes)
+          format: double
+        buckets:
+          type: array
+          description: List of time to resolve aggregated results
+          items:
+            $ref: '#/components/schemas/TimeToResolveBucketDto'
+    TopResourcesType:
+      type: string
+      enum:
+      - services
+      - sources
+      title: Top Resources Type
+      description: Top Resources Type to fetch
+    IncidentTopResourcesDto:
+      type: object
+      title: Incident Top Resources Dto
+      description: Incident top resources for the provided time period
+      properties:
+        resource:
+          type: string
+          description: Incident resource name
+        incident_count:
+          type: integer
+          description: Total incident count against the resource
+          format: int64
+        incident_severity:
+          type: object
+          description: Incident counts by severity
+          additionalProperties:
+            type: integer
+            format: int64
+    MoogResponseOperationalStatsWebResponse:
+      type: object
+      description: Alerts/Incidents API OperationalStatsWebResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/OperationalStatsWebResponse'
+      required:
+      - status
+      - data
+    TimeToResolveBucketDto:
+      type: object
+      title: Time To Resolve Bucket Dto
+      properties:
+        index:
+          type: integer
+          description: Time taken to resolve incident in hours range
+          format: int64
+          examples:
+          - 0, 2, 5 where 0 means incidents resolved in 0 to 1hr, 5 means 5 to 6hr
+        incident_count:
+          type: integer
+          description: Total incidents resolved
+          format: int64
+    HistogramInterval:
+      type: string
+      enum:
+      - hour
+      - day
+      title: Histogram Interval
+      description: Histogram calendar interval
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    OperationalStatsRequest:
+      type: object
+      title: Operational Stats Request
+      description: Executive summary request body
+      properties:
+        start:
+          type: integer
+          description: Epoch timestamp(in milliseconds) used to filter out the results based on created at
+          format: int64
+          exclusiveMinimum: 0
+        end:
+          type: integer
+          description: Epoch timestamp(in milliseconds) used to filter out the results till this time
+          format: int64
+          exclusiveMinimum: 0
+        bucket_size:
+          $ref: '#/components/schemas/HistogramInterval'
+          description: Bucket size is used to fetch incident trend results per hour/day
+        utc_offset:
+          type: string
+          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time use for incident trend results
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        resource:
+          $ref: '#/components/schemas/TopResourcesType'
+          description: resource type to fetch
+      required:
+      - start
+      - end
+      - bucket_size
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IncidentTrendDto:
+      type: object
+      title: Incident Trend Dto
+      description: Incident trend data for the provided time period
+      properties:
+        incident_time:
+          type: integer
+          description: Incident creation time
+          format: int64
+        incident_severity:
+          type: object
+          description: Incident counts by severity
+          additionalProperties:
+            type: integer
+            format: int64
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

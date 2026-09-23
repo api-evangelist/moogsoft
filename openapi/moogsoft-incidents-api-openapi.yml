@@ -1,0 +1,1745 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/ Incidents API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Incidents
+  description: CRUD operations for incidents
+paths:
+  /v1/incidents/{incidentId}:
+    put:
+      tags:
+      - Incidents
+      summary: Update incident information
+      description: Update incident information.
+      operationId: updateIncidentPut
+      parameters:
+      - name: incidentId
+        in: path
+        description: Id of the incident that is being updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Update payload for the incident
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPayloadDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    patch:
+      tags:
+      - Incidents
+      summary: Update the incident to the given status and/or assignee
+      description: Update the incident to the given status and/or assignee.
+      operationId: updateIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: Id of the incident that is being updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: JSON Patch payload for the incident
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchPayloadDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Incidents
+      summary: Get incident by id
+      description: Get incident by id.
+      operationId: getIncident
+      parameters:
+      - name: incidentId
+        in: path
+        description: Id of the incident that is being retrieved
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+  /v1/incidents:
+    patch:
+      tags:
+      - Incidents
+      summary: Update multiple incidents to the given status and/or assignee
+      description: Update the incidents to the given status and/or assignee.
+      operationId: updateIncidents
+      requestBody:
+        description: Bulk update payload for the incidents
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkPatchPayloadDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfIncidentDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Incidents
+      summary: List incidents that match the given filter
+      description: List incidents that match the given filter. Note that all GET requests are limited to a maximum of 10,000 items per query.
+      operationId: listIncidents
+      parameters:
+      - name: User-Agent
+        in: header
+        schema:
+          type: string
+      - name: filter
+        in: query
+        description: Query string to filter the incidents by. The string must be in AIOps query language. You may use any of the columns for filtering.
+        schema:
+          type: string
+          examples:
+          - class in (Middleware, Hardware)
+        examples:
+          default:
+            value: class in (Middleware, Hardware)
+      - name: jsonFilter
+        in: query
+        description: Return only incidents that match this AG-Grid-style JSON filter, such as {"status":{"values":["open","in progress","resolved"],"filterType":"set"}}
+        deprecated: true
+        schema:
+          type: string
+      - name: jsonSort
+        in: query
+        description: Sort the results according to this AG-Grid-style JSON sort info, such as [{"sort":"asc","colId":"severity"}]
+        deprecated: true
+        schema:
+          type: string
+      - name: keyword
+        in: query
+        description: Return only incidents that contain these keywords.
+        deprecated: true
+        schema:
+          type: string
+          examples:
+          - support
+        examples:
+          default:
+            value: support
+      - name: limit
+        in: query
+        description: Number of incidents to fetch, after skipping the number specified in the 'start' parameter if any. Between 1 and 5000
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+          maximum: 5000
+          default: '100'
+          examples:
+          - 100
+        examples:
+          default:
+            value: 100
+      - name: start
+        in: query
+        description: 'Number of incidents to skip. That is, the first incident returned will be object # start + 1.'
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: '0'
+          examples:
+          - 0
+        examples:
+          default:
+            value: 0
+      - name: utcOffset
+        in: query
+        description: The difference in hours from Coordinated Universal Time (UTC) to user's local time.
+        schema:
+          type: string
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        examples:
+          default:
+            value: GMT-7/GMT+7:30
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentList'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - Incidents
+      summary: Get a list of all incidents with matching criteria
+      description: Get a list of all incidents with matching criteria. Note that all POST requests are limited to a maximum of 10,000 items per query.
+      operationId: listIncidentsPost
+      requestBody:
+        description: List incidents request specification
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListIncidentsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentList'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+  /v1/incidents/{incidentId}/external-ids:
+    get:
+      tags:
+      - Incidents
+      summary: Get all externalIds associated with the incident
+      description: Get all externalIds associated with the incident. Returns the systemName and all the details
+      operationId: getAllIncidentExternalIds
+      parameters:
+      - name: incidentId
+        in: path
+        description: incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfExternalSystemDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+  /v1/incidents/{incidentId}/external-ids/{integrationId}:
+    get:
+      tags:
+      - Incidents
+      summary: Get details associated with specific external system
+      description: Get details associated with a specific external system in the incident. Returns the systemName and all the details
+      operationId: getIncidentExternalId
+      parameters:
+      - name: incidentId
+        in: path
+        description: incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: integrationId
+        in: path
+        description: integration ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseExternalSystemDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    patch:
+      tags:
+      - Incidents
+      summary: Update externalID information to an incident
+      description: Updates details about an external system to the incident
+      operationId: patchIncidentExternalId
+      parameters:
+      - name: incidentId
+        in: path
+        description: incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: integrationId
+        in: path
+        description: integration ID
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      requestBody:
+        description: Configs used to update existing configs.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalSystemDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - Incidents
+      summary: Delete externalID information from an incident
+      description: Delete details about an external system in the incident
+      operationId: deleteIncidentExternalId
+      parameters:
+      - name: incidentId
+        in: path
+        description: incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: integrationId
+        in: path
+        description: integration ID
+        required: true
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - Incidents
+      summary: Add externalID information to an incident
+      description: Add details about an external system to the incident
+      operationId: postIncidentExternalId
+      parameters:
+      - name: incidentId
+        in: path
+        description: incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: integrationId
+        in: path
+        description: integration ID
+        required: true
+        schema:
+          type: string
+          pattern: \S
+      requestBody:
+        description: Configs used to update existing configs.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExternalSystemDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+  /v1/incidents/{incidentId}/tags:
+    patch:
+      tags:
+      - Incidents
+      summary: Update the incident with the given tags
+      description: Update the incident
+      operationId: updateIncidentTags
+      parameters:
+      - name: incidentId
+        in: path
+        description: Id of the incident being updated
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Tags to attach to the incident
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetIncidentTagsPayloadDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+  /v1/situation-room/{incidentId}/timeline:
+    get:
+      tags:
+      - Incidents
+      summary: Get timeline for an incident
+      operationId: getIncidentTimeline
+      parameters:
+      - name: incidentId
+        in: path
+        description: Incident Id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfIncidentTimelineDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    IncidentList:
+      type: object
+      title: Incident List
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentDto'
+        count:
+          type: integer
+          format: int64
+        search_after:
+          type: array
+          description: When needing to scroll through a large number of incidents, the value of this field can be provided to the 'searchAfter' parameter of the next query invocation.
+    CommentDto:
+      type: object
+      title: Comment Dto
+      properties:
+        id:
+          type: string
+        comment:
+          type: string
+        created_by:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        is_resolving_step:
+          type: boolean
+          writeOnly: true
+        type:
+          $ref: '#/components/schemas/CommentType'
+        is_edited:
+          type: boolean
+    DateColumnFilter:
+      type: object
+      title: Date Column Filter
+      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        dateFrom:
+          type: string
+          description: Date filter value to used with comparison operator
+        dateTo:
+          type: string
+          description: Date filter value to used when comparison operator is inRange
+        filterType:
+          const: date
+          description: Declares date filterType
+      required:
+      - type
+      - filterType
+    Urgency:
+      type: string
+      enum:
+      - high
+      - medium
+      - low
+      title: Urgency
+      description: Urgency of an incident
+    ListIncidentsRequest:
+      type: object
+      title: List Incidents Request
+      description: List incidents POST request body
+      properties:
+        start:
+          type: integer
+          description: 'Number of incidents to skip. That is, the first incident returned will be object # start + 1.'
+          format: int32
+          minimum: 0
+          default: 0
+          examples:
+          - 0
+        limit:
+          type: integer
+          description: Number of incidents to fetch, after skipping the number specified in the 'start' parameter if any. Between 1 and 5000
+          format: int32
+          exclusiveMinimum: 0
+          maximum: 5000
+          default: 100
+          examples:
+          - 100
+        json_filter:
+          type: object
+          description: Return only incidents that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
+          additionalProperties:
+            $ref: '#/components/schemas/ColumnFilter'
+          examples:
+          - status:
+              values:
+              - open
+              - in progress
+              - resolved
+              filterType: set
+        json_sort:
+          type: array
+          description: Sort the results according to this AG-Grid-style JSON sort info.
+          examples:
+          - - sort: asc
+              colId: severity
+          items:
+            $ref: '#/components/schemas/AgGridSortColumn'
+        keyword:
+          type: string
+          description: Return only incidents that contain these keywords.
+          examples:
+          - support
+        utc_offset:
+          type: string
+          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time.
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        search_after:
+          type: array
+          description: When needing to scroll through a large number of incidents, this parameter can be used instead of 'start' to proceed with incidents that follow the previous search result. The 'searchAfter' from the previous response must be provided along with the same filter and sort criteria. All results are exhausted when a search response includes no more incidents.
+        fields:
+          type: array
+          description: Subset of fields to return (default is all non-null incident fields
+          items:
+            type: string
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    SetColumnFilter:
+      type: object
+      title: Set Column Filter
+      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        values:
+          type: array
+          description: Set filter value(s) to used with comparison operator
+          items:
+            type: string
+        filterType:
+          const: set
+          description: Declares set filterType
+      required:
+      - type
+      - values
+      - filterType
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
+    CommentType:
+      type: string
+      enum:
+      - STANDARD
+      - RESOLVING
+      - ANNOUNCEMENT
+      title: Comment Type
+      description: CommentType for incidents comments
+    ExternalSystemDto:
+      type: object
+      title: External System Dto
+      properties:
+        integration_id:
+          type: string
+        external_name:
+          type: string
+        external_id:
+          type: string
+        external_link:
+          type: string
+        integration_name:
+          type: string
+        integration_type:
+          type: string
+    MaintenanceWindowStatDto:
+      type: object
+      title: Maintenance Window Stat Dto
+      properties:
+        window_id:
+          type: string
+          description: unique id of the maintenance window
+        occurrence_id:
+          type: string
+          description: unique id of the maintenance window occurrence
+        enter:
+          type: integer
+          description: Epoch timestamp in millis of when the alert entered maintenance
+          format: int64
+        exit:
+          type: integer
+          description: Epoch timestamp in millis of when the alert left maintenance
+          format: int64
+    Priority:
+      type: string
+      enum:
+      - P1
+      - P2
+      - P3
+      - P4
+      - P5
+      title: Priority
+      description: Priority of an incident
+    PatchPayloadDto:
+      type: object
+      title: Patch Payload Dto
+      description: Incident update payload
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+          description: status that gets assigned to the incident
+        assignee:
+          type: string
+          description: user email that gets assigned to the incident
+          examples:
+          - exampleUser@moogsoft.com
+        assigned_groups:
+          type: array
+          description: An array of group ids or group names, returns error if any of them not found
+          examples:
+          - - goupid1
+            - groupid2
+          items:
+            type: string
+        description:
+          type:
+          - string
+          - 'null'
+          description: Allows for overriding calculated description with a manual one. Restore calculated behavior by setting to an empty string.
+          maxLength: 32500
+          examples:
+          - New description text
+        priority:
+          $ref: '#/components/schemas/Priority'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        urgency:
+          $ref: '#/components/schemas/Urgency'
+    MoogResponseIncidentList:
+      type: object
+      description: Alerts/Incidents API IncidentList response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentList'
+      required:
+      - status
+      - data
+    Status:
+      type: string
+      enum:
+      - error
+      - open
+      - in progress
+      - superseded
+      - resolved
+      - closed
+      title: Status
+      description: Status for incidents and alerts (case-insensitive)
+    SetIncidentTagsPayloadDto:
+      type: object
+      title: Set Incident Tags Payload Dto
+      properties:
+        tags:
+          type: object
+          description: The tags being added to the incident
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+      - tags
+    MoogResponseListOfExternalSystemDto:
+      type: object
+      description: Alerts/Incidents API ExternalSystemDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSystemDto'
+      required:
+      - status
+      - data
+    TimelineUserDto:
+      type: object
+      title: Timeline User Dto
+      properties:
+        id:
+          type: string
+        family_name:
+          type: string
+        given_name:
+          type: string
+        email:
+          type: string
+        picture:
+          type: string
+        familyName:
+          type: string
+          description: Use family_name instead
+          x-deprecated: true
+        givenName:
+          type: string
+          description: Use given_name instead
+          x-deprecated: true
+    IncidentDto:
+      type: object
+      title: Incident Dto
+      description: Incidents returned from list endpoint
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+          description: alert/incident status
+        severity:
+          $ref: '#/components/schemas/Severity'
+          description: alert/incident severity level
+        severity_high_water:
+          $ref: '#/components/schemas/Severity'
+          description: alert/incident high-water severity level
+        assignee:
+          type: string
+          description: email of the user who is assigned to the alert/incident
+          examples:
+          - test@moogsoft.com
+        assigned_groups:
+          type: array
+          description: An array of group ids
+          examples:
+          - - goupid1
+            - groupid2
+          items:
+            type: string
+        first_event_time:
+          type: integer
+          description: Epoch timestamp in seconds of the first event for this alert/incident
+          format: int64
+          examples:
+          - 1607985505
+        last_event_time:
+          type: integer
+          description: Epoch timestamp in seconds of the last event for this alert/incident
+          format: int64
+          examples:
+          - 1607985505
+        description:
+          type: string
+          description: description that usually contains the alert/incident ID, source and service
+          examples:
+          - '1 Source: www.your-source.com Affected retail, support
+
+            '
+        status_numeric:
+          type: integer
+          format: int32
+        severity_numeric:
+          type: integer
+          format: int32
+        severity_high_water_numeric:
+          type: integer
+          format: int32
+        incident_id:
+          type: integer
+          description: incident ID
+          format: int64
+          examples:
+          - 101
+        closed_on:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident was closed
+          format: int64
+          examples:
+          - 1607985505
+        created_at:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident was created
+          format: int64
+          examples:
+          - 1607985505
+        classes:
+          type: array
+          description: incident classes
+          items:
+            type: string
+        services:
+          type: array
+          description: incident services
+          items:
+            type: string
+        in_progress_on:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident was moved to in progress
+          format: int64
+          examples:
+          - 1607985505
+        last_state_change:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident status was changed
+          format: int64
+          examples:
+          - 1607985505
+        resolved_on:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident was resolved
+          format: int64
+          examples:
+          - 1607985505
+        superseded_on:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the incident was superseded
+          format: int64
+          examples:
+          - 1607985505
+        superseded_by:
+          type: integer
+          description: the superseded by incident ID
+          format: int64
+          examples:
+          - 33
+        merged_into_incident:
+          type: integer
+          description: the ID of the incident that this incident was merged into
+          format: int64
+          examples:
+          - 33
+        correlation_definition:
+          type: string
+          description: correlation definition uuid used to create the incident
+          examples:
+          - a551ab9f-c5ab-4dfe-a52d-b325393176af
+        source_correlation_name:
+          type: string
+          description: correlation definition name used to create the incident
+          examples:
+          - Similar Sources
+        tags:
+          type: object
+          description: the tags belong to the incident
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        types:
+          type: array
+          description: the unique types belong to the incident
+          items:
+            type: string
+        policies:
+          type: array
+          description: the unique policies belong to the incident
+          items:
+            type: string
+        alerts:
+          type: array
+          items:
+            type: integer
+            format: int64
+        maintenance_windows:
+          type: array
+          description: Set of all maintenance windows and occurrences the incident has been associated with
+          items:
+            $ref: '#/components/schemas/MaintenanceWindowStatDto'
+        auto_closed_on:
+          type: integer
+          format: int64
+        priority:
+          $ref: '#/components/schemas/Priority'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        urgency:
+          $ref: '#/components/schemas/Urgency'
+        external_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSystemDto'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentDto'
+        sources:
+          type: array
+          description: incident sources
+          items:
+            type: string
+        total_alerts:
+          type: integer
+          description: the total alerts belong to the incident
+          format: int64
+          examples:
+          - 30
+        external_names:
+          type: array
+          items:
+            type: string
+        in_maintenance:
+          type: boolean
+        manual_description_set:
+          type: boolean
+        priority_numeric:
+          type: integer
+          format: int32
+        resolving_steps:
+          type: integer
+          description: the total number of resolving steps
+          format: int64
+          examples:
+          - 30
+        resolve_time:
+          type: integer
+          description: Time taken to resolve, resolved or closed incidents (in seconds).
+          format: int64
+    ColumnFilter:
+      type: object
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
+    TextColumnFilter:
+      type: object
+      title: Text Column Filter
+      description: Filter a text column based on a string comparison<br>filterType = "text"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: string
+          description: Text filter value to used with comparison operator
+        filterType:
+          const: text
+          description: Declares text filterType
+      required:
+      - type
+      - filterType
+    IncidentTimelineDto:
+      type: object
+      title: Incident Timeline Dto
+      description: Incident timeline entry details
+      properties:
+        summary_title:
+          type: string
+          description: The activity title
+          examples:
+          - First Event
+        summary_subtitle:
+          type: string
+          description: The activity subtitle
+          examples:
+          - Alert 4
+        activity_type:
+          $ref: '#/components/schemas/ActivityType'
+          description: The timeline entry activity type
+        severity:
+          type: string
+          description: The severity of the alert. Used only for alerts activity
+          examples:
+          - MINOR
+        redirection_id:
+          type: string
+          description: The ID which can be used to redirect
+          examples:
+          - '4'
+        description:
+          type: string
+          description: The activity description
+          examples:
+          - Assigned groups changed to Cloud Team
+        activity_time:
+          type: integer
+          description: Epoch timestamp in milliseconds indicating when the activity happened
+          format: int64
+          examples:
+          - 1681968617138
+        correlation_definition:
+          type: object
+          description: The correlation definition for incident/alert related activities
+        notification_sent:
+          type: object
+          description: An on-call notification sent for this incident
+        manual_description_set:
+          type: boolean
+          description: Indicates an incident description was created manually
+          examples:
+          - true
+        comment_type:
+          $ref: '#/components/schemas/CommentType'
+          description: The type of comment. Used only for comments activity
+        user:
+          $ref: '#/components/schemas/TimelineUserDto'
+          description: The user that performed the activity
+        action_by:
+          type: string
+          description: The user mail id that performed the activity
+        reference_alert_id:
+          type: integer
+          description: The ID other alerts were referenced against
+          format: int64
+          examples:
+          - 4
+        fields:
+          type: string
+          description: The fields and values from the correlation definition associated with the reference alert
+        summaryTitle:
+          type: string
+          description: Use summary_title instead
+          x-deprecated: true
+        summarySubtitle:
+          type: string
+          description: Use summary_subtitle instead
+          x-deprecated: true
+        activityType:
+          $ref: '#/components/schemas/ActivityType'
+          description: Use activity_type instead
+        redirectionId:
+          type: string
+          description: Use redirection_id instead
+          x-deprecated: true
+        activityTime:
+          type: integer
+          description: Use activity_time instead
+          format: int64
+        correlationDefinition:
+          type: object
+          description: Use correlation_definition instead
+          x-deprecated: true
+        manualDescriptionSet:
+          type: boolean
+          description: Use manual_description_set instead
+          x-deprecated: true
+    BulkPatchPayloadDto:
+      type: object
+      title: Bulk Patch Payload Dto
+      description: Incident bulk update payload
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+          description: status that gets assigned to the incident
+        assignee:
+          type: string
+          description: user email that gets assigned to the incident
+          examples:
+          - exampleUser@moogsoft.com
+        assigned_groups:
+          type: array
+          description: An array of group ids or group names, returns error if any of them not found
+          examples:
+          - - goupid1
+            - groupid2
+          items:
+            type: string
+        description:
+          type:
+          - string
+          - 'null'
+          description: Allows for overriding calculated description with a manual one. Restore calculated behavior by setting to an empty string.
+          maxLength: 32500
+          examples:
+          - New description text
+        priority:
+          $ref: '#/components/schemas/Priority'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        urgency:
+          $ref: '#/components/schemas/Urgency'
+        ids:
+          type: array
+          description: Unique incident ids to update
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: integer
+            format: int64
+      required:
+      - ids
+    MoogResponseExternalSystemDto:
+      type: object
+      description: Alerts/Incidents API ExternalSystemDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ExternalSystemDto'
+      required:
+      - status
+      - data
+    BooleanColumnFilter:
+      type: object
+      title: Boolean Column Filter
+      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: boolean
+          description: Boolean value to used for comparison
+        filterType:
+          const: boolean
+          description: Declares boolean filterType
+      required:
+      - type
+      - filter
+      - filterType
+    NumberColumnFilter:
+      type: object
+      title: Number Column Filter
+      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: integer
+          description: Numeric filter value to used with comparison operator
+          format: int64
+        filterTo:
+          type: integer
+          description: Numeric filter value to used when comparison operator is inRange
+          format: int64
+        filterType:
+          const: number
+          description: Declares number filterType
+      required:
+      - type
+      - filterType
+    Impact:
+      type: string
+      enum:
+      - high
+      - medium
+      - low
+      title: Impact
+      description: Impact of an incident
+    MoogResponseListOfIncidentDto:
+      type: object
+      description: Alerts/Incidents API IncidentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentDto'
+      required:
+      - status
+      - data
+    ActivityType:
+      type: string
+      enum:
+      - FIRST_EVENT
+      - INCIDENT_CREATED
+      - ALERT_ADDED
+      - ALERT_STATUS_CHANGE
+      - ALERT_ASSIGNMENT
+      - INCIDENT_STATUS_CHANGE
+      - INCIDENT_ASSIGNMENT
+      - COMMENT_ADDED
+      - COMMENT_EDITED
+      - DESCRIPTION_CHANGE
+      - INCIDENT_GROUP_ASSIGNMENT
+      - ALERT_GROUP_ASSIGNMENT
+      - ANNOUNCEMENT
+      - WATCHER_ADDED
+      - WATCHER_REMOVED
+      title: Activity Type
+      description: Activity type for incident timeline
+    AgGridSortColumn:
+      type: object
+      title: Ag Grid Sort Column
+      description: Sorting criteria to use for searches
+      properties:
+        colId:
+          type: string
+          description: The column on which to sort
+          minLength: 1
+        sort:
+          type: string
+          enum:
+          - asc
+          - desc
+          description: The direction in which to sort
+          pattern: asc|desc
+      required:
+      - colId
+      - sort
+    MoogResponseIncidentDto:
+      type: object
+      description: Alerts/Incidents API IncidentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentDto'
+      required:
+      - status
+      - data
+    MoogResponseListOfIncidentTimelineDto:
+      type: object
+      description: Alerts/Incidents API IncidentTimelineDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentTimelineDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

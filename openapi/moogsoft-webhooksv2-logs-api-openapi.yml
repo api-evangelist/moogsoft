@@ -1,0 +1,313 @@
+openapi: 3.2.0
+info:
+  version: 2.0.0
+  title: webhooksV2 Logs API
+  description: You can use this API to create, retrieve, update, delete, and test webhoook integrations.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: webhooksV2 Logs
+  description: ''
+paths:
+  /v2/integrations/webhooks/logs/{id}:
+    get:
+      tags:
+      - webhooksV2 Logs
+      summary: Reads webhook logs from the DB
+      description: Reads webhook logs from the DB, in reverse chronological order.
+      operationId: getWebhookLogs
+      parameters:
+      - name: errors
+        in: query
+        description: Indicates whether to fetch error logs
+        schema:
+          type: boolean
+          default: 'true'
+      - name: successes
+        in: query
+        description: Indicates whether to fetch success logs
+        schema:
+          type: boolean
+          default: 'true'
+      - name: id
+        in: path
+        description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfWebhookTestDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - webhooksV2 Logs
+      summary: Deletes webhook logs from the DB
+      description: Deletes webhook logs from the DB.
+      operationId: deleteWebhookLogs
+      parameters:
+      - name: id
+        in: path
+        description: id must be a valid id returned by the v2/integrations/webhooks/items endpoint
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    WebhookRequest:
+      type: object
+      title: Webhook Request
+      properties:
+        url:
+          $ref: '#/components/schemas/UrlDefinition'
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+      required:
+      - body
+    MoogResponseListOfWebhookTestDto:
+      type: object
+      title: Moog Response List Of Webhook Test Dto
+      description: Webhook API WebhookTestDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookTestDto'
+      required:
+      - status
+      - data
+    UrlDefinition:
+      type: object
+      title: Url Definition
+      properties:
+        verb:
+          $ref: '#/components/schemas/WebhookVerb'
+          description: Outbound integration HTTP verb
+        url:
+          type: string
+          description: Outbound integration target URL
+          pattern: \S
+      required:
+      - verb
+      - url
+    WebhookStatus:
+      type: string
+      enum:
+      - DISABLED
+      - RUNNING
+      - PROVISIONED
+      - INVALID_URL
+      - BAD_AUTH
+      - BAD_FILTER
+      - PAGE_NOT_FOUND
+      - BAD_RESPONSE
+      - SOCKET_TIMEOUT
+      - IO_ERROR
+      - TICKET_PARSE_FAILURE
+      - MOOG_ERROR
+      title: Webhook Status
+      description: Webhook Status
+    WebhookResponse:
+      type: object
+      title: Webhook Response
+      properties:
+        code:
+          type: integer
+          format: int32
+        code_reason:
+          type: string
+        body:
+          type: string
+        duration_ms:
+          type: integer
+          format: int64
+        attempts:
+          type: integer
+          format: int32
+        codeReason:
+          type: string
+          description: Use code_reason instead
+          x-deprecated: true
+        durationMs:
+          type: integer
+          description: Use duration_ms instead
+          format: int64
+    WebhookVerb:
+      type: string
+      enum:
+      - POST
+      - PATCH
+      - PUT
+      - DELETE
+      title: Webhook Verb
+      description: HTTP Verb
+    MoogFailureResponse:
+      type: object
+      description: Webhook API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    WebhookAction:
+      type: string
+      enum:
+      - IGNORE
+      - CREATE
+      - UPDATE
+      - DELETE
+      title: Webhook Action
+    WebhookTestDto:
+      type: object
+      title: Webhook Test Dto
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+        action:
+          $ref: '#/components/schemas/WebhookAction'
+        status:
+          $ref: '#/components/schemas/WebhookStatus'
+        request:
+          $ref: '#/components/schemas/WebhookRequest'
+        response:
+          $ref: '#/components/schemas/WebhookResponse'
+        additional_info:
+          type: object
+        data:
+          type: object
+        message:
+          type: string
+        additionalInfo:
+          type: object
+          description: Use additional_info instead
+          x-deprecated: true
+    MoogErrorResponse:
+      type: object
+      description: Webhook API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Webhook API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

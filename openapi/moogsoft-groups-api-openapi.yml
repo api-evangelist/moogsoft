@@ -1,0 +1,553 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: User Groups API
+  description: API for User Service
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Groups
+  description: Endpoints relating to user groups
+paths:
+  /v1/groups:
+    get:
+      tags:
+      - Groups
+      summary: List User Groups
+      description: List all user groups currently defined in the system.
+      operationId: getGroups
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - group-management:no-access
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - Groups
+      summary: Create User Groups
+      description: Create new group(s) in the system
+      operationId: postGroups
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: The request body may be a single Group object or an array of Groups
+              minItems: 1
+              items:
+                type: object
+            examples:
+              User Groups:
+                description: Parameters used to build multiple valid user group
+                value:
+                - name: Support Team
+                  description: Group for support team
+                  groupMembers:
+                  - 6217d0958391447445648af4
+                  - 6217d0958391447445645dg7
+                  roleAssignment: 6217d0958391498735648za2
+                - name: Backend Team
+                  description: Group for backend team
+                  groupMembers:
+                  - 6217d0958391447445648ah6
+                  - 6217d0958391447445645df6
+                  roleAssignment: 6217d0958391498735648za3
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+              examples:
+                User Groups:
+                  description: Response received after successfully creating multiple user groups
+                  value:
+                    status: success
+                    data:
+                    - name: Support Team
+                      description: Group for support team
+                      groupMembers:
+                      - 6217d0958391447445648af4
+                      - 6217d0958391447445645dg7
+                      roleAssignment: 6217d0958391498735648za2
+                      id: 6217d0958391447445648ab2
+                      created: '2022-03-10T16:15:50Z'
+                      createdBy: string
+                      lastModified: '2022-03-10T16:15:50Z'
+                      lastModifiedBy: string
+                      isSso: true
+                    - name: Backend Team
+                      description: Group for backend team
+                      groupMembers:
+                      - 6217d0958391447445648ah6
+                      - 6217d0958391447445645df6
+                      roleAssignment: 6217d0958391498735648za3
+                      id: 6217d0958391447445648ab2
+                      created: '2022-03-10T16:15:50Z'
+                      createdBy: string
+                      lastModified: '2022-03-10T16:15:50Z'
+                      lastModifiedBy: string
+                      isSso: true
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - group-management:edit
+        description: Required user permissions for this endpoint
+  /v1/groups/{id}:
+    patch:
+      tags:
+      - Groups
+      summary: Update a User Group
+      description: Update an existing user group in the system
+      operationId: patchGroup
+      parameters:
+      - name: id
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of your user group
+                  pattern: ^[a-zA-Z0-9.&()_\-\s]+$
+                  minLength: 1
+                  maxLength: 127
+                  examples:
+                  - Support Team
+                description:
+                  type: string
+                  description: Description of your user group
+                  examples:
+                  - Group for Support Team
+                groupMembers:
+                  type: array
+                  description: List of the unique IDs for the members of the group
+                  examples:
+                  - - 6217d0958391447445648af4
+                    - 6217d095839144744565dg7
+                  items:
+                    type: string
+                roleAssignment:
+                  type: string
+                  description: Unique ID of the role to be assigned to the group
+                  examples:
+                  - 6217d0958391498735648za2
+              required:
+              - name
+              - groupMembers
+            examples:
+              User Group:
+                description: Parameters of the user group to be updated
+                value:
+                  name: Support Team
+                  description: Group for support team
+                  groupMembers:
+                  - 6217d0958391447445648af4
+                  - 6217d095839144744565dg7
+                  roleAssignment: 6217d0958391498735648za2
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - group-management:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Groups
+      summary: Get a User Group
+      description: Gets the specific user group that matches the provided ID
+      operationId: getGroup
+      parameters:
+      - name: id
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseGroupDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - group-management:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - Groups
+      summary: Delete a User Group
+      description: Delete a user group that already exists in the system
+      operationId: deleteGroup
+      parameters:
+      - name: id
+        in: path
+        description: ID of the group
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - group-management:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    IsgErrorMessage:
+      type: object
+      title: Isg Error Message
+      description: Message relating to the API error
+      properties:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: string
+          description: ISO-8601 Date/time when the API error was reported
+          format: date-time
+          examples:
+          - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
+          type: array
+          description: Substitution arguments used for localization
+          items:
+            type: string
+    MoogResponseListOfGroupDto:
+      type: object
+      description: User API GroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+      required:
+      - status
+      - data
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseGroupDto:
+      type: object
+      description: User API GroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/GroupDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    GroupDto:
+      type: object
+      title: Group Dto
+      properties:
+        name:
+          type: string
+          description: The name of your user group
+          pattern: ^[a-zA-Z0-9.&()_\-\s]+$
+          minLength: 1
+          maxLength: 127
+          examples:
+          - Support Team
+        description:
+          type: string
+          description: Description of your user group
+          examples:
+          - Group for Support Team
+        groupMembers:
+          type: array
+          description: List of the unique IDs for the members of the group
+          examples:
+          - - 6217d0958391447445648af4
+            - 6217d095839144744565dg7
+          items:
+            type: string
+        roleAssignment:
+          type: string
+          description: Unique ID of the role to be assigned to the group
+          examples:
+          - 6217d0958391498735648za2
+        id:
+          type: string
+          description: ID of the user group
+          examples:
+          - 6217d0958391447445648ab2
+        created:
+          $ref: '#/components/schemas/Instant'
+        createdBy:
+          type: string
+        lastModified:
+          $ref: '#/components/schemas/Instant'
+        lastModifiedBy:
+          type: string
+        isSso:
+          type: boolean
+      required:
+      - name
+      - id
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IsgErrorSeverity:
+      type: string
+      enum:
+      - Info
+      - Warning
+      - Error
+      - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

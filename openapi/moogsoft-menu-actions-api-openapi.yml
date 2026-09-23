@@ -1,0 +1,755 @@
+openapi: 3.2.0
+info:
+  version: 4.0.0
+  title: Config Menu actions API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu actions, and maintenance windows
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Menu actions
+paths:
+  /v1/menu-actions/standalone-workflows:
+    get:
+      tags:
+      - Menu actions
+      summary: Returns any menu actions that utilize standalone workflows
+      description: Returns all menu actions that utilize standalone workflows. If an ID is specified, only returns the menu actions that utilize a workflow with that particular ID.
+      operationId: getStandaloneMenuActions
+      parameters:
+      - name: id
+        in: query
+        description: Standalone Workflow Id
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfMenuActionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:view
+  /v1/menu-actions/{id}:
+    patch:
+      tags:
+      - Menu actions
+      summary: Update the menu action with the given id
+      description: Update the menu action with the given id.
+      operationId: updateMenuAction
+      parameters:
+      - name: id
+        in: path
+        description: The menu action id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseMenuActionDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMenuActionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:edit
+    get:
+      tags:
+      - Menu actions
+      summary: Get the menu action with the given id
+      description: Get the menu action with the given id.
+      operationId: getMenuAction
+      parameters:
+      - name: id
+        in: path
+        description: The menu action id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMenuActionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:view
+    delete:
+      tags:
+      - Menu actions
+      summary: Delete the menu action with the given id
+      description: Delete the menu action with the given id.
+      operationId: deleteMenuAction
+      parameters:
+      - name: id
+        in: path
+        description: The menu action id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:edit
+  /v1/menu-actions:
+    get:
+      tags:
+      - Menu actions
+      summary: Returns any menu actions that match
+      description: Returns any menu actions that match.
+      operationId: findMenuActions
+      parameters:
+      - name: context_type
+        in: query
+        description: Menu action context type
+        schema:
+          $ref: '#/components/schemas/ContextType'
+      - name: name
+        in: query
+        description: Menu action name
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfMenuActionDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:view
+    post:
+      tags:
+      - Menu actions
+      summary: Create a menu action
+      description: Create a menu action.
+      operationId: createMenuAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseMenuActionDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMenuActionDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - integrations:edit
+components:
+  schemas:
+    SelectionListValue:
+      type: object
+      title: Selection List Value
+      description: Selection List Value.
+      oneOf:
+      - $ref: '#/components/schemas/SelectionListStringValueDto'
+      - $ref: '#/components/schemas/SelectionListNumberValueDto'
+    StandaloneWorkflowOperationDto:
+      type: object
+      title: Standalone Workflow Operation Dto
+      description: Menu action standalone workflow operation attributes.
+      properties:
+        type:
+          const: STANDALONE_WORKFLOW
+        workflow_id:
+          type: string
+          description: The id of the workflow to invoke.
+        workflow_context:
+          type: object
+          description: Additional workflow context information.
+      required:
+      - workflow_id
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MenuActionDto:
+      type: object
+      title: Menu Action Dto
+      description: Menu action attributes.
+      properties:
+        name:
+          type: string
+          description: The name of the menu action.
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Optional description of the menu action
+        category_id:
+          type: string
+          description: Optional ID of the menu action category
+        context_type:
+          $ref: '#/components/schemas/ContextType'
+          description: The context type this menu action is associated with.
+        prompted_fields:
+          type: array
+          description: Optional list of prompted fields for the menu action.
+          items:
+            $ref: '#/components/schemas/PromptedField'
+        operation:
+          $ref: '#/components/schemas/MenuActionOperation'
+          description: The operation this menu action is associated with.
+        id:
+          type: string
+          description: ID of the menu action
+      required:
+      - name
+      - context_type
+      - operation
+    SelectionListNumberValueDto:
+      type: object
+      title: Selection List Number Value Dto
+      description: Selection list number value field attributes.
+      properties:
+        type:
+          const: NUMBER
+        value:
+          type: number
+          description: Number value.
+      required:
+      - value
+    StringPromptedFieldDto:
+      type: object
+      title: String Prompted Field Dto
+      description: String prompted field attributes.
+      properties:
+        type:
+          const: STRING
+        name:
+          type: string
+          description: The name of the prompted field.
+          pattern: ^[a-zA-Z0-9-_]+$
+          minLength: 1
+          maxLength: 64
+        display_name:
+          type: string
+          description: The display name of the prompted field.
+          maxLength: 64
+        default_value:
+          type: string
+          description: Optional default value of the string prompted field.
+        min:
+          type: integer
+          description: Optional minimum length of the string prompted field.
+          format: int32
+          minimum: 0
+        max:
+          type: integer
+          description: Optional maximum length of the string prompted field.
+          format: int32
+          minimum: 0
+      required:
+      - name
+    MoogResponseListOfMenuActionDto:
+      type: object
+      description: Config API MenuActionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MenuActionDto'
+      required:
+      - status
+      - data
+    SelectionListPromptedFieldDto:
+      type: object
+      title: Selection List Prompted Field Dto
+      description: Selection list prompted field attributes.
+      properties:
+        type:
+          const: SELECTION_LIST
+        name:
+          type: string
+          description: The name of the prompted field.
+          pattern: ^[a-zA-Z0-9-_]+$
+          minLength: 1
+          maxLength: 64
+        display_name:
+          type: string
+          description: The display name of the prompted field.
+          maxLength: 64
+        default_value:
+          $ref: '#/components/schemas/SelectionListValue'
+          description: Optional default value from the selection list.
+        selection_list:
+          type: array
+          description: List of values for the user to pick from.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/SelectionListValue'
+      required:
+      - name
+      - selection_list
+    PromptedField:
+      type: object
+      title: Prompted Field
+      description: Prompted fields for the menu action.
+      oneOf:
+      - $ref: '#/components/schemas/StringPromptedFieldDto'
+      - $ref: '#/components/schemas/NumberPromptedFieldDto'
+      - $ref: '#/components/schemas/SelectionListPromptedFieldDto'
+    ResponseDisplayType:
+      type: string
+      enum:
+      - NEW_TAB
+      - POPUP
+      - NONE
+      title: Response Display Type
+    SelectionListStringValueDto:
+      type: object
+      title: Selection List String Value Dto
+      description: Selection list string value field attributes.
+      properties:
+        type:
+          const: STRING
+        value:
+          type: string
+          description: String value.
+          pattern: \S
+      required:
+      - value
+    ContextType:
+      type: string
+      enum:
+      - ALERT
+      - INCIDENT
+      title: Context Type
+    MenuActionOperation:
+      type: object
+      title: Menu Action Operation
+      description: The operation which menu action is associated with.
+      oneOf:
+      - $ref: '#/components/schemas/WebhookOperationDto'
+      - $ref: '#/components/schemas/ServerApiOperationDto'
+      - $ref: '#/components/schemas/SetTagsOperationDto'
+      - $ref: '#/components/schemas/StandaloneWorkflowOperationDto'
+    BaseMenuActionDto:
+      type: object
+      title: Base Menu Action Dto
+      description: Base menu action attributes.
+      properties:
+        name:
+          type: string
+          description: The name of the menu action.
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Optional description of the menu action
+        category_id:
+          type: string
+          description: Optional ID of the menu action category
+        context_type:
+          $ref: '#/components/schemas/ContextType'
+          description: The context type this menu action is associated with.
+        prompted_fields:
+          type: array
+          description: Optional list of prompted fields for the menu action.
+          items:
+            $ref: '#/components/schemas/PromptedField'
+        operation:
+          $ref: '#/components/schemas/MenuActionOperation'
+          description: The operation this menu action is associated with.
+      required:
+      - name
+      - context_type
+      - operation
+    NumberPromptedFieldDto:
+      type: object
+      title: Number Prompted Field Dto
+      description: Number prompted field attributes.
+      properties:
+        type:
+          const: NUMBER
+        name:
+          type: string
+          description: The name of the prompted field.
+          pattern: ^[a-zA-Z0-9-_]+$
+          minLength: 1
+          maxLength: 64
+        display_name:
+          type: string
+          description: The display name of the prompted field.
+          maxLength: 64
+        default_value:
+          type: number
+          description: Optional default value of the number prompted field.
+        min:
+          type: integer
+          description: Optional minimum value of the number prompted field.
+          format: int32
+        max:
+          type: integer
+          description: Optional maximum value of the number prompted field.
+          format: int32
+      required:
+      - name
+    ServerApiOperationDto:
+      type: object
+      title: Server Api Operation Dto
+      description: Menu action server API operation attributes.
+      properties:
+        type:
+          const: SERVER_API
+        headers:
+          type: object
+          description: Any headers required by the webhook operation.
+          additionalProperties:
+            type: string
+          examples:
+          - Content-Type: application/json
+        request_method:
+          $ref: '#/components/schemas/HttpRequestMethod'
+          description: The http request method for this operation.
+        base_urls:
+          type: array
+          description: Optional base url for this operation.
+          items:
+            type: string
+            pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        url:
+          type: string
+          description: The url for this operation.
+          pattern: ^(https?://|\$\{(\w++)\}).*
+        body:
+          type: string
+          description: The http request body for this operation.
+          examples:
+          - '{"id":"${incident_id}","info":"${info}"}'
+        response_display_type:
+          $ref: '#/components/schemas/ResponseDisplayType'
+          description: The response display type for this operation.
+      required:
+      - request_method
+      - url
+      - response_display_type
+    MoogResponseMenuActionDto:
+      type: object
+      description: Config API MenuActionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MenuActionDto'
+      required:
+      - status
+      - data
+    SetTagsOperationDto:
+      type: object
+      title: Set Tags Operation Dto
+      description: Menu action set tags operation attributes.
+      properties:
+        type:
+          const: SET_TAGS
+        tags:
+          type: object
+          description: The tags for the operation to set.
+          additionalProperties:
+            type: string
+      required:
+      - tags
+    WebhookOperationDto:
+      type: object
+      title: Webhook Operation Dto
+      description: Menu action webhook operation attributes.
+      properties:
+        type:
+          const: WEBHOOK
+        headers:
+          type: object
+          description: Any headers required by the webhook operation.
+          additionalProperties:
+            type: string
+          examples:
+          - Content-Type: application/json
+        request_method:
+          $ref: '#/components/schemas/HttpRequestMethod'
+          description: The http request method for this operation.
+        base_urls:
+          type: array
+          description: Optional base url for this operation.
+          items:
+            type: string
+            pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        url:
+          type: string
+          description: The url for this operation.
+          pattern: ^(https?://|\$\{(\w++)\}).*
+        body:
+          type: string
+          description: The http request body for this operation.
+          examples:
+          - '{"id":"${incident_id}","info":"${info}"}'
+        response_display_type:
+          $ref: '#/components/schemas/ResponseDisplayType'
+          description: The response display type for this operation.
+      required:
+      - request_method
+      - url
+      - response_display_type
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    HttpRequestMethod:
+      type: string
+      enum:
+      - GET
+      - PATCH
+      - POST
+      - PUT
+      - DELETE
+      title: Http Request Method
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Config API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

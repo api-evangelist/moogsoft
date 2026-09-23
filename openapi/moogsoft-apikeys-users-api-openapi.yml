@@ -1,0 +1,381 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Apikeys Users API
+  description: API for User Service
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Apikeys-users
+  description: Endpoints relating to API key operations
+paths:
+  /v2/users/{userId}/keys:
+    post:
+      tags:
+      - Apikeys-users
+      summary: Create a new API key
+      description: Creates a new api key with the current user permissions
+      operationId: createApiKey
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user the API key is associated with
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseApiKeyDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Apikeys-users
+      summary: Get an API keys for an user
+      description: Lists all the API keys associated with the system
+      operationId: getUserApiKeys
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user the API keys belongs to
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfApiKeyDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+  /v2/users/{userId}/keys/{keyId}:
+    get:
+      tags:
+      - Apikeys-users
+      summary: Get details for specific API key
+      description: Returns the details for a specific API key
+      operationId: getApiKey
+      parameters:
+      - name: keyId
+        in: path
+        description: ID of the API key to get details
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        description: ID of the user the API key belongs to
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseApiKeyDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - Apikeys-users
+      summary: Delete an API key associated with a user
+      description: Deletes the API associated with the userId
+      operationId: deleteApiKey
+      parameters:
+      - name: keyId
+        in: path
+        description: ID of the API key to delete
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        description: ID of the user the API key belongs to
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+      - '2022-03-10'
+    BaseApiKeyDto:
+      type: object
+      title: Base Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ApiKeyDto'
+      required:
+      - status
+      - data
+    MoogResponseListOfApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeyDto'
+      required:
+      - status
+      - data
+    ApiKeyDto:
+      type: object
+      title: Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        userId:
+          type: string
+        userEmail:
+          type: string
+        apiKey:
+          type: string
+      required:
+      - name
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

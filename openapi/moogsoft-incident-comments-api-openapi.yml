@@ -1,0 +1,454 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/Incidents Incident Comments API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: incident-comments
+  description: Get, save and edit incident comments
+paths:
+  /v1/incidents/{incidentId}/comments:
+    get:
+      tags:
+      - incident-comments
+      summary: Get all comments of an existing incident
+      operationId: getComments
+      parameters:
+      - name: incidentId
+        in: path
+        description: ID of the incident to return list of comments. Returns 400 (Invalid ID Supplied) if this value is anything other than a non-negative integer.
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentCommentResponse'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - incident-comments
+      summary: Add comment to existing incident
+      operationId: addComment
+      parameters:
+      - name: incidentId
+        in: path
+        description: Incident id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Incident comment to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentCommentDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+  /v1/incidents/{incidentId}/comments/{commentId}:
+    patch:
+      tags:
+      - incident-comments
+      summary: update existing comment
+      operationId: updateComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment id
+        required: true
+        schema:
+          type: string
+      - name: incidentId
+        in: path
+        description: Incident id
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        description: Incident comment to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentCommentDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - incident-comments
+      summary: Delete comment of an incident
+      operationId: deleteComment
+      parameters:
+      - name: commentId
+        in: path
+        description: Comment ID
+        required: true
+        schema:
+          type: string
+      - name: incidentId
+        in: path
+        description: Incident ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    CommentType:
+      type: string
+      enum:
+      - STANDARD
+      - RESOLVING
+      - ANNOUNCEMENT
+      title: Comment Type
+      description: CommentType for incidents comments
+    MoogResponseIncidentCommentResponse:
+      type: object
+      description: Alerts/Incidents API IncidentCommentResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentCommentResponse'
+      required:
+      - status
+      - data
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseIncidentCommentDto:
+      type: object
+      description: Alerts/Incidents API IncidentCommentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentCommentDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IncidentCommentDto:
+      type: object
+      title: Incident Comment Dto
+      description: Comment details which are returned from comments endpoint
+      properties:
+        comment_id:
+          type: string
+          description: The unique comment ID of the comment
+          examples:
+          - 8b5ac7f4-b054-4d2f-9292-380618ecab11
+        incident_id:
+          type: integer
+          description: The unique incident ID of the incident where the comment belongs
+          format: int64
+          examples:
+          - 101
+        comment:
+          type: string
+          description: The comment's message
+          examples:
+          - This issue has been resolved
+        user:
+          $ref: '#/components/schemas/CommentUserDto'
+          description: The comment owner's user details
+        is_edited:
+          type: boolean
+          description: The flag indicates whether the comment is edited or not
+          examples:
+          - false
+        type:
+          $ref: '#/components/schemas/CommentType'
+          description: The types of comment 'STANDARD', 'RESOLVING' & 'ANNOUNCEMENT'. The 'ANNOUNCEMENT' type is immutable while the other types are interchangeable
+        created_at:
+          $ref: '#/components/schemas/Instant'
+          description: Epoch timestamp in seconds indicating when the comment was created
+        commentId:
+          type: string
+          description: Use comment_id instead
+          x-deprecated: true
+        incidentId:
+          type: integer
+          description: Use incident_id instead
+          format: int64
+        isEdited:
+          type: boolean
+          description: Use is_edited instead
+          x-deprecated: true
+        createdAt:
+          $ref: '#/components/schemas/Instant'
+          description: Use created_at instead
+    CommentUserDto:
+      type: object
+      title: Comment User Dto
+      properties:
+        id:
+          type: string
+        family_name:
+          type: string
+        given_name:
+          type: string
+        email:
+          type: string
+        picture:
+          type: string
+        familyName:
+          type: string
+          description: Use family_name instead
+          x-deprecated: true
+        givenName:
+          type: string
+          description: Use given_name instead
+          x-deprecated: true
+    CommentRequestDto:
+      type: object
+      title: Comment Request Dto
+      description: Comment details which are needed to create a comment
+      properties:
+        comment:
+          type: string
+          description: The comment's message
+          examples:
+          - This issue has been resolved
+        type:
+          $ref: '#/components/schemas/CommentType'
+          description: The types of comment 'STANDARD', 'RESOLVING' & 'ANNOUNCEMENT'. The 'ANNOUNCEMENT' type is immutable while the other types are interchangeable
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IncidentCommentResponse:
+      type: object
+      title: Incident Comment Response
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentCommentDto'
+        count:
+          type: integer
+          format: int64
+        resolving_step_count:
+          type: integer
+          format: int64
+        announcement_count:
+          type: integer
+          format: int64
+        resolvingStepCount:
+          type: integer
+          description: Use resolving_step_count instead
+          format: int64
+        announcementCount:
+          type: integer
+          description: Use announcement_count instead
+          format: int64
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

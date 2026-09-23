@@ -11,10 +11,10 @@ hosts:
   documents:
   - path: /.well-known/openid-configuration
     status: 200
-    file: well-known/moogsoft-auth-openid-configuration.json
+    file: moogsoft-auth-openid-configuration.json
   - path: /.well-known/oauth-authorization-server
     status: 200
-    file: well-known/moogsoft-auth-oauth-authorization-server.json
+    file: moogsoft-auth-oauth-authorization-server.json
 - host: api.moogsoft.ai
   documents:
   - path: /.well-known/security.txt

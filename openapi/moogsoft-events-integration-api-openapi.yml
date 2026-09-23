@@ -1,0 +1,290 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: Events Integration API
+  description: API for Apex AIOps Incident Management Events Integration.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: events-integration
+  description: Endpoints relating to event ingestion
+paths:
+  /v1/integrations/events:
+    post:
+      tags:
+      - events-integration
+      summary: Post event(s) to MOC
+      description: Process events and process them via Event Workflows.
+      operationId: postEvents
+      parameters:
+      - name: User-Agent
+        in: header
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/WebEventDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value: []
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    IsgErrorMessage:
+      type: object
+      title: Isg Error Message
+      description: Message relating to the API error
+      properties:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: number
+          description: ISO-8601 Date/time when the API error was reported
+          format: int64
+          examples:
+          - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
+          type: array
+          description: Substitution arguments used for localization
+          items:
+            type: string
+    WebEventDto:
+      type: object
+      title: Event
+      properties:
+        source:
+          type: string
+          description: The source that generated the event
+          maxLength: 32500
+          examples:
+          - www.your-source.com
+        check:
+          type: string
+          description: The check that triggered the event
+          examples:
+          - cpu load
+        severity:
+          $ref: '#/components/schemas/Severity'
+          description: The relative severity of the event
+        description:
+          type: string
+          description: A human-readable description of the event
+          maxLength: 32500
+          examples:
+          - CPU spike to 75%
+        deduplication_key:
+          type: string
+          description: Custom event deduplication key value
+          examples:
+          - my-service::user-response-time
+        time:
+          $ref: '#/components/schemas/Timestamp'
+          description: Time of event, seconds or milliseconds since Jan 1, 1970 UTC. If not specified, arrival time is used.
+        services:
+          type: array
+          description: One or more services that gathered the event or are associated with it
+          examples:
+          - - retail
+            - support
+          items:
+            type: string
+        alias:
+          type: string
+          description: The alias for the event source
+        utc_offset:
+          type: string
+          description: An offset to apply to the provided event time, as an abbreviation such as "PST", a full name such as "America/Los_Angeles", or offset form such as "GMT-8:00"
+          examples:
+          - UTC
+        manager:
+          type: string
+          description: A general identifier of the event generator or intermediary, such as AppDynamics, NewRelic, etc.
+          examples:
+          - CloudWatchEC2
+        manager_id:
+          type: string
+          description: ID for the external manager or tool that sent the event
+          examples:
+          - '1234'
+        class:
+          type: string
+          description: The high-level category of the resource that generated the fault or performance event
+          examples:
+          - Application
+        namespace:
+          type: string
+          description: The namespace value related to the event
+        type:
+          type: string
+          description: The high-level category of the issue that generated the fault or performance event
+          examples:
+          - Capacity
+        tags:
+          type: object
+          description: Tags cannot contain embedded objects; nor lists other than a "labels" list
+        location:
+          $ref: '#/components/schemas/LocationDto'
+          description: A set of key-value pairs that specific the physical or virtual location where the event occurred
+        policyId:
+          type: string
+          description: The policy id representing the policy associated with the moog detector
+      required:
+      - source
+      - check
+      - severity
+      - description
+    GeoLocationDto:
+      type: object
+      title: GeoLocation
+      properties:
+        lat:
+          type: number
+          format: float
+        long:
+          type: number
+          format: float
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
+    LocationDto:
+      type: object
+      title: Location
+      properties:
+        street:
+          type: string
+        building:
+          type: string
+        suite:
+          type: integer
+          format: int32
+        floor:
+          type: string
+        city:
+          type: string
+        state_or_province:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+        geo_coordinates:
+          $ref: '#/components/schemas/GeoLocationDto'
+        rack:
+          type: string
+        aisle:
+          type: string
+        u_position:
+          type: string
+        region:
+          type: string
+        data_center:
+          type: string
+        availability_zone:
+          type: string
+        geo_coordinates_lat:
+          type: integer
+          format: int32
+        geo_coordinates_long:
+          type: integer
+          format: int32
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    IsgErrorSeverity:
+      type: string
+      enum:
+      - Info
+      - Warning
+      - Error
+      - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Events Integration
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

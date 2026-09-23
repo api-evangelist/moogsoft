@@ -1,0 +1,56 @@
+openapi: 3.2.0
+info:
+  version: 3.0.25-5d76381-134
+  title: service Datum Index Suggestions Resource API
+servers:
+- url: http://localhost:3030
+  description: Auto generated value
+- url: http://0.0.0.0:3030
+  description: Auto generated value
+tags:
+- name: Datum Index Suggestions Resource
+paths:
+  /datum-index-suggestions:
+    get:
+      tags:
+      - Datum Index Suggestions Resource
+      summary: Get possible autocomplete suggestions for the particular field and value
+      parameters:
+      - name: limit
+        in: query
+        description: The maximum number of suggestions to return (by default this is 10)
+        schema:
+          type: integer
+          format: int32
+          default: '10'
+      - name: name
+        in: query
+        description: The field name you want to autocomplete the value for (fully_qualified_moob, metric, source). The default is fully_qualified_moob
+        required: true
+        schema:
+          type: string
+          pattern: \S
+          default: fully_qualified_moob
+      - name: value
+        in: query
+        description: The value that you want to try and autocomplete
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                uniqueItems: true
+                items:
+                  type: string
+      servers:
+      - url: http://localhost:3030
+        description: Auto generated value
+      - url: http://0.0.0.0:3030
+        description: Auto generated value
+      operationId: getDatumIndexSuggestions
+      x-operation-id-source: derived

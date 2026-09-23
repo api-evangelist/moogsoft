@@ -1,0 +1,130 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: UI Services License API
+  description: APIs for handling features requests and some UI driven queries.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Moogsoft Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: License
+paths:
+  /v2/license/info:
+    get:
+      description: Returns the current license info for the instance of Apex AIOps Incident Management
+      responses:
+        '200':
+          description: Succesful return of license
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Team Trial
+                      class:
+                        type: string
+                        example: trial
+                      expiry:
+                        type: object
+                        properties:
+                          daysLeft:
+                            type: number
+                            example: 10
+                          expirationDate:
+                            type: string
+                            example: '2024-07-01'
+                xml:
+                  name: main
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: Team Trial
+                      class:
+                        type: string
+                        example: trial
+                      expiry:
+                        type: object
+                        properties:
+                          daysLeft:
+                            type: number
+                            example: 10
+                          expirationDate:
+                            type: string
+                            example: '2024-07-01'
+                xml:
+                  name: main
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Unable to find record in SalesForce
+                xml:
+                  name: main
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: error
+                  msg:
+                    type: string
+                    example: Unable to find record in SalesForce
+                xml:
+                  name: main
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      tags:
+      - License
+      summary: Get license info
+      x-summary-source: derived
+      operationId: getV2LicenseInfo
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  description: Find out more about Apex AIOps Incident Management

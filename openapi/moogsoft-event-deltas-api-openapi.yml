@@ -1,0 +1,202 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: UI Services Event Deltas API
+  description: APIs for handling features requests and some UI driven queries.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Moogsoft Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Event Deltas
+paths:
+  /v1/event-deltas:
+    get:
+      description: For a given alert ID or a dedupe key, retrieve a breakdown of the different events.
+      parameters:
+      - name: alertId
+        in: query
+        description: The alert ID to pull events for.
+        schema:
+          type: string
+      - name: dedupeKey
+        in: query
+        description: The dedupe key for all events to filter on.
+        schema:
+          type: string
+      - name: startTime
+        in: query
+        description: The timestamp (in epoch time) marking the beginning of the range to retrieve events for.
+        schema:
+          type: string
+          default: The last 24 hours
+          example: 1720083965000
+        examples:
+          default:
+            value: 1720083965000
+      - name: endTime
+        in: query
+        description: The timestamp (in epoch time) marking the end of the range to retrieve events for.
+        schema:
+          type: string
+          example: 1720083965000
+        examples:
+          default:
+            value: 1720083965000
+      - name: direction
+        in: query
+        description: The order to use when returning the events.
+        schema:
+          $ref: '#/components/schemas/SortOrder'
+      - name: skip
+        in: query
+        description: The number of events to skip before returning the results.
+        schema:
+          type: string
+          default: 0
+      - name: limit
+        in: query
+        description: The maximum number of events to return.
+        schema:
+          type: string
+          default: 100
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDeltasResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '408':
+          description: Request Timeout
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeoutResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      tags:
+      - Event Deltas
+      summary: Get event deltas
+      x-summary-source: derived
+      operationId: getV1EventDeltas
+      x-operation-id-source: derived
+components:
+  schemas:
+    EventDeltasResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+            result:
+              type: array
+              items:
+                type: object
+                properties:
+                  contentType:
+                    type: string
+                    example: incremental
+                  alertId:
+                    type: number
+                    example: 2436002
+                  content:
+                    type: object
+                    properties:
+                      time:
+                        type: number
+                        example: 1723585970835
+                      tags:
+                        type: object
+                        properties:
+                          cluster:
+                            type: string
+                            example: eks-toolington-us-west-2-01
+                          service:
+                            type: string
+                            example: Provzilla
+                          LogStream:
+                            type: string
+                            example: https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#logsV2:log-groups/log-group/$252Faws$252Flambda$252Fcirm-dev-dev-metrics
+                          env:
+                            type: string
+                            example: toolington
+                          integration_type:
+                            type: string
+                            example: eventapi
+                  eventTime:
+                    type: number
+                    example: 1723585970835
+                  dedupeKey:
+                    type: string
+                    example: provzilla::cirm-dev-dev-metrics::provzillaerrorthrown
+      xml:
+        name: EventDeltasResponse
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    TimeoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Timeout Error
+      xml:
+        name: TimeoutResponse
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      xml:
+        name: SortOrder
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  description: Find out more about Apex AIOps Incident Management

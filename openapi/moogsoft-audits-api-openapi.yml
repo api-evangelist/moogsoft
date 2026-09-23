@@ -1,0 +1,209 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: UI Services Audits API
+  description: APIs for handling features requests and some UI driven queries.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Moogsoft Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Audits
+paths:
+  /v1/audits:
+    get:
+      description: Get audit log entries for individual services or items by their ID
+      parameters:
+      - name: startTime
+        in: query
+        schema:
+          type: string
+      - name: endTime
+        in: query
+        schema:
+          type: string
+      - name: offset
+        in: query
+        schema:
+          type: string
+      - name: serviceName
+        in: query
+        description: Service to retrieve logs for.
+        schema:
+          $ref: '#/components/schemas/ServiceName'
+      - name: recordId
+        in: query
+        description: recordId/uuid of individual item to pull audits for. Can be alert/incident ID or uuid of a config item.
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: number of items to return per query
+        schema:
+          type: string
+      - name: sortOrder
+        in: query
+        description: sort order by timestamp
+        schema:
+          $ref: '#/components/schemas/SortOrder'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      tags:
+      - Audits
+      summary: Get audits
+      x-summary-source: derived
+      operationId: getV1Audits
+      x-operation-id-source: derived
+components:
+  schemas:
+    ServiceName:
+      type: string
+      enum:
+      - prc-model
+      - prc-features
+      - prc-training
+      - prc-labels
+      - automation
+      - ums-user
+      - ums-apikey
+      - ums-sso
+      - ums-role
+      - ums-group
+      - appinsights
+      - cloudwatch
+      - datadog
+      - sig_alert_history
+      - maintenance-windows
+      - alerts
+      - incidents
+      - incident-watchers
+      - catalogs
+      - workflows
+      - correlation-engine
+      - correlation-engine-webserver
+      - webhooks
+      - notification-policies
+      - on-call-schedules
+      - on-call-notifications-sent
+      - on-call-notifications-acknowledged
+      - on-call-open-issues
+      - pagerduty
+      - byoapi
+      - metrics-policies
+      xml:
+        name: ServiceName
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    AuditResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            count:
+              type: number
+              example: 1
+            result:
+              type: array
+              items:
+                type: object
+                properties:
+                  recordId:
+                    type: string
+                    example: automation-config
+                  service:
+                    type: string
+                    example: automation
+                  description:
+                    type: string
+                    example: Updating Auto-Close Automation configuration
+                  updatedValues:
+                    type: object
+                    properties:
+                      closeResolvedIncidentsInSeconds:
+                        type: number
+                        example: 3600
+                      closeAlertsWhenAllIncidentsClosed:
+                        type: boolean
+                        example: true
+                      closeIncidentsInSeconds:
+                        type: number
+                        example: 604800
+                      closeAlertsInSeconds:
+                        type: number
+                        example: 259200
+                      closeResolvedAlertsInSeconds:
+                        type: number
+                        example: 1800
+                  details: {}
+                  tenant:
+                    type: string
+                    example: palpatine
+                  timestamp:
+                    type: number
+                    example: 1687357919086
+                  username:
+                    type: string
+                    example: System
+                  originalValues: {}
+      xml:
+        name: AuditResponse
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      xml:
+        name: SortOrder
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  description: Find out more about Apex AIOps Incident Management

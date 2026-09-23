@@ -1,0 +1,1454 @@
+openapi: 3.2.0
+info:
+  version: 4.0.0
+  title: Config maintenance windows API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu actions, and maintenance windows
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Maintenance Windows
+  description: Maintenance Window scheduling
+paths:
+  /v1/maintenance/occurrences/{id}/cancelled:
+    put:
+      tags:
+      - Maintenance Windows
+      summary: Cancel a maintenance window schedule
+      operationId: cancelOccurrence
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:edit
+  /v1/maintenance/windows/{id}/occurrences/expired:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get expired occurrences for a specific maintenance window
+      operationId: getMaintenanceExpiredOccurrences
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the maintenance occurrences
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the maintenance occurrences
+          format: int32
+          minimum: 0
+          default: 0
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Specifies the maintenance window id for which to retrieve occurrences
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/occurrences/expired:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get expired, skipped, or cancelled maintenance window occurrences (in reverse…
+      operationId: getExpiredMaintenanceOccurrences
+      parameters:
+      - name: limit
+        in: query
+        description: Specifies limit when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        description: Specifies offset record when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/occurrences/{id}:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get a maintenance occurrence
+      operationId: getMaintenanceOccurrence
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/windows/{id}/occurrences/pending:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get pending occurrences for a specific maintenance window
+      operationId: getMaintenancePendingOccurrences
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the maintenance occurrences
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the maintenance occurrences
+          format: int32
+          minimum: 0
+          default: 0
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Specifies the maintenance window id for which to retrieve occurrences
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/occurrences/running:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Gets maintenance window occurrences that are running
+      operationId: getRunningMaintenanceOccurrences
+      parameters:
+      - name: limit
+        in: query
+        description: Specifies limit when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        description: Specifies offset record when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/windows/{id}/status:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get the current status of a maintenance window
+      operationId: getMaintenanceWindowStatus
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceStatusDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/occurrences/{id}/skipped:
+    put:
+      tags:
+      - Maintenance Windows
+      summary: Skip a maintenance window schedule
+      operationId: skipOccurrence
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:edit
+  /v1/maintenance/windows/{id}/occurrences/running:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get active occurrences for a specific maintenance window
+      operationId: getMaintenanceRunningOccurrences
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the maintenance occurrences
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the maintenance occurrences
+          format: int32
+          minimum: 0
+          default: 0
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Specifies the maintenance window id for which to retrieve occurrences
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/windows:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get maintenance window schedules
+      operationId: getMaintenanceWindows
+      parameters:
+      - name: deleted
+        in: query
+        schema:
+          type: boolean
+          description: Optional flag indicating whether to retrieve ONLY deleted or non-deleted windows (default is to return ALL windows)
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the maintenance windows
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the maintenance windows
+          format: int32
+          minimum: 0
+          default: 0
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          enum:
+          - created
+          - lastUpdated
+          - name
+          - createdBy
+          - lastUpdatedBy
+          - start
+          description: Specifies the column to sort by when retrieving the maintenance windows
+          default: created
+      - name: sortOrder
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          description: Specifies the sorting order when retrieving the maintenance windows
+          default: desc
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceWindowListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+    post:
+      tags:
+      - Maintenance Windows
+      summary: Creates a new maintenance window schedule
+      operationId: createMaintenanceWindow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseMaintenanceWindowDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceWindowDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:edit
+  /v1/maintenance/occurrences/pending:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get pending maintenance window occurrences
+      operationId: getPendingMaintenanceOccurrences
+      parameters:
+      - name: limit
+        in: query
+        description: Specifies limit when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        description: Specifies offset record when retrieving the maintenance occurrences
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/windows/{id}/occurrences:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get all occurrences for a specific maintenance window
+      operationId: getMaintenanceOccurrences
+      parameters:
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          description: Specifies limit when retrieving the maintenance occurrences
+          format: int32
+          exclusiveMinimum: 0
+          default: 100
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          description: Specifies offset record when retrieving the maintenance occurrences
+          format: int32
+          minimum: 0
+          default: 0
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          description: Specifies the maintenance window id for which to retrieve occurrences
+          minLength: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceOccurrenceListDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+  /v1/maintenance/windows/{id}:
+    patch:
+      tags:
+      - Maintenance Windows
+      summary: Update a maintenance window schedule
+      operationId: updateMaintenanceWindow
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseMaintenanceWindowDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceWindowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:edit
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get a maintenance window schedule
+      operationId: getMaintenanceWindow
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseMaintenanceWindowDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:view
+    delete:
+      tags:
+      - Maintenance Windows
+      summary: Delete a maintenance window schedule
+      operationId: deleteMaintenanceWindow
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - maintenance:edit
+  /v1/timezones:
+    get:
+      tags:
+      - Maintenance Windows
+      summary: Get all available timezones
+      operationId: getAllTimezones
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfTimezoneDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+components:
+  schemas:
+    MoogResponseMaintenanceWindowListDto:
+      type: object
+      description: Config API MaintenanceWindowListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceWindowListDto'
+      required:
+      - status
+      - data
+    MoogResponseMaintenanceOccurrenceListDto:
+      type: object
+      description: Config API MaintenanceOccurrenceListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceOccurrenceListDto'
+      required:
+      - status
+      - data
+    MoogResponseMaintenanceWindowDto:
+      type: object
+      description: Config API MaintenanceWindowDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceWindowDto'
+      required:
+      - status
+      - data
+    MaintenanceWindowDto:
+      type: object
+      title: Maintenance Window Dto
+      description: Definition for a given scheduled maintenance window
+      properties:
+        name:
+          type: string
+          description: Name of the maintenance window
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: Description of the maintenance window
+        external_link:
+          type: string
+          description: Optional change Record link to an external system
+        filter:
+          type: string
+          description: Required filter string
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
+        duration:
+          type: integer
+          description: Duration of the maintenance window, in seconds
+          format: int32
+          minimum: 60
+        timezone:
+          type: string
+          description: Optional timezone of the maintenance window; used for display purposes
+        repeats:
+          $ref: '#/components/schemas/Repeatable'
+          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
+          discriminator:
+            propertyName: period
+            mapping:
+              daily: '#/components/schemas/DailyRepeatable'
+              weekly: '#/components/schemas/WeeklyRepeatable'
+              monthly: '#/components/schemas/MonthlyRepeatable'
+              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
+        status:
+          $ref: '#/components/schemas/MaintenanceStatus'
+          description: Status of the maintenance window, based upon occurrences
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was last updated
+        created_by:
+          type: string
+          description: User who created the maintenance window
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: User who last updated the maintenance window
+          readOnly: true
+        id:
+          type: string
+          description: Unique id of the maintenance window
+          readOnly: true
+        deleted:
+          type: boolean
+          description: Indicates whether the maintenance window was DELETED
+          readOnly: true
+      required:
+      - filter
+      - start
+      - duration
+    SchedulePeriod:
+      type: string
+      enum:
+      - daily
+      - weekly
+      - monthly
+      - monthly_nth_day
+      title: Schedule Period
+      description: Scheduling Periodicity
+    MaintenanceWindowListDto:
+      type: object
+      title: Maintenance Window List Dto
+      properties:
+        result:
+          type: array
+          description: List of maintenance windows, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/MaintenanceWindowDto'
+        count:
+          type: integer
+          description: Total number of maintenace windows that would have been returned in the absence of offset and limit
+          format: int64
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MaintenanceStatusDto:
+      type: object
+      title: Maintenance Status Dto
+      description: Definition for a given maintenance window's status
+      properties:
+        id:
+          type: string
+          description: Unique id of the maintenance window
+          readOnly: true
+        name:
+          type: string
+          description: Name of the maintenance window
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/MaintenanceStatus'
+          description: Overall status, based on window occurrences
+        expired_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Previous occurrence that ran or was cancelled
+        running_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Currently running occurrence, if any
+        pending_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Next pending occurrence, if any
+    MaintenanceOccurrenceDto:
+      type: object
+      title: Maintenance Occurrence Dto
+      description: Definition for a specific occurrence of a maintenance window
+      properties:
+        name:
+          type: string
+          description: Name of the maintenance window
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: Description of the maintenance window
+        external_link:
+          type: string
+          description: Optional change Record link to an external system
+        filter:
+          type: string
+          description: Required filter string
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
+        duration:
+          type: integer
+          description: Duration of the maintenance window, in seconds
+          format: int32
+          minimum: 60
+        timezone:
+          type: string
+          description: Optional timezone of the maintenance window; used for display purposes
+        repeats:
+          $ref: '#/components/schemas/Repeatable'
+          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
+          discriminator:
+            propertyName: period
+            mapping:
+              daily: '#/components/schemas/DailyRepeatable'
+              weekly: '#/components/schemas/WeeklyRepeatable'
+              monthly: '#/components/schemas/MonthlyRepeatable'
+              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
+        status:
+          $ref: '#/components/schemas/MaintenanceStatus'
+          description: Status of the maintenance window, based upon occurrences
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was last updated
+        created_by:
+          type: string
+          description: User who created the maintenance window
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: User who last updated the maintenance window
+          readOnly: true
+        id:
+          type: string
+          description: Unique id of the maintenance window occurrence
+          readOnly: true
+        window_id:
+          type: string
+          description: Unique id of the maintenance window associated with this occurrence
+          readOnly: true
+        actual_start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Actual start time of the occurrence, milliseconds since Jan 1, 1970 GMT
+        actual_duration:
+          type: integer
+          description: Actual duration of the occurrence, in seconds
+          format: int32
+          readOnly: true
+      required:
+      - filter
+      - start
+      - duration
+    MoogResponseMaintenanceOccurrenceDto:
+      type: object
+      description: Config API MaintenanceOccurrenceDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+      required:
+      - status
+      - data
+    MaintenanceOccurrenceListDto:
+      type: object
+      title: Maintenance Occurrence List Dto
+      properties:
+        result:
+          type: array
+          description: List of maintenance window occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+        count:
+          type: integer
+          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
+          format: int64
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    MoogResponseListOfTimezoneDto:
+      type: object
+      description: Config API TimezoneDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimezoneDto'
+      required:
+      - status
+      - data
+    MoogResponseMaintenanceStatusDto:
+      type: object
+      description: Config API MaintenanceStatusDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceStatusDto'
+      required:
+      - status
+      - data
+    TimezoneDto:
+      type: object
+      title: Timezone Dto
+      properties:
+        zoneId:
+          type: string
+        offset:
+          type: string
+    MaintenanceStatus:
+      type: string
+      enum:
+      - pending
+      - running
+      - completed
+      - skipped
+      - cancelled
+      title: Maintenance Status
+      description: Maintenance Status
+    Repeatable:
+      type: object
+      title: Repeatable
+      properties:
+        period:
+          $ref: '#/components/schemas/SchedulePeriod'
+          description: Periodicity of the schedule
+        until:
+          $ref: '#/components/schemas/Timestamp'
+          description: (Optional) Final run time of the schedule, milliseconds since Jan 1, 1970 GMT
+        times:
+          type: integer
+          description: '(Optional) Maximum number of times to run the schedule (note: only one of ''until'' and ''times'' is allowed to be used)'
+          format: int32
+          exclusiveMinimum: 0
+      required:
+      - period
+    BaseMaintenanceWindowDto:
+      type: object
+      title: Base Maintenance Window Dto
+      description: Definition for creating or updating a given scheduled maintenance window
+      properties:
+        name:
+          type: string
+          description: Name of the maintenance window
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: Description of the maintenance window
+        external_link:
+          type: string
+          description: Optional change Record link to an external system
+        filter:
+          type: string
+          description: Required filter string
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
+        duration:
+          type: integer
+          description: Duration of the maintenance window, in seconds
+          format: int32
+          minimum: 60
+        timezone:
+          type: string
+          description: Optional timezone of the maintenance window; used for display purposes
+        repeats:
+          $ref: '#/components/schemas/Repeatable'
+          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
+          discriminator:
+            propertyName: period
+            mapping:
+              daily: '#/components/schemas/DailyRepeatable'
+              weekly: '#/components/schemas/WeeklyRepeatable'
+              monthly: '#/components/schemas/MonthlyRepeatable'
+              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
+      required:
+      - filter
+      - start
+      - duration
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Config API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

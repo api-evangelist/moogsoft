@@ -1,0 +1,135 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: UI Services Features API
+  description: APIs for handling features requests and some UI driven queries.
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Moogsoft Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Features
+paths:
+  /v2/features:
+    get:
+      summary: Features
+      description: Get all feature flags per user.
+      parameters:
+      - name: authorization
+        in: header
+        description: Leave this value blank. For internal use only.
+        schema:
+          type: string
+      - name: role
+        in: query
+        description: View the feature flags for this user type.
+        required: true
+        schema:
+          type: string
+          example: operator
+        examples:
+          default:
+            value: operator
+      - name: license
+        in: query
+        description: User license type.
+        required: true
+        schema:
+          $ref: '#/components/schemas/LicenseType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeaturesResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoSplitResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      tags:
+      - Features
+      operationId: getV2Features
+      x-operation-id-source: derived
+components:
+  schemas:
+    NoSplitResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: failure
+        message:
+          type: string
+          example: Split not initialised
+      xml:
+        name: NoSplitResponse
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    FeaturesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            Feature1:
+              type: string
+              example: 'off'
+            Feature2:
+              type: string
+              example: 'on'
+      xml:
+        name: FeaturesResponse
+    LicenseType:
+      type: string
+      enum:
+      - enterprise
+      - team
+      - free
+      xml:
+        name: LicenseType
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/moogsoft-cloud/en/apis.html
+  description: Find out more about Apex AIOps Incident Management

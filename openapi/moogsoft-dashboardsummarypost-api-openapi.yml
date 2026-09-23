@@ -1,0 +1,370 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/Incidents Dashboard Summary Post API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: dashboardSummaryPost
+paths:
+  /v3/service/summary:
+    post:
+      tags:
+      - dashboardSummaryPost
+      summary: Get alert/incident summary for dashboard
+      operationId: getServiceSummaryPost
+      requestBody:
+        description: Dashboard Summary request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DashboardSummaryRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentSummaryResponse'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - incidents:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    IncidentSummaryResponse:
+      type: object
+      title: Incident Summary Response
+      properties:
+        tiles:
+          type: array
+          description: dashboard tile data
+          items:
+            $ref: '#/components/schemas/DashboardTile'
+        incident_count:
+          type: integer
+          description: total incident count for summary view
+          format: int64
+        alert_count:
+          type: integer
+          description: total alert count for summary view
+          format: int64
+        event_count:
+          type: integer
+          description: total event count for summary view
+          format: int64
+        open_incident_count:
+          type: integer
+          description: total of open, in progress and resolved incident count for summary view
+          format: int64
+        mttr:
+          type: number
+          description: mean time to resolve(in seconds) for incidents in summary view
+          format: double
+        mtta:
+          type: number
+          description: mean time to acknowledge(in seconds) for incidents in summary view
+          format: double
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
+    DashboardTile:
+      type: object
+      title: Dashboard Tile
+      properties:
+        name:
+          type: string
+          description: name of the tile
+        open_count:
+          type: integer
+          description: number of "open + in progress + resolved" incidents
+          format: int64
+        closed_count:
+          type: integer
+          description: number of closed incidents
+          format: int64
+        severity_count:
+          type: object
+          description: this contains per severity counts
+          additionalProperties:
+            type: integer
+            format: int64
+          examples:
+          - '{critical: 10, major: 10}'
+        priority_count:
+          type: object
+          description: this contains per priority counts
+          additionalProperties:
+            type: integer
+            format: int64
+          examples:
+          - '{P1: 10, P2: 10}'
+    DateColumnFilter:
+      type: object
+      title: Date Column Filter
+      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        dateFrom:
+          type: string
+          description: Date filter value to used with comparison operator
+        dateTo:
+          type: string
+          description: Date filter value to used when comparison operator is inRange
+        filterType:
+          const: date
+          description: Declares date filterType
+      required:
+      - type
+      - filterType
+    ColumnFilter:
+      type: object
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
+    SortBy:
+      type: string
+      enum:
+      - severity
+      - priority
+      title: Sort By
+      description: Dashboard sort by options
+    TextColumnFilter:
+      type: object
+      title: Text Column Filter
+      description: Filter a text column based on a string comparison<br>filterType = "text"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: string
+          description: Text filter value to used with comparison operator
+        filterType:
+          const: text
+          description: Declares text filterType
+      required:
+      - type
+      - filterType
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseIncidentSummaryResponse:
+      type: object
+      description: Alerts/Incidents API IncidentSummaryResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentSummaryResponse'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    BooleanColumnFilter:
+      type: object
+      title: Boolean Column Filter
+      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: boolean
+          description: Boolean value to used for comparison
+        filterType:
+          const: boolean
+          description: Declares boolean filterType
+      required:
+      - type
+      - filter
+      - filterType
+    SetColumnFilter:
+      type: object
+      title: Set Column Filter
+      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        values:
+          type: array
+          description: Set filter value(s) to used with comparison operator
+          items:
+            type: string
+        filterType:
+          const: set
+          description: Declares set filterType
+      required:
+      - type
+      - values
+      - filterType
+    NumberColumnFilter:
+      type: object
+      title: Number Column Filter
+      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: integer
+          description: Numeric filter value to used with comparison operator
+          format: int64
+        filterTo:
+          type: integer
+          description: Numeric filter value to used when comparison operator is inRange
+          format: int64
+        filterType:
+          const: number
+          description: Declares number filterType
+      required:
+      - type
+      - filterType
+    DashboardSummaryRequest:
+      type: object
+      title: Dashboard Summary Request
+      description: Dashboard summary POST request body
+      properties:
+        json_filter:
+          type: object
+          description: Return only incidents that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
+          additionalProperties:
+            $ref: '#/components/schemas/ColumnFilter'
+          examples:
+          - status:
+              values:
+              - open
+              - in progress
+              - resolved
+              filterType: set
+        utc_offset:
+          type: string
+          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time.
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        tile_by:
+          type: string
+          description: defines the grouping of alert/incident summary data
+          pattern: services|classes|types|^tags\..*
+        sort_by:
+          $ref: '#/components/schemas/SortBy'
+          description: defines the sorting of incident summary data
+      required:
+      - tile_by
+      - sort_by
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

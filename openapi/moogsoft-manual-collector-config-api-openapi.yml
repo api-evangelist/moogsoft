@@ -1,0 +1,394 @@
+openapi: 3.2.0
+info:
+  version: 1.1.0
+  title: Collector V2 Manual Collector Config API
+  description: This API enables you to work with collectors
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: manual-collector-config
+paths:
+  /v2/manual-collector-config:
+    get:
+      tags:
+      - manual-collector-config
+      summary: Returns any manual collector config that matches
+      description: Returns any manual collector config that matches.
+      operationId: findManualCollectorConfig
+      parameters:
+      - name: collector_id
+        in: query
+        description: Collector id associated with the config
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfManualCollectorConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - manual-collector-config
+      summary: Delete all matching manual collector config
+      description: Delete all matching manual collector config.
+      operationId: deleteMatchingManualCollectorConfig
+      parameters:
+      - name: collector_id
+        in: query
+        description: The collector id associated with the config
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - manual-collector-config
+      summary: Create new manual collector config
+      description: Create new manual collector config.
+      operationId: createManualCollectorConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BaseManualCollectorConfigDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseManualCollectorConfigDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+  /v2/manual-collector-config/{id}:
+    get:
+      tags:
+      - manual-collector-config
+      summary: Get the manual collector config with the given id
+      description: Get the manual collector config with the given id.
+      operationId: getManualCollectorConfig
+      parameters:
+      - name: id
+        in: path
+        description: The manual collector config id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseManualCollectorConfigDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - manual-collector-config
+      summary: Delete the manual collector config with the given id
+      description: Delete the manual collector config with the given id.
+      operationId: deleteManualCollectorConfig
+      parameters:
+      - name: id
+        in: path
+        description: The manual collector config id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    ManualCollectorConfigDto:
+      type: object
+      title: Manual Collector Config Dto
+      description: Manual collector config with base and generated attributes.
+      properties:
+        collector_id:
+          type: string
+          description: The collector id that this config is associated with.
+        enabled:
+          type: boolean
+          description: A boolean indicating if the config is enabled or not (by default true).
+        configuration:
+          type: object
+          description: The manual collector config.
+        id:
+          type: string
+          description: ID of the manual collector config
+      required:
+      - collector_id
+      - configuration
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfManualCollectorConfigDto:
+      type: object
+      description: Collector V2 API ManualCollectorConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManualCollectorConfigDto'
+      required:
+      - status
+      - data
+    MoogResponseManualCollectorConfigDto:
+      type: object
+      description: Collector V2 API ManualCollectorConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ManualCollectorConfigDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Collector V2 API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    BaseManualCollectorConfigDto:
+      type: object
+      title: Base Manual Collector Config Dto
+      description: Base manual collector config attributes.
+      properties:
+        collector_id:
+          type: string
+          description: The collector id that this config is associated with.
+        enabled:
+          type: boolean
+          description: A boolean indicating if the config is enabled or not (by default true).
+        configuration:
+          type: object
+          description: The manual collector config.
+      required:
+      - collector_id
+      - configuration
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Collector V2 API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

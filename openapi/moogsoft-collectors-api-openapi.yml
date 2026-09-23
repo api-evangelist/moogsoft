@@ -1,0 +1,1059 @@
+openapi: 3.2.0
+info:
+  version: 1.1.0
+  title: Collector V2 Collectors API
+  description: This API enables you to work with collectors
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Collectors
+paths:
+  /v2/collectors:
+    post:
+      tags:
+      - Collectors
+      summary: Register/update a collector and set up default plugins
+      description: Register/update a collector and set up default plugins.
+      operationId: registerCollector
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterCollectorDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCollectorDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Collectors
+      summary: Get all known collectors
+      description: Get all known collectors.
+      operationId: getCollectors
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCollectorDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}:
+    get:
+      tags:
+      - Collectors
+      summary: Get a collector by id
+      description: Get a collector by id.
+      operationId: getCollector
+      parameters:
+      - name: collectorId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCollectorDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - Collectors
+      summary: Delete Collector
+      operationId: deleteCollector
+      parameters:
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/api-key:
+    get:
+      tags:
+      - Collectors
+      summary: Get a new API Key for an id
+      description: Generate new API Key.
+      operationId: getAPIKey
+      parameters:
+      - name: collectorId
+        in: path
+        description: The id to get an API Key for
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/encrypted-topology:
+    get:
+      tags:
+      - Collectors
+      summary: Generate Encrypted Topology
+      operationId: generateEncryptedTopology
+      parameters:
+      - name: api_key
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/heartbeats:
+    post:
+      tags:
+      - Collectors
+      summary: Process Heartbeats
+      operationId: processHeartbeats
+      parameters:
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CollectorHeartbeatDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/logs:
+    post:
+      tags:
+      - Collectors
+      summary: Save Logs
+      operationId: saveLogs
+      parameters:
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CollectorLogDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - Collectors
+      summary: Get Logs
+      operationId: getLogs
+      parameters:
+      - name: direction
+        in: query
+        description: The direction that log timestamps will be ordered
+        schema:
+          type: object
+          enum:
+          - ASC
+          - DESC
+          default: DESC
+      - name: end_time
+        in: query
+        description: The UTC end time of logs to filter on
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: keyword
+        in: query
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The maximum number of logs to return
+        schema:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10000
+          default: '5000'
+      - name: skip
+        in: query
+        description: The number of logs to skip before returning the results
+        schema:
+          type: integer
+          format: int32
+          minimum: 0
+          default: '0'
+      - name: start_time
+        in: query
+        description: The UTC start time of logs to filter on
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCollectorLogResponse'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/messages:
+    get:
+      tags:
+      - Collectors
+      summary: Get Messages
+      operationId: getMessages
+      parameters:
+      - name: action
+        in: query
+        schema:
+          $ref: '#/components/schemas/CollectorAction'
+      - name: status
+        in: query
+        schema:
+          $ref: '#/components/schemas/CollectorMessageStatus'
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfCollectorMessageDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - Collectors
+      summary: Create Collector Message
+      operationId: createCollectorMessage
+      parameters:
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectorMessageRequestDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCollectorMessageDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collectors/{collectorId}/messages/{messageId}:
+    patch:
+      tags:
+      - Collectors
+      summary: Update Message Response
+      operationId: updateMessageResponse
+      parameters:
+      - name: collectorId
+        in: path
+        description: The collector id
+        required: true
+        schema:
+          type: string
+      - name: messageId
+        in: path
+        description: The message id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectorMessageResponseDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseCollectorMessageDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    CollectorMessageDto:
+      type: object
+      title: Collector Message Dto
+      description: Collector message.
+      properties:
+        id:
+          type: string
+        collector_id:
+          type: string
+          description: The collector id that this message is associated with
+        collector_action:
+          $ref: '#/components/schemas/CollectorAction'
+          description: The collector action that is needed
+        action_message:
+          type: string
+          description: A message which can optionally be included with the action
+        status:
+          $ref: '#/components/schemas/CollectorMessageStatus'
+          description: The status of the collector message
+        response_message:
+          type: string
+          description: A message which can optionally contain a response from the collector
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+          description: The time the message was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: The time the message was last updated
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    RegisterCollectorDto:
+      type: object
+      title: Register Collector Dto
+      description: Register collector attributes.
+      properties:
+        version:
+          type: string
+          description: The version of the collector
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        vector_version:
+          type: string
+          description: The vector version of the collector
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        host:
+          type: string
+          description: The host the collector is running on
+          pattern: \S
+        os:
+          $ref: '#/components/schemas/PlatformType'
+          description: The operating system of the collector's current host
+        id:
+          type: string
+          description: Optional collector provided id
+        seed_key:
+          type: string
+          description: Seed key for security key generation
+        proxy_url:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        base_url:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        host_properties:
+          type: object
+          description: Additional properties available to the collector topology.
+          additionalProperties:
+            type: string
+      required:
+      - version
+      - host
+      - os
+    CollectorHeartbeatDto:
+      type: object
+      title: Collector Heartbeat Dto
+      description: Collector heartbeat message.
+      properties:
+        version:
+          type: string
+          description: The version of the collector
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        host:
+          type: string
+          description: The host of the collector
+        uptime:
+          type: number
+          description: The uptime of the collector in seconds
+          format: double
+      required:
+      - version
+      - uptime
+    CollectorMessageStatus:
+      type: string
+      enum:
+      - OPEN
+      - SUCCESS
+      - FAIL
+      title: Collector Message Status
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseCollectorLogResponse:
+      type: object
+      description: Collector V2 API CollectorLogResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorLogResponse'
+      required:
+      - status
+      - data
+    CollectorMessageRequestDto:
+      type: object
+      title: Collector Message Request Dto
+      description: Collector message request.
+      properties:
+        collector_action:
+          $ref: '#/components/schemas/CollectorAction'
+          description: The collector action that is needed
+        action_message:
+          type: string
+          description: A message which can optionally be included with the action
+    CollectorLogDto:
+      type: object
+      title: Collector Log Dto
+      description: Collector log message.
+      properties:
+        level:
+          $ref: '#/components/schemas/CollectorLogLevel'
+          description: The log level attributed to this log message
+        message:
+          type: string
+          description: The log message
+        component:
+          type: string
+          description: The component that generated the log message
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+          description: The timestamp for when the log message was generated
+      required:
+      - level
+      - message
+      - timestamp
+    CollectorMessageResponseDto:
+      type: object
+      title: Collector Message Response Dto
+      description: Collector message response.
+      properties:
+        status:
+          $ref: '#/components/schemas/CollectorMessageStatus'
+          description: The status of the collector message
+        response_message:
+          type: string
+          description: A message which can optionally contain a response from the collector
+      required:
+      - status
+    MoogResponseCollectorMessageDto:
+      type: object
+      description: Collector V2 API CollectorMessageDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorMessageDto'
+      required:
+      - status
+      - data
+    CollectorLogResponse:
+      type: object
+      title: Collector Log Response
+      properties:
+        totalHits:
+          type: integer
+          format: int64
+        collectorLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorLogDto'
+    MoogResponseCollectorDto:
+      type: object
+      description: Collector V2 API CollectorDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorDto'
+      required:
+      - status
+      - data
+    PlatformType:
+      type: string
+      enum:
+      - MACOS
+      - LINUX
+      - WINDOWS
+      title: Platform Type
+    MoogResponseListOfCollectorMessageDto:
+      type: object
+      description: Collector V2 API CollectorMessageDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorMessageDto'
+      required:
+      - status
+      - data
+    CollectorLogLevel:
+      type: string
+      enum:
+      - TRACE
+      - DEBUG
+      - INFO
+      - WARN
+      - ERROR
+      title: Collector Log Level
+    CollectorDto:
+      type: object
+      title: Collector Dto
+      description: Basic collector attributes.
+      properties:
+        tenant:
+          type: string
+          description: The tenant of the collector
+        id:
+          type: string
+          description: ID of the collector
+        version:
+          type: string
+          description: The version of the collector
+        vector_version:
+          type: string
+          description: The vector version of the collector
+        uptime:
+          type: number
+          description: Uptime in seconds
+          format: double
+        host:
+          type: string
+          description: The host of the collector
+        os:
+          $ref: '#/components/schemas/PlatformType'
+          description: The OS of the collector
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: The last updated time in milliseconds
+        enabled_plugin_count:
+          type: integer
+          description: The number of enabled plugins
+          format: int64
+        proxy_url:
+          type: string
+          description: The proxy url to be used if behind a proxy
+        base_url:
+          type: string
+        host_properties:
+          type: object
+          additionalProperties:
+            type: string
+    CollectorAction:
+      type: string
+      enum:
+      - UPDATE_CONFIG
+      - SHUTDOWN
+      - UPGRADE_BINARY
+      title: Collector Action
+    MoogResponseListOfCollectorDto:
+      type: object
+      description: Collector V2 API CollectorDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Collector V2 API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Collector V2 API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

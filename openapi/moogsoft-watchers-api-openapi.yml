@@ -1,0 +1,669 @@
+openapi: 3.2.0
+info:
+  version: 4.0.0
+  title: Config Watchers API
+  description: This API allows you to save and retrieve config, catalogs, credentials, watchers, menu actions, and maintenance windows
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: Watchers
+  description: Watchers configuration
+paths:
+  /v1/templates/email/{id}:
+    patch:
+      tags:
+      - Watchers
+      summary: Updates an existing e-mail template
+      operationId: updateTemplate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEmailTemplateDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:edit
+    get:
+      tags:
+      - Watchers
+      summary: Gets an existing e-mail template
+      operationId: getTemplate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEmailTemplateDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:view
+    delete:
+      tags:
+      - Watchers
+      summary: Deletes an existing e-mail template
+      operationId: deleteTemplate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:edit
+  /v1/watchers/incidents/{id}:
+    put:
+      tags:
+      - Watchers
+      summary: Creates or updates a Watchers group for an Incident
+      operationId: putIncidentWatchers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchersRequestDto'
+      responses:
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Incident Watchers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfIncidentWatchersDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:edit
+    get:
+      tags:
+      - Watchers
+      summary: Gets an existing Incidents Watchers group
+      operationId: getIncidentWatchers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Incident Watchers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfIncidentWatchersDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:view
+    delete:
+      tags:
+      - Watchers
+      summary: Deletes an existing Incidents Watchers group by Incident ID
+      operationId: deleteIncidentWatchers
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:edit
+  /v1/watchers/incidents/{id}/self:
+    put:
+      tags:
+      - Watchers
+      summary: Creates or updates a Watchers group for an Incident, for the current user
+      operationId: putIncidentWatchersSelf
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchersRequestSelfDto'
+      responses:
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+        default:
+          description: List of Incident Watchers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfIncidentWatchersDto'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:view
+  /v1/templates/email:
+    get:
+      tags:
+      - Watchers
+      summary: Gets all existing e-mail templates
+      operationId: getTemplates
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfEmailTemplateDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:view
+    post:
+      tags:
+      - Watchers
+      summary: Creates an e-mail template
+      operationId: createTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmailTemplateDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseEmailTemplateDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        description: Required user permissions for this endpoint
+        value:
+        - incidents:edit
+components:
+  schemas:
+    MoogResponseListOfEmailTemplateDto:
+      type: object
+      description: Config API EmailTemplateDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplateDto'
+      required:
+      - status
+      - data
+    WatchersOperation:
+      type: string
+      enum:
+      - ADD
+      - REPLACE
+      - REMOVE
+      title: Watchers Operation
+    WatchersRequestDto:
+      type: object
+      title: Watchers Request Dto
+      description: Request to create or update a Watchers group
+      properties:
+        id:
+          type: string
+          description: Unique ID for the watcher group
+          readOnly: true
+        name:
+          type: string
+          description: Optional name to assign to the watcher group
+        email_template_id:
+          type: string
+          description: Email template to use for watcher notification (missing indicates default template is used)
+        email_subject:
+          type: string
+          description: Email subject to use for watcher notification (missing indicates default subject is used)
+        users:
+          type: array
+          description: Individual users watching the incident
+          items:
+            type: string
+            pattern: \S
+        groups:
+          type: array
+          description: User Groups watching the incident
+          items:
+            type: string
+            pattern: \S
+        operation:
+          $ref: '#/components/schemas/WatchersOperation'
+          description: 'Request operation: ADD, REMOVE, or REPLACE'
+    MoogResponseListOfIncidentWatchersDto:
+      type: object
+      description: Config API IncidentWatchersDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentWatchersDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IncidentWatchersDto:
+      type: object
+      title: Incident Watchers Dto
+      description: Definition for a given incident watcher group
+      properties:
+        id:
+          type: string
+          description: Unique ID for the watcher group
+          readOnly: true
+        name:
+          type: string
+          description: Optional name to assign to the watcher group
+        email_template_id:
+          type: string
+          description: Email template to use for watcher notification (missing indicates default template is used)
+        email_subject:
+          type: string
+          description: Email subject to use for watcher notification (missing indicates default subject is used)
+        users:
+          type: array
+          description: Individual users watching the incident
+          items:
+            type: string
+            pattern: \S
+        groups:
+          type: array
+          description: User Groups watching the incident
+          items:
+            type: string
+            pattern: \S
+        incident_id:
+          type: integer
+          description: Incident being watched
+          format: int64
+      required:
+      - incident_id
+    MoogResponseEmailTemplateDto:
+      type: object
+      description: Config API EmailTemplateDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/EmailTemplateDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    EmailTemplateDto:
+      type: object
+      title: Email Template Dto
+      description: Definition for an email template
+      properties:
+        id:
+          type: string
+          description: Unique ID for the template
+          readOnly: true
+        name:
+          type: string
+          description: Name of the template
+        template:
+          type: string
+          description: The actual template, which can contain embedded HTML
+    WatchersRequestSelfDto:
+      type: object
+      title: Watchers Request Self Dto
+      description: Request to add or remove self to/from a Watchers group
+      properties:
+        operation:
+          $ref: '#/components/schemas/WatchersOperation'
+          description: 'Request operation: ADD, or REMOVE'
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Config API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

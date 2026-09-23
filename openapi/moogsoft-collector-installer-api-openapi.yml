@@ -1,0 +1,457 @@
+openapi: 3.2.0
+info:
+  version: 1.1.0
+  title: Collector V2 Collector Installer API
+  description: This API enables you to work with collectors
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: collector-installer
+paths:
+  /v2/collector-installer/base-url:
+    get:
+      tags:
+      - collector-installer
+      summary: Returns the base URL for api requests
+      description: Returns the base URL for api requests.
+      operationId: getBaseUrl
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collector-installer/check:
+    head:
+      tags:
+      - collector-installer
+      summary: Check if the collector service is active
+      description: Used as a health check for the collector
+      operationId: collectorHealthCheck
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value: []
+        description: Required user permissions for this endpoint
+  /v2/collector-installer/curl:
+    get:
+      tags:
+      - collector-installer
+      summary: Returns a command to download and install the collector
+      description: Returns a command to download and install the collector.
+      operationId: getInstallCommand
+      parameters:
+      - name: platform
+        in: query
+        description: The desired platform for the install command
+        required: true
+        schema:
+          $ref: '#/components/schemas/PlatformType'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+  /v2/collector-installer/download:
+    get:
+      tags:
+      - collector-installer
+      summary: Download the collector bundle
+      description: Download the collector bundle (latest if no version specified).
+      operationId: download
+      parameters:
+      - name: arch
+        in: query
+        description: The desired architecture for the download
+        required: true
+        schema:
+          $ref: '#/components/schemas/ArchType'
+      - name: fileType
+        in: query
+        description: The desired version for the download (default to .tar for Linux and .msi for Windows if not provided)
+        schema:
+          $ref: '#/components/schemas/FileType'
+      - name: libc
+        in: query
+        description: The desired libc implementation for a Linux download
+        schema:
+          $ref: '#/components/schemas/LIBC'
+      - name: platform
+        in: query
+        description: The desired platform for the download
+        required: true
+        schema:
+          $ref: '#/components/schemas/PlatformType'
+      - name: version
+        in: query
+        description: The desired version for the download (default to latest if not provided)
+        schema:
+          type: string
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+  /v2/collector-installer/latest-version:
+    get:
+      tags:
+      - collector-installer
+      summary: Fetch the latest collector version as JSON
+      description: Fetch the latest collector version as JSON.
+      operationId: latestVersionJson
+      parameters:
+      - name: arch
+        in: query
+        description: The desired architecture
+        required: true
+        schema:
+          $ref: '#/components/schemas/ArchType'
+      - name: fileType
+        in: query
+        description: The desired file extension
+        schema:
+          $ref: '#/components/schemas/FileType'
+      - name: platform
+        in: query
+        description: The desired platform
+        required: true
+        schema:
+          $ref: '#/components/schemas/PlatformType'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponsestring'
+                __errors__:
+                  '#/components/schemas/MoogResponsestring': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:view
+        description: Required user permissions for this endpoint
+  /v2/collector-installer/script:
+    get:
+      tags:
+      - collector-installer
+      summary: Fetch the collector install script
+      description: Fetch the collector install script.
+      operationId: getInstallScript
+      parameters:
+      - name: base_url
+        in: query
+        description: The baseUrl for the install script when a reverse proxy is utilized
+        schema:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+      - name: platform
+        in: query
+        description: The desired platform for the install script
+        required: true
+        schema:
+          $ref: '#/components/schemas/PlatformType'
+      - name: proxy_url
+        in: query
+        description: The proxyUrl for the install script when a proxy url is utilized
+        schema:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - integrations:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    FileType:
+      type: string
+      enum:
+      - ZIP
+      - TAR
+      - MSI
+      title: File Type
+    LIBC:
+      type: string
+      enum:
+      - GNU
+      - MUSL
+      - NONLINUX
+      title: LIBC
+    ArchType:
+      type: string
+      enum:
+      - X86_64
+      - ARMV7
+      - ARM64
+      title: Arch Type
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: Collector V2 API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    PlatformType:
+      type: string
+      enum:
+      - MACOS
+      - LINUX
+      - WINDOWS
+      title: Platform Type
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Collector V2 API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

@@ -1,0 +1,621 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: User SSO API
+  description: API for User Service
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: SSO
+  description: Endpoints relating to auth0 / single sign on (SSO)
+paths:
+  /v1/sso/advanced-connection:
+    post:
+      tags:
+      - SSO
+      summary: Create a local connection for Auth0 multi tenancy
+      description: Creates a local connection to a master Auth0 connection in a multi tenancy system
+      operationId: CreateAdvancedSSOConn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSOMultiTenancyConnDto'
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+  /v1/sso/callback_url:
+    get:
+      tags:
+      - SSO
+      summary: Get a callback url for OIDC authentication
+      description: Get a callback url for OIDC based connection
+      operationId: getSSOCallBackUrl
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseobject'
+                __errors__:
+                  '#/components/schemas/IsgListResponseobject': No foreign doc with id components found
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+  /v1/sso/connection:
+    patch:
+      tags:
+      - SSO
+      summary: Edit SSO connection
+      operationId: editSSOConnection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 60
+                options:
+                  $ref: '#/components/schemas/SSOConnOptionsDto'
+                domains:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    pattern: \S
+                useMapping:
+                  type: boolean
+                useGroupMapping:
+                  type: boolean
+                defaultRoleId:
+                  type: string
+                mapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                groupMapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                isMultiTenant:
+                  type: boolean
+              required:
+              - name
+              - options
+              - domains
+            examples:
+              SSO Connection:
+                description: Parameters use to create a valid OIDC sso connection
+                value:
+                  name: connectionName
+                  options:
+                    clientId: yourClientID
+                    clientSecret: yourClientSecret
+                    discoveryUrl: your-discovery-url.com
+                    claimsScope: ''
+                    claimsFieldName: roles
+                    groupClaimsFieldName: ''
+                    strategy: oidc
+                  domains:
+                  - your-domain.com
+                  mapping:
+                    yourSSORole: yourMoogsoftRoleId
+                  useMapping: true
+                  groupMapping: {}
+                  useGroupMapping: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOReturnDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - SSO
+      summary: Get SSO connection details
+      operationId: getSSOConnection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOConnMongoDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    post:
+      tags:
+      - SSO
+      summary: Create an auth0 connection
+      operationId: CreateAuth0Connection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 60
+                options:
+                  $ref: '#/components/schemas/SSOConnOptionsDto'
+                domains:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                    pattern: \S
+                useMapping:
+                  type: boolean
+                useGroupMapping:
+                  type: boolean
+                defaultRoleId:
+                  type: string
+                mapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                groupMapping:
+                  type: object
+                  additionalProperties:
+                    type: string
+                isMultiTenant:
+                  type: boolean
+              required:
+              - name
+              - options
+              - domains
+            examples:
+              SSO Connection:
+                description: Parameters use to create a valid OIDC sso connection
+                value:
+                  name: connectionName
+                  options:
+                    clientId: yourClientID
+                    clientSecret: yourClientSecret
+                    discoveryUrl: your-discovery-url.com
+                    claimsScope: ''
+                    claimsFieldName: roles
+                    groupClaimsFieldName: ''
+                    strategy: oidc
+                  domains:
+                  - your-domain.com
+                  mapping:
+                    yourSSORole: yourMoogsoftRoleId
+                  useMapping: true
+                  groupMapping: {}
+                  useGroupMapping: false
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseSSOReturnDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+  /v1/sso/disable:
+    put:
+      tags:
+      - SSO
+      summary: Disable an SSO connection
+      operationId: disableSSOConnection
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+  /v1/sso/enable:
+    put:
+      tags:
+      - SSO
+      summary: Enable an SSO connection
+      operationId: enableSSOConnection
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    SSOConnOptionsDto:
+      type: object
+      title: SSO Conn Options Dto
+      properties:
+        clientId:
+          type: string
+        clientSecret:
+          type: string
+        discoveryUrl:
+          type: string
+        claimsScope:
+          type: string
+        claimsFieldName:
+          type: string
+        groupClaimsFieldName:
+          type: string
+        pingFederateBaseUrl:
+          type: string
+        cert:
+          type: string
+        strategy:
+          type: string
+    SSOConnMongoDto:
+      type: object
+      title: SSO Conn Mongo Dto
+      properties:
+        created:
+          $ref: '#/components/schemas/Instant'
+        createdBy:
+          type: string
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+        lastUpdatedBy:
+          type: string
+        claimsScope:
+          type: string
+        connectionId:
+          type: string
+        name:
+          type: string
+        defaultRoleId:
+          type: string
+        domains:
+          type: array
+          items:
+            type: string
+        options:
+          $ref: '#/components/schemas/SSOConnOptionsDto'
+        useMapping:
+          type: boolean
+        useGroupMapping:
+          type: boolean
+        mapping:
+          type: object
+          additionalProperties:
+            type: string
+        groupMapping:
+          type: object
+          additionalProperties:
+            type: string
+        enabled:
+          type: boolean
+        isMultiTenant:
+          type: boolean
+    MoogResponseSSOConnMongoDto:
+      type: object
+      description: User API SSOConnMongoDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SSOConnMongoDto'
+      required:
+      - status
+      - data
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    SSOReturnDto:
+      type: object
+      title: SSO Return Dto
+      properties:
+        testUrl:
+          type: string
+        publicKeyUrl:
+          type: string
+        metadataUrl:
+          type: string
+        token:
+          type: string
+    MoogResponseSSOReturnDto:
+      type: object
+      description: User API SSOReturnDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SSOReturnDto'
+      required:
+      - status
+      - data
+    SSOMultiTenancyConnDto:
+      type: object
+      title: SSO Multi Tenancy Conn Dto
+      properties:
+        connectionId:
+          type: string
+          minLength: 1
+        domains:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            pattern: \S
+      required:
+      - connectionId
+      - domains
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

@@ -1,0 +1,807 @@
+openapi: 3.2.0
+info:
+  version: 1.0.0
+  title: User API
+  description: API for User Service
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: User
+  description: Endpoints relating to user operations
+paths:
+  /v2/users:
+    post:
+      tags:
+      - User
+      summary: Create new users
+      description: Create new user(s) who will be granted access to the instance
+      operationId: createUser
+      parameters:
+      - name: X-Email-Sender-Address
+        in: header
+        schema:
+          type: string
+      - name: X-Email-Sender-Role-Arn
+        in: header
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/BaseUserDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgListResponseUserDto'
+              examples:
+                Invite Single User:
+                  description: Response received after successfully creating single user
+                  value:
+                    status: success
+                    data:
+                      email: string
+                      familyName: string
+                      givenName: string
+                      role: string
+                      roleId: string
+                      tenantName: string
+                      excludeUserDeletion: true
+                      isSSO: true
+                      countryCode: string
+                      phoneNumber: string
+                      notificationPreferences:
+                      - EMAIL
+                Invite Bulk Users:
+                  description: Response received after successfully creating multiple users
+                  value:
+                    status: success
+                    data:
+                    - email: user1@email.com
+                      familyName: string
+                      givenName: string
+                      role: string
+                      roleId: string
+                      tenantName: string
+                      excludeUserDeletion: true
+                      isSSO: true
+                      countryCode: string
+                      phoneNumber: string
+                      notificationPreferences:
+                      - EMAIL
+                    - email: user2@email.com
+                      familyName: string
+                      givenName: string
+                      role: string
+                      roleId: string
+                      tenantName: string
+                      excludeUserDeletion: true
+                      isSSO: true
+                      countryCode: string
+                      phoneNumber: string
+                      notificationPreferences:
+                      - EMAIL
+                      - VOICE
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IsgErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - User
+      summary: Get all users in the system
+      description: Get details for all user in the system
+      operationId: getUsers
+      parameters:
+      - name: showDeleted
+        in: query
+        schema:
+          type: boolean
+          default: false
+      - name: sortBy
+        in: query
+        schema:
+          type: string
+          default: name
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseListOfUserDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:view
+        description: Required user permissions for this endpoint
+  /v2/users/export:
+    get:
+      tags:
+      - User
+      summary: Export all users in the system as CSV file
+      description: Export information of all the users in the system including their Name, Email, Source, Role, User Groups, Status from the system in form of CSV file
+      operationId: exportUsers
+      responses:
+        '200':
+          description: OK
+          content:
+            text/csv:
+              examples:
+                default:
+                  value: 'name,email,source,role,groups,status
+
+                    John Doe,john.doe@example.com,Invitation,Admin,[Group 1,Group 2],DELETED
+
+                    Jane Smith,jane.smith@example.com,SSO,Admin,[Group 2,Group 3],ACTIVE
+
+                    '
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:view
+        description: Required user permissions for this endpoint
+  /v2/users/profile:
+    patch:
+      tags:
+      - User
+      summary: Edit current user info
+      description: Edit the profile information for the current user
+      operationId: editProfileInfo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:no-access
+        description: Required user permissions for this endpoint
+  /v2/users/{id}:
+    patch:
+      tags:
+      - User
+      summary: Edit an existing user
+      description: Edit a user already in the system
+      operationId: editUser
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+    get:
+      tags:
+      - User
+      summary: Get details for an existing user
+      description: Get details for user existing in the system
+      operationId: getUserDetails
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseUserDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:view
+        description: Required user permissions for this endpoint
+    delete:
+      tags:
+      - User
+      summary: Delete a user in the system
+      description: Delete a user already in the system, user will not be able to access the system
+      operationId: deleteUser
+      parameters:
+      - name: id
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value:
+        - user:edit
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+      - '2022-03-10'
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    IsgErrorMessage:
+      type: object
+      title: Isg Error Message
+      description: Message relating to the API error
+      properties:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: string
+          description: ISO-8601 Date/time when the API error was reported
+          format: date-time
+          examples:
+          - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
+          type: array
+          description: Substitution arguments used for localization
+          items:
+            type: string
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    IsgListResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        results:
+          type: object
+      required:
+      - results
+    MoogResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/UserDto'
+      required:
+      - status
+      - data
+    UserProfileDto:
+      type: object
+      title: User Profile Dto
+      properties:
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+    UpdateUserDto:
+      type: object
+      title: Update User Dto
+      properties:
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+          pattern: \S
+        groups:
+          type: array
+          items:
+            type: string
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+      required:
+      - roleId
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+      required:
+      - status
+      - data
+    NotificationPreference:
+      type: string
+      enum:
+      - EMAIL
+      - SMS
+      - VOICE
+      title: Notification Preference
+    BaseUserDto:
+      type: object
+      title: Base User Dto
+      properties:
+        email:
+          type: string
+          pattern: \S
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+        tenantName:
+          type: string
+        excludeUserDeletion:
+          type: boolean
+        isSSO:
+          type: boolean
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+      required:
+      - email
+      - familyName
+      - givenName
+      - roleId
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IsgErrorSeverity:
+      type: string
+      enum:
+      - Info
+      - Warning
+      - Error
+      - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
+    UserDto:
+      type: object
+      title: User Dto
+      properties:
+        email:
+          type: string
+          pattern: \S
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+        tenantName:
+          type: string
+        excludeUserDeletion:
+          type: boolean
+        isSSO:
+          type: boolean
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+        id:
+          type: string
+        numericId:
+          type: integer
+          format: int64
+        emailVerified:
+          type: boolean
+        name:
+          type: string
+        picture:
+          type: string
+        createdAt:
+          type: string
+        createdBy:
+          type: string
+        updatedAt:
+          $ref: '#/components/schemas/Instant'
+        updatedBy:
+          type: string
+        writtenAt:
+          $ref: '#/components/schemas/Instant'
+        lastLogin:
+          $ref: '#/components/schemas/Date'
+        status:
+          $ref: '#/components/schemas/UserStatus'
+        blocked:
+          type: boolean
+        groups:
+          type: array
+          items:
+            type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        jwtPermissions:
+          type: array
+          items:
+            type: string
+        tenants:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+      required:
+      - email
+      - familyName
+      - givenName
+      - roleId
+    UserStatus:
+      type: string
+      enum:
+      - INVITED
+      - ACTIVE
+      - DELETED
+      title: User Status
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing User API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management

@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  version: 3.0.25-5d76381-134
+  title: service Rollup Resource API
+servers:
+- url: http://localhost:3030
+  description: Auto generated value
+- url: http://0.0.0.0:3030
+  description: Auto generated value
+tags:
+- name: Rollup Resource
+paths:
+  /rollups:
+    get:
+      tags:
+      - Rollup Resource
+      summary: Get a series of metric rollups in time order based on the input filters
+      parameters:
+      - name: end_time
+        in: query
+        description: The UTC end time of rollups to filter on, in ms or s. Default is the current time
+        schema:
+          type: integer
+          format: int64
+      - name: fully_qualified_moob
+        in: query
+        description: The full name of the managed object associated with a metric. The full name is in the format <i>namespace:managed-object:archive</i>
+        required: true
+        schema:
+          type: string
+      - name: granularity
+        in: query
+        description: The granularity level to aggregate on. You can specify <b>minute</b>, <b>hour</b>, <b>day</b>, <b>week</b>, or <b>year</b>. The granularity should be smaller than the total time window.<br>If you want to get raw data points, use <b>GET datums</b> in the Rollup API
+        required: true
+        schema:
+          $ref: '#/components/schemas/Granularity'
+      - name: key
+        in: query
+        description: The key name to filter on
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: The maximum number of rollups to return. Defaults to 100.
+        schema:
+          type: integer
+          format: int32
+          default: '100'
+      - name: metric
+        in: query
+        description: The metric name to filter on
+        required: true
+        schema:
+          type: string
+      - name: source
+        in: query
+        description: The source name to filter on
+        required: true
+        schema:
+          type: string
+      - name: start_time
+        in: query
+        description: The UTC start time of rollups to filter on, in ms or s. Default is one hour before the current time
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSlimRollupResultsDto'
+      servers:
+      - url: http://localhost:3030
+        description: Auto generated value
+      - url: http://0.0.0.0:3030
+        description: Auto generated value
+      operationId: getRollups
+      x-operation-id-source: derived
+components:
+  schemas:
+    Granularity:
+      type: string
+      enum:
+      - RAW
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
+    SlimRollupDto:
+      type: object
+      properties:
+        mean:
+          type: number
+          format: double
+        count:
+          type: integer
+          format: int64
+        sigma:
+          type: number
+          format: double
+        median:
+          type: number
+          format: double
+        low:
+          type: number
+          format: double
+        high:
+          type: number
+          format: double
+        quartile_1:
+          type: number
+          format: double
+        quartile_3:
+          type: number
+          format: double
+        median_absolute_deviation:
+          type: number
+          format: double
+        timed_at_ms:
+          type: integer
+          format: int64
+        datasource:
+          type: string
+    GetSlimRollupResultsDto:
+      type: object
+      properties:
+        fully_qualified_moob:
+          type: string
+          x-deprecated: true
+        metric:
+          type: string
+        source:
+          type: string
+          x-deprecated: true
+        key:
+          type: string
+          x-deprecated: true
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        lastTimestamp:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimRollupDto'
+        total:
+          type: integer
+          format: int64

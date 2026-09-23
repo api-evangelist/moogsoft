@@ -1,0 +1,279 @@
+openapi: 3.2.0
+info:
+  version: 3.0.0
+  title: Alerts/Incidents Incident Filters API
+  description: This API enables you to retrieve and update alerts and incidents, and other APIs relating to them
+  termsOfService: https://www.moogsoft.com/legal-information/express-terms-conditions/
+  contact:
+    name: API Support
+    url: https://docs.moogsoft.com/en/moogsoft-apis.html
+    email: support@moogsoft.com
+  license:
+    url: https://www.moogsoft.com/legal-information
+    name: Apex AIOps Incident Management Proprietary
+servers:
+- url: https://api.moogsoft.ai
+- url: https://api.dev.moogsoft.cloud
+security:
+- ApiKeyAuth: []
+tags:
+- name: incident-filters
+  description: Validate incident filters
+paths:
+  /v1/incident-filters/columns:
+    get:
+      tags:
+      - incident-filters
+      summary: Get column names available for use with incident filters
+      description: Column names for filtering incidents in workflows, outbound integrations, etc.
+      operationId: incidentFilterColumnNames
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseColumnsDto'
+        '400':
+          description: Invalid parameters or data validation violation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value: []
+        description: Required user permissions for this endpoint
+  /v1/incident-filters/validate:
+    post:
+      tags:
+      - incident-filters
+      summary: Validate Incident Filter
+      operationId: validateIncidentFilter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/IncidentFilterStrDto'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogResponseIncidentFilterStrResultDto'
+        '400':
+          description: Bad Request
+        '404':
+          description: Requested object(s) not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        4XX:
+          description: Authorization or other error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogFailureResponse'
+        5XX:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoogErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      servers:
+      - url: https://api.moogsoft.ai
+      - url: https://api.dev.moogsoft.cloud
+      x-permissions:
+        value: []
+        description: Required user permissions for this endpoint
+components:
+  schemas:
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
+    MoogResponseColumnsDto:
+      type: object
+      description: Alerts/Incidents API ColumnsDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ColumnsDto'
+      required:
+      - status
+      - data
+    ColumnInfo:
+      type: object
+      title: Column Info
+      properties:
+        colId:
+          type: string
+        headerName:
+          type: string
+        cellRenderer:
+          type: string
+        sortable:
+          type: boolean
+        hide:
+          type: boolean
+        filterOptions:
+          $ref: '#/components/schemas/FilterOptions'
+    IncidentFilterStrDto:
+      type: object
+      title: Incident Filter Str Dto
+      description: An incident's filter string to validate
+      properties:
+        filterString:
+          type: string
+          description: The incident's filter string to validate
+          pattern: \S
+          examples:
+          - severity = Clear AND source = www.my-source.com
+      required:
+      - filterString
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseIncidentFilterStrResultDto:
+      type: object
+      description: Alerts/Incidents API IncidentFilterStrResultDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentFilterStrResultDto'
+      required:
+      - status
+      - data
+    FilterOptions:
+      type: object
+      title: Filter Options
+      properties:
+        type:
+          type: string
+        operators:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComparisonType'
+        setValues:
+          type: array
+          items:
+            type: string
+        category:
+          $ref: '#/components/schemas/FieldCategory'
+    IncidentFilterStrResultDto:
+      type: object
+      title: Incident Filter Str Result Dto
+      description: The result of validating an incident's filter string
+      properties:
+        isValid:
+          type: boolean
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      description: API Key for accessing Alerts/Incidents API
+      name: apiKey
+      in: header
+externalDocs:
+  url: https://docs.moogsoft.com/en/moogsoft-apis.html
+  description: Find out more about Apex AIOps Incident Management
