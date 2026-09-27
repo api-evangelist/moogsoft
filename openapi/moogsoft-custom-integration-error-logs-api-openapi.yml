@@ -125,37 +125,6 @@ paths:
         - integrations:edit
 components:
   schemas:
-    ByoErrorLogDto:
-      type: object
-      title: Byo Error Log Dto
-      properties:
-        integrationId:
-          type: string
-        timestamp:
-          $ref: '#/components/schemas/Instant'
-        errors:
-          type: array
-          items:
-            type: string
-        reason:
-          type: string
-    MoogResponseListOfByoErrorLogDto:
-      type: object
-      title: Moog Response List Of Byo Error Log Dto
-      description: Create Your Own Integration API ByoErrorLogDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ByoErrorLogDto'
-      required:
-      - status
-      - data
     Instant:
       type: number
       title: Instant
@@ -198,6 +167,37 @@ components:
       required:
       - status
       - message
+    MoogResponseListOfByoErrorLogDto:
+      type: object
+      title: Moog Response List Of Byo Error Log Dto
+      description: Create Your Own Integration API ByoErrorLogDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ByoErrorLogDto'
+      required:
+      - status
+      - data
+    ByoErrorLogDto:
+      type: object
+      title: Byo Error Log Dto
+      properties:
+        integrationId:
+          type: string
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+        errors:
+          type: array
+          items:
+            type: string
+        reason:
+          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

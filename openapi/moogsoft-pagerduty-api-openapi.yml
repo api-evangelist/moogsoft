@@ -385,18 +385,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    WebhookFilterDto:
-      type: object
-      title: Webhook Filter Dto
-      properties:
-        id:
-          type: string
-          description: ID of the PagerDuty service or team to filter events on, must be empty if filtering by account
-        type:
-          $ref: '#/components/schemas/PagerDutyWebhookSubscriptionType'
-          description: Scope of the events to be delivered (account, team, or service)
-      required:
-      - type
     MoogResponseListOfPagerDutyIntegrationDto:
       type: object
       title: Moog Response List Of Pager Duty Integration Dto
@@ -414,6 +402,65 @@ components:
       required:
       - status
       - data
+    PagerDutyIntegrationType:
+      type: string
+      enum:
+      - alert
+      - incident
+      - both
+      title: Pager Duty Integration Type
+      description: The event type of your PagerDuty integration (alert, incidents or both)
+    MoogFailureResponse:
+      type: object
+      description: Pager Duty API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponsePagerDutyIntegrationDto:
+      type: object
+      title: Moog Response Pager Duty Integration Dto
+      description: Pager Duty API PagerDutyIntegrationDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/PagerDutyIntegrationDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Pager Duty API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     PagerDutyIntegrationDto:
       type: object
       title: Pager Duty Integration Dto
@@ -457,50 +504,18 @@ components:
       - name
       - type
       - credentialName
-    PagerDutyIntegrationType:
-      type: string
-      enum:
-      - alert
-      - incident
-      - both
-      title: Pager Duty Integration Type
-      description: The event type of your PagerDuty integration (alert, incidents or both)
-    MoogFailureResponse:
+    WebhookFilterDto:
       type: object
-      description: Pager Duty API failure response body
+      title: Webhook Filter Dto
       properties:
-        status:
+        id:
           type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          description: ID of the PagerDuty service or team to filter events on, must be empty if filtering by account
+        type:
+          $ref: '#/components/schemas/PagerDutyWebhookSubscriptionType'
+          description: Scope of the events to be delivered (account, team, or service)
       required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: Pager Duty API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+      - type
     PagerDutyWebhookSubscriptionType:
       type: string
       enum:
@@ -509,21 +524,6 @@ components:
       - team_reference
       title: Pager Duty Webhook Subscription Type
       description: PagerDuty webhook subscription type
-    MoogResponsePagerDutyIntegrationDto:
-      type: object
-      title: Moog Response Pager Duty Integration Dto
-      description: Pager Duty API PagerDutyIntegrationDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/PagerDutyIntegrationDto'
-      required:
-      - status
-      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

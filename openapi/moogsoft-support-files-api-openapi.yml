@@ -92,6 +92,22 @@ components:
         contents:
           type: string
           description: The contents of the support file
+    MoogResponseListOfSupportFileDto:
+      type: object
+      description: Collector V2 API SupportFileDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportFileDto'
+      required:
+      - status
+      - data
     MoogFailureResponse:
       type: object
       description: Collector V2 API failure response body
@@ -128,22 +144,6 @@ components:
       required:
       - status
       - message
-    MoogResponseListOfSupportFileDto:
-      type: object
-      description: Collector V2 API SupportFileDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupportFileDto'
-      required:
-      - status
-      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

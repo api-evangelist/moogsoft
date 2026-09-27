@@ -448,6 +448,104 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    SSOMultiTenancyConnDto:
+      type: object
+      title: SSO Multi Tenancy Conn Dto
+      properties:
+        connectionId:
+          type: string
+          minLength: 1
+        domains:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            pattern: \S
+      required:
+      - connectionId
+      - domains
+    MoogResponseSSOReturnDto:
+      type: object
+      description: User API SSOReturnDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SSOReturnDto'
+      required:
+      - status
+      - data
+    SSOReturnDto:
+      type: object
+      title: SSO Return Dto
+      properties:
+        testUrl:
+          type: string
+        publicKeyUrl:
+          type: string
+        metadataUrl:
+          type: string
+        token:
+          type: string
+    MoogResponseSSOConnMongoDto:
+      type: object
+      description: User API SSOConnMongoDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SSOConnMongoDto'
+      required:
+      - status
+      - data
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     SSOConnOptionsDto:
       type: object
       title: SSO Conn Options Dto
@@ -512,104 +610,6 @@ components:
           type: boolean
         isMultiTenant:
           type: boolean
-    MoogResponseSSOConnMongoDto:
-      type: object
-      description: User API SSOConnMongoDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/SSOConnMongoDto'
-      required:
-      - status
-      - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogFailureResponse:
-      type: object
-      description: User API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    SSOReturnDto:
-      type: object
-      title: SSO Return Dto
-      properties:
-        testUrl:
-          type: string
-        publicKeyUrl:
-          type: string
-        metadataUrl:
-          type: string
-        token:
-          type: string
-    MoogResponseSSOReturnDto:
-      type: object
-      description: User API SSOReturnDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/SSOReturnDto'
-      required:
-      - status
-      - data
-    SSOMultiTenancyConnDto:
-      type: object
-      title: SSO Multi Tenancy Conn Dto
-      properties:
-        connectionId:
-          type: string
-          minLength: 1
-        domains:
-          type: array
-          minItems: 1
-          items:
-            type: string
-            pattern: \S
-      required:
-      - connectionId
-      - domains
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

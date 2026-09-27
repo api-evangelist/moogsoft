@@ -289,6 +289,24 @@ paths:
         - integrations:edit
 components:
   schemas:
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MenuActionCategoryDto:
       type: object
       title: Menu Action Category Dto
@@ -309,6 +327,24 @@ components:
       required:
       - name
       - context_type
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogResponseListOfMenuActionCategoryDto:
       type: object
       description: Config API MenuActionCategoryDto response body
@@ -322,6 +358,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MenuActionCategoryDto'
+      required:
+      - status
+      - data
+    MoogResponseMenuActionCategoryDto:
+      type: object
+      description: Config API MenuActionCategoryDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MenuActionCategoryDto'
       required:
       - status
       - data
@@ -348,56 +398,6 @@ components:
       - ALERT
       - INCIDENT
       title: Context Type
-    MoogResponseMenuActionCategoryDto:
-      type: object
-      description: Config API MenuActionCategoryDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MenuActionCategoryDto'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Config API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

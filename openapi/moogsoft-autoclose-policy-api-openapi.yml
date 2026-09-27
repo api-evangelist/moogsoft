@@ -313,46 +313,12 @@ components:
           $ref: '#/components/schemas/Instant'
         last_updated_by:
           type: string
-    MoogResponseListOfAutoClosePolicyDto:
-      type: object
-      description: Alerts/Incidents API AutoClosePolicyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AutoClosePolicyDto'
-      required:
-      - status
-      - data
     Instant:
       type: number
       title: Instant
       format: int64
       examples:
       - '2022-03-10T16:15:50Z'
-    BaseAutoClosePolicyDto:
-      type: object
-      title: Base Auto Close Policy Dto
-      properties:
-        name:
-          type: string
-        type:
-          type: string
-        description:
-          type: string
-        filter:
-          type: string
-        close_resolved_in_seconds:
-          type: integer
-          format: int64
-        close_all_in_seconds:
-          type: integer
-          format: int64
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -371,6 +337,22 @@ components:
       required:
       - status
       - message
+    MoogResponseListOfAutoClosePolicyDto:
+      type: object
+      description: Alerts/Incidents API AutoClosePolicyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AutoClosePolicyDto'
+      required:
+      - status
+      - data
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -389,6 +371,24 @@ components:
       required:
       - status
       - message
+    BaseAutoClosePolicyDto:
+      type: object
+      title: Base Auto Close Policy Dto
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        filter:
+          type: string
+        close_resolved_in_seconds:
+          type: integer
+          format: int64
+        close_all_in_seconds:
+          type: integer
+          format: int64
     MoogResponseAutoClosePolicyDto:
       type: object
       description: Alerts/Incidents API AutoClosePolicyDto response body

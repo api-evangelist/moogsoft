@@ -70,44 +70,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseIncidentSimilarityResult:
-      type: object
-      title: Moog Response Incident Similarity Result
-      description: Similar Incidents Service API IncidentSimilarityResult response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentSimilarityResult'
-      required:
-      - status
-      - data
-    IncidentSimilarityResult:
-      type: object
-      title: Incident Similarity Result
-      description: Inference result from similar-incidents.
-      properties:
-        result:
-          $ref: '#/components/schemas/IncidentSimilarityDto'
-    IncidentSimilarityRequest:
-      type: object
-      title: Incident Similarity Request
-      description: A request to get the similarity between 2 incidents
-      properties:
-        refIncidentID:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-        cmpIncidentID:
-          type: integer
-          format: int64
-          exclusiveMinimum: 0
-      required:
-      - refIncidentID
-      - cmpIncidentID
     MoogFailureResponse:
       type: object
       description: Similar Incidents Service API failure response body
@@ -126,6 +88,13 @@ components:
       required:
       - status
       - message
+    IncidentSimilarityDto:
+      type: object
+      title: Incident Similarity Dto
+      properties:
+        similarity:
+          type: number
+          format: double
     MoogErrorResponse:
       type: object
       description: Similar Incidents Service API error response body
@@ -144,13 +113,44 @@ components:
       required:
       - status
       - message
-    IncidentSimilarityDto:
+    IncidentSimilarityResult:
       type: object
-      title: Incident Similarity Dto
+      title: Incident Similarity Result
+      description: Inference result from similar-incidents.
       properties:
-        similarity:
-          type: number
-          format: double
+        result:
+          $ref: '#/components/schemas/IncidentSimilarityDto'
+    MoogResponseIncidentSimilarityResult:
+      type: object
+      title: Moog Response Incident Similarity Result
+      description: Similar Incidents Service API IncidentSimilarityResult response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentSimilarityResult'
+      required:
+      - status
+      - data
+    IncidentSimilarityRequest:
+      type: object
+      title: Incident Similarity Request
+      description: A request to get the similarity between 2 incidents
+      properties:
+        refIncidentID:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+        cmpIncidentID:
+          type: integer
+          format: int64
+          exclusiveMinimum: 0
+      required:
+      - refIncidentID
+      - cmpIncidentID
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

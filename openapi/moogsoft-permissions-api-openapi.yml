@@ -81,55 +81,6 @@ components:
       required:
       - status
       - data
-    PermissionDto:
-      type: object
-      title: Permission Dto
-      properties:
-        name:
-          type: string
-          maxLength: 60
-        description:
-          type: string
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-    MoogFailureResponse:
-      type: object
-      description: User API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     Permission:
       type: object
       title: Permission
@@ -154,6 +105,55 @@ components:
           type: array
           items:
             type: string
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    PermissionDto:
+      type: object
+      title: Permission Dto
+      properties:
+        name:
+          type: string
+          maxLength: 60
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

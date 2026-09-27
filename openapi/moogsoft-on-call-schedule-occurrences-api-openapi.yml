@@ -81,24 +81,6 @@ components:
       title: Timestamp
       description: Number of milliseconds since Jan 1, 1970 UTC
       format: int64
-    MoogErrorResponse:
-      type: object
-      description: On-Call API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogFailureResponse:
       type: object
       description: On-Call API failure response body
@@ -137,6 +119,24 @@ components:
       - start
       - end
       - user
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

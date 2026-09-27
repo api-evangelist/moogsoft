@@ -118,6 +118,33 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    FilterStringDto:
+      type: object
+      title: Filter String Dto
+      description: A filter string to validate
+      properties:
+        filterString:
+          type: string
+          description: The filter string to validate
+          pattern: \S
+          examples:
+          - severity = Clear AND source = www.my-source.com
+      required:
+      - filterString
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
     ComparisonType:
       type: string
       enum:
@@ -138,28 +165,9 @@ components:
       - notExactMatch
       title: Comparison Type
       description: Comparison operator type to use for the filter
-    FilterStringDto:
+    MoogResponseFilterStringResultDto:
       type: object
-      title: Filter String Dto
-      description: A filter string to validate
-      properties:
-        filterString:
-          type: string
-          description: The filter string to validate
-          pattern: \S
-          examples:
-          - severity = Clear AND source = www.my-source.com
-      required:
-      - filterString
-    FieldCategory:
-      type: string
-      enum:
-      - primitive
-      - array
-      title: Field Category
-    MoogResponseColumnsDto:
-      type: object
-      description: Alerts/Incidents API ColumnsDto response body
+      description: Alerts/Incidents API FilterStringResultDto response body
       properties:
         status:
           type: string
@@ -167,7 +175,7 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/ColumnsDto'
+          $ref: '#/components/schemas/FilterStringResultDto'
       required:
       - status
       - data
@@ -205,27 +213,6 @@ components:
       required:
       - status
       - message
-    MoogResponseFilterStringResultDto:
-      type: object
-      description: Alerts/Incidents API FilterStringResultDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/FilterStringResultDto'
-      required:
-      - status
-      - data
-    FilterStringResultDto:
-      type: object
-      title: Filter String Result Dto
-      description: The result of validating a filter string
-      properties:
-        isValid:
-          type: boolean
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -260,14 +247,27 @@ components:
             type: string
         category:
           $ref: '#/components/schemas/FieldCategory'
-    ColumnsDto:
+    MoogResponseColumnsDto:
       type: object
-      title: Columns Dto
+      description: Alerts/Incidents API ColumnsDto response body
       properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColumnInfo'
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ColumnsDto'
+      required:
+      - status
+      - data
+    FilterStringResultDto:
+      type: object
+      title: Filter String Result Dto
+      description: The result of validating a filter string
+      properties:
+        isValid:
+          type: boolean
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

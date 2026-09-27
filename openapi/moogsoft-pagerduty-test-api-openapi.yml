@@ -128,14 +128,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    PagerDutyWebhookSubscriptionType:
-      type: string
-      enum:
-      - account_reference
-      - service_reference
-      - team_reference
-      title: Pager Duty Webhook Subscription Type
-      description: PagerDuty webhook subscription type
     PagerDutyPostEventResponse:
       type: object
       title: Pager Duty Post Event Response
@@ -146,18 +138,6 @@ components:
           type: string
         message:
           type: string
-    WebhookFilterDto:
-      type: object
-      title: Webhook Filter Dto
-      properties:
-        id:
-          type: string
-          description: ID of the PagerDuty service or team to filter events on, must be empty if filtering by account
-        type:
-          $ref: '#/components/schemas/PagerDutyWebhookSubscriptionType'
-          description: Scope of the events to be delivered (account, team, or service)
-      required:
-      - type
     PagerDutyIntegrationType:
       type: string
       enum:
@@ -202,6 +182,18 @@ components:
       required:
       - status
       - message
+    WebhookFilterDto:
+      type: object
+      title: Webhook Filter Dto
+      properties:
+        id:
+          type: string
+          description: ID of the PagerDuty service or team to filter events on, must be empty if filtering by account
+        type:
+          $ref: '#/components/schemas/PagerDutyWebhookSubscriptionType'
+          description: Scope of the events to be delivered (account, team, or service)
+      required:
+      - type
     MoogResponsePagerDutyPostEventResponse:
       type: object
       title: Moog Response Pager Duty Post Event Response
@@ -217,6 +209,14 @@ components:
       required:
       - status
       - data
+    PagerDutyWebhookSubscriptionType:
+      type: string
+      enum:
+      - account_reference
+      - service_reference
+      - team_reference
+      title: Pager Duty Webhook Subscription Type
+      description: PagerDuty webhook subscription type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

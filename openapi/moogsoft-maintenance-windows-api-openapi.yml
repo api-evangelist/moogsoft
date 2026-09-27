@@ -1034,34 +1034,49 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
-    MoogResponseMaintenanceWindowListDto:
+    BaseMaintenanceWindowDto:
       type: object
-      description: Config API MaintenanceWindowListDto response body
+      title: Base Maintenance Window Dto
+      description: Definition for creating or updating a given scheduled maintenance window
       properties:
-        status:
+        name:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceWindowListDto'
-      required:
-      - status
-      - data
-    MoogResponseMaintenanceOccurrenceListDto:
-      type: object
-      description: Config API MaintenanceOccurrenceListDto response body
-      properties:
-        status:
+          description: Name of the maintenance window
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceOccurrenceListDto'
+          description: Description of the maintenance window
+        external_link:
+          type: string
+          description: Optional change Record link to an external system
+        filter:
+          type: string
+          description: Required filter string
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
+        duration:
+          type: integer
+          description: Duration of the maintenance window, in seconds
+          format: int32
+          minimum: 60
+        timezone:
+          type: string
+          description: Optional timezone of the maintenance window; used for display purposes
+        repeats:
+          $ref: '#/components/schemas/Repeatable'
+          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
+          discriminator:
+            propertyName: period
+            mapping:
+              daily: '#/components/schemas/DailyRepeatable'
+              weekly: '#/components/schemas/WeeklyRepeatable'
+              monthly: '#/components/schemas/MonthlyRepeatable'
+              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
       required:
-      - status
-      - data
+      - filter
+      - start
+      - duration
     MoogResponseMaintenanceWindowDto:
       type: object
       description: Config API MaintenanceWindowDto response body
@@ -1076,6 +1091,66 @@ components:
       required:
       - status
       - data
+    SchedulePeriod:
+      type: string
+      enum:
+      - daily
+      - weekly
+      - monthly
+      - monthly_nth_day
+      title: Schedule Period
+      description: Scheduling Periodicity
+    MaintenanceOccurrenceListDto:
+      type: object
+      title: Maintenance Occurrence List Dto
+      properties:
+        result:
+          type: array
+          description: List of maintenance window occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+        count:
+          type: integer
+          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
+          format: int64
+    MoogResponseMaintenanceOccurrenceListDto:
+      type: object
+      description: Config API MaintenanceOccurrenceListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceOccurrenceListDto'
+      required:
+      - status
+      - data
+    MoogResponseMaintenanceWindowListDto:
+      type: object
+      description: Config API MaintenanceWindowListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceWindowListDto'
+      required:
+      - status
+      - data
+    MaintenanceStatus:
+      type: string
+      enum:
+      - pending
+      - running
+      - completed
+      - skipped
+      - cancelled
+      title: Maintenance Status
+      description: Maintenance Status
     MaintenanceWindowDto:
       type: object
       title: Maintenance Window Dto
@@ -1144,15 +1219,55 @@ components:
       - filter
       - start
       - duration
-    SchedulePeriod:
-      type: string
-      enum:
-      - daily
-      - weekly
-      - monthly
-      - monthly_nth_day
-      title: Schedule Period
-      description: Scheduling Periodicity
+    Repeatable:
+      type: object
+      title: Repeatable
+      properties:
+        period:
+          $ref: '#/components/schemas/SchedulePeriod'
+          description: Periodicity of the schedule
+        until:
+          $ref: '#/components/schemas/Timestamp'
+          description: (Optional) Final run time of the schedule, milliseconds since Jan 1, 1970 GMT
+        times:
+          type: integer
+          description: '(Optional) Maximum number of times to run the schedule (note: only one of ''until'' and ''times'' is allowed to be used)'
+          format: int32
+          exclusiveMinimum: 0
+      required:
+      - period
+    MoogResponseMaintenanceStatusDto:
+      type: object
+      description: Config API MaintenanceStatusDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceStatusDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MaintenanceWindowListDto:
       type: object
       title: Maintenance Window List Dto
@@ -1166,49 +1281,6 @@ components:
           type: integer
           description: Total number of maintenace windows that would have been returned in the absence of offset and limit
           format: int64
-    MoogFailureResponse:
-      type: object
-      description: Config API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MaintenanceStatusDto:
-      type: object
-      title: Maintenance Status Dto
-      description: Definition for a given maintenance window's status
-      properties:
-        id:
-          type: string
-          description: Unique id of the maintenance window
-          readOnly: true
-        name:
-          type: string
-          description: Name of the maintenance window
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/MaintenanceStatus'
-          description: Overall status, based on window occurrences
-        expired_occurrence:
-          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-          description: Previous occurrence that ran or was cancelled
-        running_occurrence:
-          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-          description: Currently running occurrence, if any
-        pending_occurrence:
-          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-          description: Next pending occurrence, if any
     MaintenanceOccurrenceDto:
       type: object
       title: Maintenance Occurrence Dto
@@ -1285,6 +1357,14 @@ components:
       - filter
       - start
       - duration
+    TimezoneDto:
+      type: object
+      title: Timezone Dto
+      properties:
+        zoneId:
+          type: string
+        offset:
+          type: string
     MoogResponseMaintenanceOccurrenceDto:
       type: object
       description: Config API MaintenanceOccurrenceDto response body
@@ -1299,19 +1379,31 @@ components:
       required:
       - status
       - data
-    MaintenanceOccurrenceListDto:
+    MaintenanceStatusDto:
       type: object
-      title: Maintenance Occurrence List Dto
+      title: Maintenance Status Dto
+      description: Definition for a given maintenance window's status
       properties:
-        result:
-          type: array
-          description: List of maintenance window occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
-          items:
-            $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-        count:
-          type: integer
-          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
-          format: int64
+        id:
+          type: string
+          description: Unique id of the maintenance window
+          readOnly: true
+        name:
+          type: string
+          description: Name of the maintenance window
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/MaintenanceStatus'
+          description: Overall status, based on window occurrences
+        expired_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Previous occurrence that ran or was cancelled
+        running_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Currently running occurrence, if any
+        pending_occurrence:
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+          description: Next pending occurrence, if any
     Timestamp:
       type: integer
       title: Timestamp
@@ -1333,107 +1425,15 @@ components:
       required:
       - status
       - data
-    MoogResponseMaintenanceStatusDto:
+    MoogFailureResponse:
       type: object
-      description: Config API MaintenanceStatusDto response body
+      description: Config API failure response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Failure status indicator (always "failure")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceStatusDto'
-      required:
-      - status
-      - data
-    TimezoneDto:
-      type: object
-      title: Timezone Dto
-      properties:
-        zoneId:
-          type: string
-        offset:
-          type: string
-    MaintenanceStatus:
-      type: string
-      enum:
-      - pending
-      - running
-      - completed
-      - skipped
-      - cancelled
-      title: Maintenance Status
-      description: Maintenance Status
-    Repeatable:
-      type: object
-      title: Repeatable
-      properties:
-        period:
-          $ref: '#/components/schemas/SchedulePeriod'
-          description: Periodicity of the schedule
-        until:
-          $ref: '#/components/schemas/Timestamp'
-          description: (Optional) Final run time of the schedule, milliseconds since Jan 1, 1970 GMT
-        times:
-          type: integer
-          description: '(Optional) Maximum number of times to run the schedule (note: only one of ''until'' and ''times'' is allowed to be used)'
-          format: int32
-          exclusiveMinimum: 0
-      required:
-      - period
-    BaseMaintenanceWindowDto:
-      type: object
-      title: Base Maintenance Window Dto
-      description: Definition for creating or updating a given scheduled maintenance window
-      properties:
-        name:
-          type: string
-          description: Name of the maintenance window
-          pattern: ^[a-zA-Z0-9()_\-\s]+$
-        description:
-          type: string
-          description: Description of the maintenance window
-        external_link:
-          type: string
-          description: Optional change Record link to an external system
-        filter:
-          type: string
-          description: Required filter string
-        start:
-          $ref: '#/components/schemas/Timestamp'
-          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
-        duration:
-          type: integer
-          description: Duration of the maintenance window, in seconds
-          format: int32
-          minimum: 60
-        timezone:
-          type: string
-          description: Optional timezone of the maintenance window; used for display purposes
-        repeats:
-          $ref: '#/components/schemas/Repeatable'
-          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
-          discriminator:
-            propertyName: period
-            mapping:
-              daily: '#/components/schemas/DailyRepeatable'
-              weekly: '#/components/schemas/WeeklyRepeatable'
-              monthly: '#/components/schemas/MonthlyRepeatable'
-              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
-      required:
-      - filter
-      - start
-      - duration
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
+          - failure
         message:
           type: string
         additional:

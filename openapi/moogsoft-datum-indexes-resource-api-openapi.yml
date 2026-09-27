@@ -93,6 +93,25 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    GetSlimDatumIndexResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumIndexDto'
+        total:
+          type: integer
+          format: int64
+        source:
+          type: string
+        alternateResults:
+          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+    SortByDirection:
+      type: string
+      enum:
+      - ASC
+      - DESC
     SlimDatumIndexDto:
       type: object
       properties:
@@ -118,31 +137,17 @@ components:
           x-deprecated: true
         last_updated:
           $ref: '#/components/schemas/Instant'
-    GetSlimDatumIndexResultsDto:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlimDatumIndexDto'
-        total:
-          type: integer
-          format: int64
-        source:
-          type: string
-        alternateResults:
-          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+    Instant:
+      type: string
+      format: date-time
+      examples:
+      - '2022-03-10T16:15:50Z'
     DatumIndexSortBy:
       type: string
       enum:
       - DATUMS
       - METRIC
       - LAST_UPDATED
-    Instant:
-      type: string
-      format: date-time
-      examples:
-      - '2022-03-10T16:15:50Z'
     DatumIndexRequestDto:
       type: object
       properties:
@@ -158,8 +163,3 @@ components:
           format: int32
         filter:
           type: string
-    SortByDirection:
-      type: string
-      enum:
-      - ASC
-      - DESC

@@ -107,6 +107,28 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    TimeoutResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Timeout Error
+      xml:
+        name: TimeoutResponse
     EventDeltasResponse:
       type: object
       properties:
@@ -162,28 +184,6 @@ components:
                     example: provzilla::cirm-dev-dev-metrics::provzillaerrorthrown
       xml:
         name: EventDeltasResponse
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        message:
-          type: string
-          example: Detailed error message when available
-      xml:
-        name: ErrorResponse
-    TimeoutResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        message:
-          type: string
-          example: Timeout Error
-      xml:
-        name: TimeoutResponse
     SortOrder:
       type: string
       enum:

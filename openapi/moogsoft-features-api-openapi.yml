@@ -77,28 +77,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    NoSplitResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: failure
-        message:
-          type: string
-          example: Split not initialised
-      xml:
-        name: NoSplitResponse
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        message:
-          type: string
-          example: Detailed error message when available
-      xml:
-        name: ErrorResponse
     FeaturesResponse:
       type: object
       properties:
@@ -116,6 +94,28 @@ components:
               example: 'on'
       xml:
         name: FeaturesResponse
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
+      xml:
+        name: ErrorResponse
+    NoSplitResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: failure
+        message:
+          type: string
+          example: Split not initialised
+      xml:
+        name: NoSplitResponse
     LicenseType:
       type: string
       enum:

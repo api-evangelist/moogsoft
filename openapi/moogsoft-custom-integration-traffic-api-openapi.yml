@@ -198,34 +198,6 @@ paths:
         - integrations:view
 components:
   schemas:
-    TrafficSummaryDto:
-      type: object
-      title: Traffic Summary Dto
-      description: Traffic summary.
-      properties:
-        numPayloadsHandled:
-          type: integer
-          description: The number of payloads handled.
-          format: int64
-        numPayloadsFailed:
-          type: integer
-          description: The number of payloads failed.
-          format: int64
-    MoogResponseRecentPayload:
-      type: object
-      title: Moog Response Recent Payload
-      description: Create Your Own Integration API RecentPayload response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/RecentPayload'
-      required:
-      - status
-      - data
     MoogResponseListOfRecentPayload:
       type: object
       title: Moog Response List Of Recent Payload
@@ -243,30 +215,36 @@ components:
       required:
       - status
       - data
-    RecentPayload:
+    MoogResponseTrafficSummaryDto:
       type: object
-      title: Recent Payload
-      description: Recent payloads recieved by an endpoint
+      title: Moog Response Traffic Summary Dto
+      description: Create Your Own Integration API TrafficSummaryDto response body
       properties:
-        payloadProcessingResult:
+        status:
           type: string
-        errorMessage:
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/TrafficSummaryDto'
+      required:
+      - status
+      - data
+    MoogResponseRecentPayload:
+      type: object
+      title: Moog Response Recent Payload
+      description: Create Your Own Integration API RecentPayload response body
+      properties:
+        status:
           type: string
-        id:
-          type: string
-        sourceIp:
-          type: string
-        traceId:
-          type: string
-        timestamp:
-          type: integer
-          format: int64
-        payload:
-          type: array
-          items:
-            type: object
-        _raw:
-          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/RecentPayload'
+      required:
+      - status
+      - data
     MoogFailureResponse:
       type: object
       description: Create Your Own Integration API failure response body
@@ -303,21 +281,43 @@ components:
       required:
       - status
       - message
-    MoogResponseTrafficSummaryDto:
+    RecentPayload:
       type: object
-      title: Moog Response Traffic Summary Dto
-      description: Create Your Own Integration API TrafficSummaryDto response body
+      title: Recent Payload
+      description: Recent payloads recieved by an endpoint
       properties:
-        status:
+        payloadProcessingResult:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/TrafficSummaryDto'
-      required:
-      - status
-      - data
+        errorMessage:
+          type: string
+        id:
+          type: string
+        sourceIp:
+          type: string
+        traceId:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+        payload:
+          type: array
+          items:
+            type: object
+        _raw:
+          type: string
+    TrafficSummaryDto:
+      type: object
+      title: Traffic Summary Dto
+      description: Traffic summary.
+      properties:
+        numPayloadsHandled:
+          type: integer
+          description: The number of payloads handled.
+          format: int64
+        numPayloadsFailed:
+          type: integer
+          description: The number of payloads failed.
+          format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

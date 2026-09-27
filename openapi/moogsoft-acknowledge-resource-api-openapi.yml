@@ -184,42 +184,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogErrorResponse:
-      type: object
-      description: On-Call API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogFailureResponse:
-      type: object
-      description: On-Call API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     BulkAckPayloadDto:
       type: object
       title: Bulk Ack Payload Dto
@@ -240,6 +204,24 @@ components:
       - assignee
       - phone
       - incidentIds
+    MoogFailureResponse:
+      type: object
+      description: On-Call API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     AckPayloadDto:
       type: object
       title: Ack Payload Dto
@@ -259,6 +241,24 @@ components:
       - assignee
       - phone
       - ackCode
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

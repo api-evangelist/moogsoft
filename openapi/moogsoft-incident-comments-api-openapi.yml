@@ -255,66 +255,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    CommentType:
-      type: string
-      enum:
-      - STANDARD
-      - RESOLVING
-      - ANNOUNCEMENT
-      title: Comment Type
-      description: CommentType for incidents comments
-    MoogResponseIncidentCommentResponse:
-      type: object
-      description: Alerts/Incidents API IncidentCommentResponse response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentCommentResponse'
-      required:
-      - status
-      - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogResponseIncidentCommentDto:
-      type: object
-      description: Alerts/Incidents API IncidentCommentDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentCommentDto'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     IncidentCommentDto:
       type: object
       title: Incident Comment Dto
@@ -365,28 +305,20 @@ components:
         createdAt:
           $ref: '#/components/schemas/Instant'
           description: Use created_at instead
-    CommentUserDto:
+    MoogResponseIncidentCommentDto:
       type: object
-      title: Comment User Dto
+      description: Alerts/Incidents API IncidentCommentDto response body
       properties:
-        id:
+        status:
           type: string
-        family_name:
-          type: string
-        given_name:
-          type: string
-        email:
-          type: string
-        picture:
-          type: string
-        familyName:
-          type: string
-          description: Use family_name instead
-          x-deprecated: true
-        givenName:
-          type: string
-          description: Use given_name instead
-          x-deprecated: true
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentCommentDto'
+      required:
+      - status
+      - data
     CommentRequestDto:
       type: object
       title: Comment Request Dto
@@ -400,15 +332,21 @@ components:
         type:
           $ref: '#/components/schemas/CommentType'
           description: The types of comment 'STANDARD', 'RESOLVING' & 'ANNOUNCEMENT'. The 'ANNOUNCEMENT' type is immutable while the other types are interchangeable
-    MoogErrorResponse:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
       type: object
-      description: Alerts/Incidents API error response body
+      description: Alerts/Incidents API failure response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Failure status indicator (always "failure")
           examples:
-          - error
+          - failure
         message:
           type: string
         additional:
@@ -443,6 +381,68 @@ components:
           type: integer
           description: Use announcement_count instead
           format: int64
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    CommentUserDto:
+      type: object
+      title: Comment User Dto
+      properties:
+        id:
+          type: string
+        family_name:
+          type: string
+        given_name:
+          type: string
+        email:
+          type: string
+        picture:
+          type: string
+        familyName:
+          type: string
+          description: Use family_name instead
+          x-deprecated: true
+        givenName:
+          type: string
+          description: Use given_name instead
+          x-deprecated: true
+    CommentType:
+      type: string
+      enum:
+      - STANDARD
+      - RESOLVING
+      - ANNOUNCEMENT
+      title: Comment Type
+      description: CommentType for incidents comments
+    MoogResponseIncidentCommentResponse:
+      type: object
+      description: Alerts/Incidents API IncidentCommentResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentCommentResponse'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

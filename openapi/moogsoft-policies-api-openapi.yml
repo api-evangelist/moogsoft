@@ -488,37 +488,24 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    SortOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      title: Sort Order
-      default: desc
-    AlgorithmPolicyPriorityDto:
+    PolicyMetrics:
       type: object
-      title: Algorithm Policy Priority Dto
-      description: Algorithm policy update priority.
+      title: Policy Metrics
+      description: Metrics tracked on a per-Policy basis
       properties:
-        id:
-          type: string
-          description: ID of the policy
-        priority:
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: Date/time of last update to the metrics
+        num_metrics_matched:
           type: integer
-          description: Relative priority of this policy, processed in increasing numeric order
-          format: int32
-          maximum: 2147483646
-      required:
-      - id
-      - priority
-    AlgorithmType:
-      type: string
-      enum:
-      - adaptive
-      - threshold
-      - boolean
-      title: Algorithm Type
-      description: Anomaly Algorithm Type
+          description: Number of metrics that match the policy's MoogQL query string
+          format: int64
+          readOnly: true
+        num_anomalies_created:
+          type: integer
+          description: Number of anomalies generated against the policy
+          format: int64
+          readOnly: true
     MoogResponseListOfAlgorithmPolicyDto:
       type: object
       title: Moog Response List Of Algorithm Policy Dto
@@ -536,12 +523,29 @@ components:
       required:
       - status
       - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
+    MetricStrategy:
+      type: string
+      enum:
+      - DROP
+      - STORE_ONLY
+      - DETECT_AND_STORE
+      title: Metric Strategy
+    AlgorithmPolicyPriorityDto:
+      type: object
+      title: Algorithm Policy Priority Dto
+      description: Algorithm policy update priority.
+      properties:
+        id:
+          type: string
+          description: ID of the policy
+        priority:
+          type: integer
+          description: Relative priority of this policy, processed in increasing numeric order
+          format: int32
+          maximum: 2147483646
+      required:
+      - id
+      - priority
     MoogResponseGetPolicyListResponseDto:
       type: object
       title: Moog Response Get Policy List Response Dto
@@ -557,62 +561,6 @@ components:
       required:
       - status
       - data
-    GetPolicyListResponseDto:
-      type: object
-      title: Get Policy List Response Dto
-      description: Response to /integrations/metrics-policies paged query
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlgorithmPolicyDto'
-        count:
-          type: integer
-          format: int64
-    MetricKeyDto:
-      type: object
-      title: Metric Key Dto
-      properties:
-        fully_qualified_moob:
-          type: string
-        metric:
-          type: string
-          pattern: \S
-        source:
-          type: string
-        key:
-          type: string
-        tags:
-          type: object
-        uuid:
-          type: string
-        detector:
-          type: string
-      required:
-      - metric
-    BaseAlgorithmProperties:
-      type: object
-      title: Base Algorithm Properties
-      properties:
-        type:
-          $ref: '#/components/schemas/AlgorithmType'
-          description: Algorithm to be used with this policy
-        hold_for:
-          type: integer
-          description: Number of consecutive anomalies before generating a failure event
-          format: int32
-          minimum: 0
-          default: 1
-        reset_hold_for:
-          type: integer
-          description: Number of consecutive resets before generating a restore event
-          format: int32
-          minimum: 0
-          default: 1
-        stateful:
-          type: boolean
-          description: Boolean indicating whether the algorithm is stateful
-          default: true
     MoogResponseAlgorithmPolicyDto:
       type: object
       title: Moog Response Algorithm Policy Dto
@@ -628,31 +576,27 @@ components:
       required:
       - status
       - data
-    MoogFailureResponse:
-      type: object
-      description: Metrics API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MetricStrategy:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    AlgorithmType:
       type: string
       enum:
-      - DROP
-      - STORE_ONLY
-      - DETECT_AND_STORE
-      title: Metric Strategy
+      - adaptive
+      - threshold
+      - boolean
+      title: Algorithm Type
+      description: Anomaly Algorithm Type
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      title: Sort Order
+      default: desc
     MoogErrorResponse:
       type: object
       description: Metrics API error response body
@@ -662,6 +606,24 @@ components:
           description: Error status indicator (always "error")
           examples:
           - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogFailureResponse:
+      type: object
+      description: Metrics API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
         message:
           type: string
         additional:
@@ -737,24 +699,62 @@ components:
           description: Metrics for this policy
       required:
       - properties
-    PolicyMetrics:
+    MetricKeyDto:
       type: object
-      title: Policy Metrics
-      description: Metrics tracked on a per-Policy basis
+      title: Metric Key Dto
       properties:
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-          description: Date/time of last update to the metrics
-        num_metrics_matched:
+        fully_qualified_moob:
+          type: string
+        metric:
+          type: string
+          pattern: \S
+        source:
+          type: string
+        key:
+          type: string
+        tags:
+          type: object
+        uuid:
+          type: string
+        detector:
+          type: string
+      required:
+      - metric
+    GetPolicyListResponseDto:
+      type: object
+      title: Get Policy List Response Dto
+      description: Response to /integrations/metrics-policies paged query
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlgorithmPolicyDto'
+        count:
           type: integer
-          description: Number of metrics that match the policy's MoogQL query string
           format: int64
-          readOnly: true
-        num_anomalies_created:
+    BaseAlgorithmProperties:
+      type: object
+      title: Base Algorithm Properties
+      properties:
+        type:
+          $ref: '#/components/schemas/AlgorithmType'
+          description: Algorithm to be used with this policy
+        hold_for:
           type: integer
-          description: Number of anomalies generated against the policy
-          format: int64
-          readOnly: true
+          description: Number of consecutive anomalies before generating a failure event
+          format: int32
+          minimum: 0
+          default: 1
+        reset_hold_for:
+          type: integer
+          description: Number of consecutive resets before generating a restore event
+          format: int32
+          minimum: 0
+          default: 1
+        stateful:
+          type: boolean
+          description: Boolean indicating whether the algorithm is stateful
+          default: true
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

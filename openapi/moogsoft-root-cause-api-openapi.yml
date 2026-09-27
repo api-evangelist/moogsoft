@@ -319,30 +319,14 @@ components:
       required:
       - status
       - data
-    MoogResponseListOfPrcRootCauseDto:
-      type: object
-      title: Moog Response List Of Prc Root Cause Dto
-      description: Probable Root Cause API PrcRootCauseDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrcRootCauseDto'
-      required:
-      - status
-      - data
-    TrainingType:
+    RcBucket:
       type: string
       enum:
-      - incremental
-      - full
-      title: Training Type
-      description: Root-Cause training type
+      - High
+      - Medium
+      - Low
+      title: Rc Bucket
+      description: Root-Cause Level (case-insensitive)
     PrcRootCauseDto:
       type: object
       title: Prc Root Cause Dto
@@ -362,20 +346,73 @@ components:
         rc_bucket:
           $ref: '#/components/schemas/RcBucket'
           description: 'The computed level: high, medium, low'
+    ERcLabel:
+      type: string
+      enum:
+      - RootCause
+      - NonCausal
+      - Unlabelled
+      title: E Rc Label
+      description: Root-Cause Label (case-insensitive)
+    MoogResponseListOfPrcRootCauseDto:
+      type: object
+      title: Moog Response List Of Prc Root Cause Dto
+      description: Probable Root Cause API PrcRootCauseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrcRootCauseDto'
+      required:
+      - status
+      - data
     Instant:
       type: number
       title: Instant
       format: int64
       examples:
       - '2022-03-10T16:15:50Z'
-    RcBucket:
-      type: string
-      enum:
-      - High
-      - Medium
-      - Low
-      title: Rc Bucket
-      description: Root-Cause Level (case-insensitive)
+    MoogFailureResponse:
+      type: object
+      description: Probable Root Cause API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: Probable Root Cause API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     PrcTrainingRequestDto:
       type: object
       title: Prc Training Request Dto
@@ -396,24 +433,13 @@ components:
             format: int64
       required:
       - type
-    MoogFailureResponse:
-      type: object
-      description: Probable Root Cause API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+    TrainingType:
+      type: string
+      enum:
+      - incremental
+      - full
+      title: Training Type
+      description: Root-Cause training type
     PrcLabelRequestDto:
       type: object
       title: Prc Label Request Dto
@@ -424,32 +450,6 @@ components:
             $ref: '#/components/schemas/ERcLabel'
       required:
       - labels
-    MoogErrorResponse:
-      type: object
-      description: Probable Root Cause API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    ERcLabel:
-      type: string
-      enum:
-      - RootCause
-      - NonCausal
-      - Unlabelled
-      title: E Rc Label
-      description: Root-Cause Label (case-insensitive)
     PrcFeaturesDto:
       type: object
       title: Prc Features Dto

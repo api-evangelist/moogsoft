@@ -318,36 +318,6 @@ components:
       required:
       - status
       - message
-    MoogResponseListOfManualCollectorConfigDto:
-      type: object
-      description: Collector V2 API ManualCollectorConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ManualCollectorConfigDto'
-      required:
-      - status
-      - data
-    MoogResponseManualCollectorConfigDto:
-      type: object
-      description: Collector V2 API ManualCollectorConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ManualCollectorConfigDto'
-      required:
-      - status
-      - data
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -383,6 +353,36 @@ components:
       required:
       - collector_id
       - configuration
+    MoogResponseListOfManualCollectorConfigDto:
+      type: object
+      description: Collector V2 API ManualCollectorConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ManualCollectorConfigDto'
+      required:
+      - status
+      - data
+    MoogResponseManualCollectorConfigDto:
+      type: object
+      description: Collector V2 API ManualCollectorConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ManualCollectorConfigDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

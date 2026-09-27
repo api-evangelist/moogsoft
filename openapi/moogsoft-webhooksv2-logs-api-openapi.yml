@@ -151,114 +151,6 @@ components:
           type: string
       required:
       - body
-    MoogResponseListOfWebhookTestDto:
-      type: object
-      title: Moog Response List Of Webhook Test Dto
-      description: Webhook API WebhookTestDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookTestDto'
-      required:
-      - status
-      - data
-    UrlDefinition:
-      type: object
-      title: Url Definition
-      properties:
-        verb:
-          $ref: '#/components/schemas/WebhookVerb'
-          description: Outbound integration HTTP verb
-        url:
-          type: string
-          description: Outbound integration target URL
-          pattern: \S
-      required:
-      - verb
-      - url
-    WebhookStatus:
-      type: string
-      enum:
-      - DISABLED
-      - RUNNING
-      - PROVISIONED
-      - INVALID_URL
-      - BAD_AUTH
-      - BAD_FILTER
-      - PAGE_NOT_FOUND
-      - BAD_RESPONSE
-      - SOCKET_TIMEOUT
-      - IO_ERROR
-      - TICKET_PARSE_FAILURE
-      - MOOG_ERROR
-      title: Webhook Status
-      description: Webhook Status
-    WebhookResponse:
-      type: object
-      title: Webhook Response
-      properties:
-        code:
-          type: integer
-          format: int32
-        code_reason:
-          type: string
-        body:
-          type: string
-        duration_ms:
-          type: integer
-          format: int64
-        attempts:
-          type: integer
-          format: int32
-        codeReason:
-          type: string
-          description: Use code_reason instead
-          x-deprecated: true
-        durationMs:
-          type: integer
-          description: Use duration_ms instead
-          format: int64
-    WebhookVerb:
-      type: string
-      enum:
-      - POST
-      - PATCH
-      - PUT
-      - DELETE
-      title: Webhook Verb
-      description: HTTP Verb
-    MoogFailureResponse:
-      type: object
-      description: Webhook API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    WebhookAction:
-      type: string
-      enum:
-      - IGNORE
-      - CREATE
-      - UPDATE
-      - DELETE
-      title: Webhook Action
     WebhookTestDto:
       type: object
       title: Webhook Test Dto
@@ -284,6 +176,41 @@ components:
           type: object
           description: Use additional_info instead
           x-deprecated: true
+    WebhookStatus:
+      type: string
+      enum:
+      - DISABLED
+      - RUNNING
+      - PROVISIONED
+      - INVALID_URL
+      - BAD_AUTH
+      - BAD_FILTER
+      - PAGE_NOT_FOUND
+      - BAD_RESPONSE
+      - SOCKET_TIMEOUT
+      - IO_ERROR
+      - TICKET_PARSE_FAILURE
+      - MOOG_ERROR
+      title: Webhook Status
+      description: Webhook Status
+    MoogFailureResponse:
+      type: object
+      description: Webhook API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogErrorResponse:
       type: object
       description: Webhook API error response body
@@ -302,6 +229,79 @@ components:
       required:
       - status
       - message
+    UrlDefinition:
+      type: object
+      title: Url Definition
+      properties:
+        verb:
+          $ref: '#/components/schemas/WebhookVerb'
+          description: Outbound integration HTTP verb
+        url:
+          type: string
+          description: Outbound integration target URL
+          pattern: \S
+      required:
+      - verb
+      - url
+    WebhookVerb:
+      type: string
+      enum:
+      - POST
+      - PATCH
+      - PUT
+      - DELETE
+      title: Webhook Verb
+      description: HTTP Verb
+    WebhookAction:
+      type: string
+      enum:
+      - IGNORE
+      - CREATE
+      - UPDATE
+      - DELETE
+      title: Webhook Action
+    MoogResponseListOfWebhookTestDto:
+      type: object
+      title: Moog Response List Of Webhook Test Dto
+      description: Webhook API WebhookTestDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookTestDto'
+      required:
+      - status
+      - data
+    WebhookResponse:
+      type: object
+      title: Webhook Response
+      properties:
+        code:
+          type: integer
+          format: int32
+        code_reason:
+          type: string
+        body:
+          type: string
+        duration_ms:
+          type: integer
+          format: int64
+        attempts:
+          type: integer
+          format: int32
+        codeReason:
+          type: string
+          description: Use code_reason instead
+          x-deprecated: true
+        durationMs:
+          type: integer
+          description: Use duration_ms instead
+          format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -633,56 +633,6 @@ components:
       required:
       - status
       - data
-    AppInsightsIntegration:
-      type: object
-      title: App Insights Integration
-      properties:
-        id:
-          type: string
-          description: Unique ID of App Insights integration
-          readOnly: true
-        name:
-          type: string
-        credentialName:
-          type: string
-          pattern: \S
-        status:
-          type: string
-          enum:
-          - NONE
-          - STARTING
-          - RUNNING
-          - LIMITED
-          - DISCONNECTED
-          - STOPPED
-        createdBy:
-          type: string
-          description: User ID of who created the integration
-          readOnly: true
-        lastUpdatedBy:
-          type: string
-          description: User ID of who last updated the integration
-          readOnly: true
-        metricCount:
-          type: integer
-          format: int32
-        created:
-          $ref: '#/components/schemas/Instant'
-          description: When the integration was created
-        lastUpdated:
-          $ref: '#/components/schemas/Instant'
-          description: When the integration was last updated
-      required:
-      - credentialName
-    AppInsightsValidator:
-      type: object
-      title: App Insights Validator
-      description: Contains the name of the credentials to validate
-      properties:
-        credentialName:
-          type: string
-      required:
-      - credentialName
     Instant:
       type: number
       title: Instant
@@ -742,6 +692,56 @@ components:
       required:
       - status
       - data
+    AppInsightsIntegration:
+      type: object
+      title: App Insights Integration
+      properties:
+        id:
+          type: string
+          description: Unique ID of App Insights integration
+          readOnly: true
+        name:
+          type: string
+        credentialName:
+          type: string
+          pattern: \S
+        status:
+          type: string
+          enum:
+          - NONE
+          - STARTING
+          - RUNNING
+          - LIMITED
+          - DISCONNECTED
+          - STOPPED
+        createdBy:
+          type: string
+          description: User ID of who created the integration
+          readOnly: true
+        lastUpdatedBy:
+          type: string
+          description: User ID of who last updated the integration
+          readOnly: true
+        metricCount:
+          type: integer
+          format: int32
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the integration was created
+        lastUpdated:
+          $ref: '#/components/schemas/Instant'
+          description: When the integration was last updated
+      required:
+      - credentialName
+    AppInsightsValidator:
+      type: object
+      title: App Insights Validator
+      description: Contains the name of the credentials to validate
+      properties:
+        credentialName:
+          type: string
+      required:
+      - credentialName
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

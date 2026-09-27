@@ -153,24 +153,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Webhook API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogFailureResponse:
       type: object
       description: Webhook API failure response body
@@ -180,6 +162,24 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: Webhook API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
         message:
           type: string
         additional:

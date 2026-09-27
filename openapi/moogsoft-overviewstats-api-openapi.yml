@@ -84,6 +84,19 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
+    OverviewWebResponse:
+      type: object
+      title: Overview Web Response
+      properties:
+        incident_count:
+          type: integer
+          format: int64
+        alert_count:
+          type: integer
+          format: int64
+        event_count:
+          type: integer
+          format: int64
     MoogResponseOverviewWebResponse:
       type: object
       description: Alerts/Incidents API OverviewWebResponse response body
@@ -98,24 +111,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -134,19 +129,24 @@ components:
       required:
       - status
       - message
-    OverviewWebResponse:
+    MoogErrorResponse:
       type: object
-      title: Overview Web Response
+      description: Alerts/Incidents API error response body
       properties:
-        incident_count:
-          type: integer
-          format: int64
-        alert_count:
-          type: integer
-          format: int64
-        event_count:
-          type: integer
-          format: int64
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

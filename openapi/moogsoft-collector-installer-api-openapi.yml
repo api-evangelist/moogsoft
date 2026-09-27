@@ -382,6 +382,13 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    PlatformType:
+      type: string
+      enum:
+      - MACOS
+      - LINUX
+      - WINDOWS
+      title: Platform Type
     FileType:
       type: string
       enum:
@@ -396,13 +403,6 @@ components:
       - MUSL
       - NONLINUX
       title: LIBC
-    ArchType:
-      type: string
-      enum:
-      - X86_64
-      - ARMV7
-      - ARM64
-      title: Arch Type
     MoogFailureResponse:
       type: object
       description: Collector V2 API failure response body
@@ -439,13 +439,13 @@ components:
       required:
       - status
       - message
-    PlatformType:
+    ArchType:
       type: string
       enum:
-      - MACOS
-      - LINUX
-      - WINDOWS
-      title: Platform Type
+      - X86_64
+      - ARMV7
+      - ARM64
+      title: Arch Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

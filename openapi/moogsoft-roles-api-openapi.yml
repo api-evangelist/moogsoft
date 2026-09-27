@@ -279,24 +279,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    BaseRoleDto:
-      type: object
-      title: Base Role Dto
-      properties:
-        name:
-          type: string
-          pattern: ^[a-zA-Z0-9.&()_\-\s]+$
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-        permissionsAsString:
-          type: array
-          items:
-            type: string
-            minLength: 1
-      required:
-      - name
     MoogResponseRoleDto:
       type: object
       description: User API RoleDto response body
@@ -308,22 +290,6 @@ components:
           - success
         data:
           $ref: '#/components/schemas/RoleDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfRoleDto:
-      type: object
-      description: User API RoleDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/RoleDto'
       required:
       - status
       - data
@@ -342,6 +308,24 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
         message:
           type: string
         additional:
@@ -379,24 +363,40 @@ components:
           type: string
       required:
       - name
-    MoogErrorResponse:
+    BaseRoleDto:
       type: object
-      description: User API error response body
+      title: Base Role Dto
       properties:
-        status:
+        name:
           type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
+          pattern: ^[a-zA-Z0-9.&()_\-\s]+$
+          minLength: 1
+          maxLength: 127
+        description:
           type: string
-        additional:
+        permissionsAsString:
           type: array
           items:
             type: string
+            minLength: 1
+      required:
+      - name
+    MoogResponseListOfRoleDto:
+      type: object
+      description: User API RoleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleDto'
       required:
       - status
-      - message
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

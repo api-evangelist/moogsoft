@@ -80,16 +80,31 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Granularity:
-      type: string
-      enum:
-      - RAW
-      - MINUTE
-      - HOUR
-      - DAY
-      - WEEK
-      - MONTH
-      - YEAR
+    GetSlimRollupResultsDto:
+      type: object
+      properties:
+        fully_qualified_moob:
+          type: string
+          x-deprecated: true
+        metric:
+          type: string
+        source:
+          type: string
+          x-deprecated: true
+        key:
+          type: string
+          x-deprecated: true
+        granularity:
+          $ref: '#/components/schemas/Granularity'
+        lastTimestamp:
+          type: string
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimRollupDto'
+        total:
+          type: integer
+          format: int64
     SlimRollupDto:
       type: object
       properties:
@@ -125,28 +140,13 @@ components:
           format: int64
         datasource:
           type: string
-    GetSlimRollupResultsDto:
-      type: object
-      properties:
-        fully_qualified_moob:
-          type: string
-          x-deprecated: true
-        metric:
-          type: string
-        source:
-          type: string
-          x-deprecated: true
-        key:
-          type: string
-          x-deprecated: true
-        granularity:
-          $ref: '#/components/schemas/Granularity'
-        lastTimestamp:
-          type: string
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlimRollupDto'
-        total:
-          type: integer
-          format: int64
+    Granularity:
+      type: string
+      enum:
+      - RAW
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR

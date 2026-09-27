@@ -69,6 +69,20 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
     ComparisonType:
       type: string
       enum:
@@ -89,26 +103,6 @@ components:
       - notExactMatch
       title: Comparison Type
       description: Comparison operator type to use for the filter
-    FieldCategory:
-      type: string
-      enum:
-      - primitive
-      - array
-      title: Field Category
-    MoogResponseColumnsDto:
-      type: object
-      description: Alerts/Incidents API ColumnsDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ColumnsDto'
-      required:
-      - status
-      - data
     ColumnInfo:
       type: object
       title: Column Info
@@ -177,14 +171,20 @@ components:
             type: string
         category:
           $ref: '#/components/schemas/FieldCategory'
-    ColumnsDto:
+    MoogResponseColumnsDto:
       type: object
-      title: Columns Dto
+      description: Alerts/Incidents API ColumnsDto response body
       properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColumnInfo'
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ColumnsDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

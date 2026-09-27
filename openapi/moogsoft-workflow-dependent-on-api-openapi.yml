@@ -82,10 +82,6 @@ paths:
         value: []
 components:
   schemas:
-    ResourceType:
-      const: CATALOG
-      title: Resource Type
-      description: Representing different types of resources used by workflow action
     WorkflowType:
       type: string
       enum:
@@ -95,23 +91,10 @@ components:
       - ALERT_STANDALONE
       - INCIDENT_STANDALONE
       title: Workflow Type
-    MoogResponseListOfWorkflowDependentOnResponseDto:
-      type: object
-      title: Moog Response List Of Workflow Dependent On Response Dto
-      description: Workflow Engine API WorkflowDependentOnResponseDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WorkflowDependentOnResponseDto'
-      required:
-      - status
-      - data
+    ResourceType:
+      const: CATALOG
+      title: Resource Type
+      description: Representing different types of resources used by workflow action
     WorkflowDependentOnResponseDto:
       type: object
       title: Workflow Dependent On Response Dto
@@ -162,6 +145,23 @@ components:
       required:
       - status
       - message
+    MoogResponseListOfWorkflowDependentOnResponseDto:
+      type: object
+      title: Moog Response List Of Workflow Dependent On Response Dto
+      description: Workflow Engine API WorkflowDependentOnResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowDependentOnResponseDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

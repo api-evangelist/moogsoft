@@ -80,23 +80,6 @@ components:
       - ALERT_STANDALONE
       - INCIDENT_STANDALONE
       title: Workflow Type
-    MoogResponseListOfActionDto:
-      type: object
-      title: Moog Response List Of Action Dto
-      description: Workflow Engine API ActionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActionDto'
-      required:
-      - status
-      - data
     ActionDto:
       type: object
       title: Action Dto
@@ -119,6 +102,24 @@ components:
           description: Types of workflows the action can be used in
           items:
             $ref: '#/components/schemas/WorkflowType'
+    MoogFailureResponse:
+      type: object
+      description: Workflow Engine API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     ActionConfigurationFieldSchemaDto:
       type: object
       title: Action Configuration Field Schema Dto
@@ -136,15 +137,15 @@ components:
         type:
           type: string
           description: Type of the action field (Special pre-defined types)
-    MoogFailureResponse:
+    MoogErrorResponse:
       type: object
-      description: Workflow Engine API failure response body
+      description: Workflow Engine API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -166,24 +167,23 @@ components:
             $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
       required:
       - fields
-    MoogErrorResponse:
+    MoogResponseListOfActionDto:
       type: object
-      description: Workflow Engine API error response body
+      title: Moog Response List Of Action Dto
+      description: Workflow Engine API ActionDto response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
+          - success
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ActionDto'
       required:
       - status
-      - message
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

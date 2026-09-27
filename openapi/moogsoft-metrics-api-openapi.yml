@@ -183,6 +183,53 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
+    MoogFailureResponse:
+      type: object
+      description: Metrics API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: Metrics API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    TelegrafMetricsDto:
+      type: object
+      title: Telegraf Metrics Dto
+      properties:
+        metrics:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/TelegrafMetric'
+      required:
+      - metrics
     WebMetricDto:
       type: object
       title: Web Metric Dto
@@ -234,35 +281,16 @@ components:
       - metric
       - data
       - source
-    TelegrafMetricsDto:
+    MoogResponse:
       type: object
-      title: Telegraf Metrics Dto
-      properties:
-        metrics:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/TelegrafMetric'
-      required:
-      - metrics
-    MoogFailureResponse:
-      type: object
-      description: Metrics API failure response body
+      title: Moog Response
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          description: Success status indicator (always "success")
+        data: {}
       required:
       - status
-      - message
     TelegrafMetric:
       type: object
       title: Telegraf Metric
@@ -283,34 +311,6 @@ components:
       - fields
       - name
       - timestamp
-    MoogResponse:
-      type: object
-      title: Moog Response
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-        data: {}
-      required:
-      - status
-    MoogErrorResponse:
-      type: object
-      description: Metrics API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

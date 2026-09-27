@@ -298,68 +298,48 @@ components:
       required:
       - status
       - data
-    ViewConfigType:
-      type: string
-      enum:
-      - INCIDENT
-      - ALERT
-      - METRIC
-      title: View Config Type
-      description: View types
-    ViewConfigResponseDto:
-      type: object
-      title: View Config Response Dto
-      description: Incident view definition
-      properties:
-        id:
-          type: string
-          description: Unique id of the view
-          readOnly: true
-        owner:
-          type: string
-          description: View owner
-          readOnly: true
-        name:
-          type: string
-          description: Name of the view
-        is_shared:
-          type: boolean
-          description: Indicates whether the view is shared with other users
-        is_locked:
-          type: boolean
-          description: Indicates whether the view is locked
-          default: false
-        is_global:
-          type: boolean
-          description: Indicates whether the view is shared globally
-        shared_with_users:
-          type: array
-          description: List of users this view is shared with (if any)
-          items:
-            type: string
-        shared_with_groups:
-          type: array
-          description: List of groups this view is shared with (if any)
-          items:
-            type: string
-        created:
-          $ref: '#/components/schemas/Instant'
-          description: When the view was created
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-          description: When the view was last updated
-        view_config:
-          type: object
-          description: View configuration data
-        view_type:
-          $ref: '#/components/schemas/ViewConfigType'
-          description: View type
     Instant:
       type: number
       title: Instant
       format: int64
       examples:
       - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     ViewConfigDto:
       type: object
       title: View Config Dto
@@ -412,24 +392,54 @@ components:
         view_type:
           $ref: '#/components/schemas/ViewConfigType'
           description: View type, indicates the type of view
-    MoogFailureResponse:
+    ViewConfigResponseDto:
       type: object
-      description: User API failure response body
+      title: View Config Response Dto
+      description: Incident view definition
       properties:
-        status:
+        id:
           type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
+          description: Unique id of the view
+          readOnly: true
+        owner:
           type: string
-        additional:
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
           type: array
+          description: List of users this view is shared with (if any)
           items:
             type: string
-      required:
-      - status
-      - message
+        shared_with_groups:
+          type: array
+          description: List of groups this view is shared with (if any)
+          items:
+            type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: View configuration data
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: View type
     MoogResponseListOfViewConfigResponseDto:
       type: object
       description: User API ViewConfigResponseDto response body
@@ -446,24 +456,14 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+    ViewConfigType:
+      type: string
+      enum:
+      - INCIDENT
+      - ALERT
+      - METRIC
+      title: View Config Type
+      description: View types
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

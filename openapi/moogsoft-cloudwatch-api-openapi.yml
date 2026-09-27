@@ -937,65 +937,39 @@ paths:
         - integrations:view
 components:
   schemas:
-    MoogFailureResponse:
+    CloudwatchRegionStatus:
       type: object
-      description: Apex AIOps Incident Management Cloudwatch API failure response body
+      title: Cloudwatch Region Status
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+    MoogResponseCloudwatchAccountDto:
+      type: object
+      title: Moog Response Cloudwatch Account Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchAccountDto response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Success status indicator (always "success")
           examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          - success
+        data:
+          $ref: '#/components/schemas/CloudwatchAccountDto'
       required:
       - status
-      - message
-    CloudwatchTestDto:
+      - data
+    CloudwatchStatusDto:
       type: object
-      title: Cloudwatch Test Dto
+      title: Cloudwatch Status Dto
       properties:
-        aws_credential_name:
+        name:
           type: string
-          pattern: \S
-        aws_regions:
-          type: array
-          items:
-            type: string
-      required:
-      - aws_credential_name
-      - aws_regions
-    MetricConfigDto:
-      type: object
-      title: Metric Config Dto
-      properties:
-        uuid:
-          type: string
-        fqm:
-          type: string
-        metric:
-          type: string
-        detector:
-          type: string
-        config:
+        regions:
           type: object
-      required:
-      - metric
-      - config
-    CloudwatchRegionError:
-      type: object
-      title: Cloudwatch Region Error
-      properties:
-        region:
-          type: string
-        exists:
-          type: boolean
-        msg:
-          type: string
+          additionalProperties:
+            $ref: '#/components/schemas/CloudwatchRegionStatus'
     BaseCloudwatchConfigDto:
       type: object
       title: Base Cloudwatch Config Dto
@@ -1040,24 +1014,10 @@ components:
       required:
       - status
       - data
-    CloudwatchRegionStatus:
+    MoogResponseCloudwatchConfigDto:
       type: object
-      title: Cloudwatch Region Status
-      properties:
-        message:
-          type: string
-        status:
-          type: string
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogResponseCloudwatchTestResponse:
-      type: object
-      title: Moog Response Cloudwatch Test Response
-      description: Apex AIOps Incident Management Cloudwatch API CloudwatchTestResponse response body
+      title: Moog Response Cloudwatch Config Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
       properties:
         status:
           type: string
@@ -1065,40 +1025,27 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/CloudwatchTestResponse'
+          $ref: '#/components/schemas/CloudwatchConfigDto'
       required:
       - status
       - data
-    CloudwatchDetectorConfig:
+    MoogResponseListOfCloudwatchConfigDto:
       type: object
-      title: Cloudwatch Detector Config
+      title: Moog Response List Of Cloudwatch Config Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
       properties:
-        metric:
+        status:
           type: string
-        fully_qualified_moob:
-          type: string
-        uuid:
-          type: string
-        version:
-          type: string
-        detector:
-          type: object
-    CloudwatchTestResponse:
-      type: object
-      title: Cloudwatch Test Response
-      properties:
-        success:
-          type: boolean
-        err:
-          $ref: '#/components/schemas/CloudwatchTestError'
-        validationResult:
-          type: object
-          additionalProperties:
-            type: object
-            additionalProperties:
-              type: string
-        warning:
-          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CloudwatchConfigDto'
+      required:
+      - status
+      - data
     CloudwatchConfigDto:
       type: object
       title: CloudwatchConfig
@@ -1148,6 +1095,82 @@ components:
       - aws_credential_name
       - aws_regions
       - service_list
+    CloudwatchTestResponse:
+      type: object
+      title: Cloudwatch Test Response
+      properties:
+        success:
+          type: boolean
+        err:
+          $ref: '#/components/schemas/CloudwatchTestError'
+        validationResult:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        warning:
+          type: string
+    MetricConfigDto:
+      type: object
+      title: Metric Config Dto
+      properties:
+        uuid:
+          type: string
+        fqm:
+          type: string
+        metric:
+          type: string
+        detector:
+          type: string
+        config:
+          type: object
+      required:
+      - metric
+      - config
+    MoogErrorResponse:
+      type: object
+      description: Apex AIOps Incident Management Cloudwatch API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    CloudwatchRegionError:
+      type: object
+      title: Cloudwatch Region Error
+      properties:
+        region:
+          type: string
+        exists:
+          type: boolean
+        msg:
+          type: string
+    MoogResponseCloudwatchStatusDto:
+      type: object
+      title: Moog Response Cloudwatch Status Dto
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchStatusDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CloudwatchStatusDto'
+      required:
+      - status
+      - data
     CloudwatchServices:
       type: string
       enum:
@@ -1241,39 +1264,12 @@ components:
       - SSM-RunCommand
       - S3/Storage-Lens
       title: Cloudwatch Services
-    CloudwatchStatusDto:
-      type: object
-      title: Cloudwatch Status Dto
-      properties:
-        name:
-          type: string
-        regions:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/CloudwatchRegionStatus'
     CloudwatchAccountDto:
       type: object
       title: Cloudwatch Account Dto
       properties:
         accountId:
           type: string
-    MoogResponseListOfCloudwatchConfigDto:
-      type: object
-      title: Moog Response List Of Cloudwatch Config Dto
-      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CloudwatchConfigDto'
-      required:
-      - status
-      - data
     CloudwatchTestError:
       type: object
       title: Cloudwatch Test Error
@@ -1284,60 +1280,21 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CloudwatchRegionError'
-    MoogResponseCloudwatchStatusDto:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogFailureResponse:
       type: object
-      title: Moog Response Cloudwatch Status Dto
-      description: Apex AIOps Incident Management Cloudwatch API CloudwatchStatusDto response body
+      description: Apex AIOps Incident Management Cloudwatch API failure response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Failure status indicator (always "failure")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CloudwatchStatusDto'
-      required:
-      - status
-      - data
-    MoogResponseCloudwatchConfigDto:
-      type: object
-      title: Moog Response Cloudwatch Config Dto
-      description: Apex AIOps Incident Management Cloudwatch API CloudwatchConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CloudwatchConfigDto'
-      required:
-      - status
-      - data
-    MoogResponseCloudwatchAccountDto:
-      type: object
-      title: Moog Response Cloudwatch Account Dto
-      description: Apex AIOps Incident Management Cloudwatch API CloudwatchAccountDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CloudwatchAccountDto'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Apex AIOps Incident Management Cloudwatch API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
+          - failure
         message:
           type: string
         additional:
@@ -1347,6 +1304,49 @@ components:
       required:
       - status
       - message
+    CloudwatchDetectorConfig:
+      type: object
+      title: Cloudwatch Detector Config
+      properties:
+        metric:
+          type: string
+        fully_qualified_moob:
+          type: string
+        uuid:
+          type: string
+        version:
+          type: string
+        detector:
+          type: object
+    MoogResponseCloudwatchTestResponse:
+      type: object
+      title: Moog Response Cloudwatch Test Response
+      description: Apex AIOps Incident Management Cloudwatch API CloudwatchTestResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CloudwatchTestResponse'
+      required:
+      - status
+      - data
+    CloudwatchTestDto:
+      type: object
+      title: Cloudwatch Test Dto
+      properties:
+        aws_credential_name:
+          type: string
+          pattern: \S
+        aws_regions:
+          type: array
+          items:
+            type: string
+      required:
+      - aws_credential_name
+      - aws_regions
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

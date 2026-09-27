@@ -116,16 +116,6 @@ components:
           format: double
         stateful:
           type: boolean
-    GetSlimDatumResultsDto:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlimDatumDto'
-        total:
-          type: integer
-          format: int64
     SlimDatumDto:
       type: object
       properties:
@@ -147,3 +137,13 @@ components:
           type: object
         datasource:
           type: string
+    GetSlimDatumResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumDto'
+        total:
+          type: integer
+          format: int64

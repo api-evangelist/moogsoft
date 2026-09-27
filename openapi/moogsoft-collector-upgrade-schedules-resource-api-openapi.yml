@@ -144,20 +144,6 @@ components:
       required:
       - status
       - data
-    MoogResponseCollectorUpgradeScheduleDto:
-      type: object
-      description: Collector V2 API CollectorUpgradeScheduleDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
-      required:
-      - status
-      - data
     BaseCollectorUpgradeScheduleDto:
       type: object
       title: Base Collector Upgrade Schedule Dto
@@ -247,17 +233,6 @@ components:
       required:
       - status
       - message
-    DayOfWeek:
-      type: string
-      enum:
-      - MONDAY
-      - TUESDAY
-      - WEDNESDAY
-      - THURSDAY
-      - FRIDAY
-      - SATURDAY
-      - SUNDAY
-      title: Day Of Week
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -276,6 +251,31 @@ components:
       required:
       - status
       - message
+    DayOfWeek:
+      type: string
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+      title: Day Of Week
+    MoogResponseCollectorUpgradeScheduleDto:
+      type: object
+      description: Collector V2 API CollectorUpgradeScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
+      required:
+      - status
+      - data
     ReleaseType:
       type: string
       enum:
