@@ -404,32 +404,44 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    BasePluginConfigDto:
+    ManualCollectorConfigDto:
       type: object
-      title: Base Plugin Config Dto
-      description: Base plugin config attributes.
+      title: Manual Collector Config Dto
+      description: Manual collector config with base and generated attributes.
       properties:
         collector_id:
           type: string
           description: The collector id that this config is associated with.
-        collector_version:
-          type: string
-          description: The collector version that this config is associated with.
-          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-        plugin_name:
-          type: string
-          description: The name of the plugin that this config is for.
-          minLength: 1
         enabled:
           type: boolean
-          description: A boolean indicating if the plugin is enabled or not (by default true).
+          description: A boolean indicating if the config is enabled or not (by default true).
         configuration:
           type: object
-          description: Config for the plugin (This is optional if the plugin has no config required).
+          description: The manual collector config.
+        id:
+          type: string
+          description: ID of the manual collector config
       required:
       - collector_id
-      - collector_version
-      - plugin_name
+      - configuration
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     PluginConfigDto:
       type: object
       title: Plugin Config Dto
@@ -459,26 +471,20 @@ components:
       - collector_id
       - collector_version
       - plugin_name
-    ManualCollectorConfigDto:
+    MoogResponseManualCollectorConfigDto:
       type: object
-      title: Manual Collector Config Dto
-      description: Manual collector config with base and generated attributes.
+      description: Collector V2 API ManualCollectorConfigDto response body
       properties:
-        collector_id:
+        status:
           type: string
-          description: The collector id that this config is associated with.
-        enabled:
-          type: boolean
-          description: A boolean indicating if the config is enabled or not (by default true).
-        configuration:
-          type: object
-          description: The manual collector config.
-        id:
-          type: string
-          description: ID of the manual collector config
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ManualCollectorConfigDto'
       required:
-      - collector_id
-      - configuration
+      - status
+      - data
     MoogResponsePluginConfigDto:
       type: object
       description: Collector V2 API PluginConfigDto response body
@@ -493,24 +499,65 @@ components:
       required:
       - status
       - data
-    MoogFailureResponse:
+    BasePluginConfigDto:
       type: object
-      description: Collector V2 API failure response body
+      title: Base Plugin Config Dto
+      description: Base plugin config attributes.
+      properties:
+        collector_id:
+          type: string
+          description: The collector id that this config is associated with.
+        collector_version:
+          type: string
+          description: The collector version that this config is associated with.
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        plugin_name:
+          type: string
+          description: The name of the plugin that this config is for.
+          minLength: 1
+        enabled:
+          type: boolean
+          description: A boolean indicating if the plugin is enabled or not (by default true).
+        configuration:
+          type: object
+          description: Config for the plugin (This is optional if the plugin has no config required).
+      required:
+      - collector_id
+      - collector_version
+      - plugin_name
+    BaseManualCollectorConfigDto:
+      type: object
+      title: Base Manual Collector Config Dto
+      description: Base manual collector config attributes.
+      properties:
+        collector_id:
+          type: string
+          description: The collector id that this config is associated with.
+        enabled:
+          type: boolean
+          description: A boolean indicating if the config is enabled or not (by default true).
+        configuration:
+          type: object
+          description: The manual collector config.
+      required:
+      - collector_id
+      - configuration
+    MoogResponseListOfPluginConfigDto:
+      type: object
+      description: Collector V2 API PluginConfigDto response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Success status indicator (always "success")
           examples:
-          - failure
-        message:
-          type: string
-        additional:
+          - success
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/PluginConfigDto'
       required:
       - status
-      - message
+      - data
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -529,53 +576,6 @@ components:
       required:
       - status
       - message
-    MoogResponseListOfPluginConfigDto:
-      type: object
-      description: Collector V2 API PluginConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PluginConfigDto'
-      required:
-      - status
-      - data
-    BaseManualCollectorConfigDto:
-      type: object
-      title: Base Manual Collector Config Dto
-      description: Base manual collector config attributes.
-      properties:
-        collector_id:
-          type: string
-          description: The collector id that this config is associated with.
-        enabled:
-          type: boolean
-          description: A boolean indicating if the config is enabled or not (by default true).
-        configuration:
-          type: object
-          description: The manual collector config.
-      required:
-      - collector_id
-      - configuration
-    MoogResponseManualCollectorConfigDto:
-      type: object
-      description: Collector V2 API ManualCollectorConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ManualCollectorConfigDto'
-      required:
-      - status
-      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -68,20 +68,6 @@ components:
       - PLUGIN
       - INTEGRATION
       title: Product Feedback Category
-    ProductFeedbackDto:
-      type: object
-      title: Product Feedback Dto
-      description: Product feedback.
-      properties:
-        category:
-          $ref: '#/components/schemas/ProductFeedbackCategory'
-          description: The category of the product feedback
-        feedback:
-          type: string
-          description: The feedback text
-      required:
-      - category
-      - feedback
     MoogFailureResponse:
       type: object
       description: Collector V2 API failure response body
@@ -100,6 +86,20 @@ components:
       required:
       - status
       - message
+    ProductFeedbackDto:
+      type: object
+      title: Product Feedback Dto
+      description: Product feedback.
+      properties:
+        category:
+          $ref: '#/components/schemas/ProductFeedbackCategory'
+          description: The category of the product feedback
+        feedback:
+          type: string
+          description: The feedback text
+      required:
+      - category
+      - feedback
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body

@@ -128,22 +128,30 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseListOfCollectorUpgradeScheduleDto:
+    ReleaseType:
+      type: string
+      enum:
+      - STABLE
+      - BETA
+      title: Release Type
+    MoogFailureResponse:
       type: object
-      description: Collector V2 API CollectorUpgradeScheduleDto response body
+      description: Collector V2 API failure response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Failure status indicator (always "failure")
           examples:
-          - success
-        data:
+          - failure
+        message:
+          type: string
+        additional:
           type: array
           items:
-            $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
+            type: string
       required:
       - status
-      - data
+      - message
     BaseCollectorUpgradeScheduleDto:
       type: object
       title: Base Collector Upgrade Schedule Dto
@@ -178,6 +186,47 @@ components:
       - release_type
       - utc_offset
       - enabled
+    MoogResponseCollectorUpgradeScheduleDto:
+      type: object
+      description: Collector V2 API CollectorUpgradeScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
+      required:
+      - status
+      - data
+    DayOfWeek:
+      type: string
+      enum:
+      - MONDAY
+      - TUESDAY
+      - WEDNESDAY
+      - THURSDAY
+      - FRIDAY
+      - SATURDAY
+      - SUNDAY
+      title: Day Of Week
+    MoogResponseListOfCollectorUpgradeScheduleDto:
+      type: object
+      description: Collector V2 API CollectorUpgradeScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
+      required:
+      - status
+      - data
     CollectorUpgradeScheduleDto:
       type: object
       title: Collector Upgrade Schedule Dto
@@ -215,24 +264,6 @@ components:
       - release_type
       - utc_offset
       - enabled
-    MoogFailureResponse:
-      type: object
-      description: Collector V2 API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -251,37 +282,6 @@ components:
       required:
       - status
       - message
-    DayOfWeek:
-      type: string
-      enum:
-      - MONDAY
-      - TUESDAY
-      - WEDNESDAY
-      - THURSDAY
-      - FRIDAY
-      - SATURDAY
-      - SUNDAY
-      title: Day Of Week
-    MoogResponseCollectorUpgradeScheduleDto:
-      type: object
-      description: Collector V2 API CollectorUpgradeScheduleDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CollectorUpgradeScheduleDto'
-      required:
-      - status
-      - data
-    ReleaseType:
-      type: string
-      enum:
-      - STABLE
-      - BETA
-      title: Release Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -76,6 +76,25 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
     WebEventDto:
       type: object
       title: Event
@@ -209,6 +228,16 @@ components:
           description: Substitution arguments used for localization
           items:
             type: string
+    GeoLocationDto:
+      type: object
+      title: GeoLocation
+      properties:
+        lat:
+          type: number
+          format: float
+        long:
+          type: number
+          format: float
     LocationDto:
       type: object
       title: Location
@@ -250,35 +279,6 @@ components:
         geo_coordinates_long:
           type: integer
           format: int32
-    IsgErrorResponse:
-      type: object
-      title: Isg Error Response
-      description: Error response format for non-2XX responses
-      properties:
-        http_status_code:
-          type: integer
-          description: HTTP response code. This is the same as the standard HTTP response value
-          format: int32
-        messages:
-          type: array
-          description: List of messages providing additional information relating to the API error
-          items:
-            $ref: '#/components/schemas/IsgErrorMessage'
-    GeoLocationDto:
-      type: object
-      title: GeoLocation
-      properties:
-        lat:
-          type: number
-          format: float
-        long:
-          type: number
-          format: float
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

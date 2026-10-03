@@ -80,28 +80,6 @@ components:
       - ALERT_STANDALONE
       - INCIDENT_STANDALONE
       title: Workflow Type
-    ActionDto:
-      type: object
-      title: Action Dto
-      description: Definition of a workflow action.
-      properties:
-        name:
-          type: string
-          description: Computer name of the action
-        displayName:
-          type: string
-          description: Display name of the action
-        description:
-          type: string
-          description: Description of the action
-        schema:
-          $ref: '#/components/schemas/ActionConfigurationSchemaDto'
-          description: The configuration schema (expected fields and types) that this action requires
-        workflowTypes:
-          type: array
-          description: Types of workflows the action can be used in
-          items:
-            $ref: '#/components/schemas/WorkflowType'
     MoogFailureResponse:
       type: object
       description: Workflow Engine API failure response body
@@ -120,6 +98,18 @@ components:
       required:
       - status
       - message
+    ActionConfigurationSchemaDto:
+      type: object
+      title: Action Configuration Schema Dto
+      description: A list of schema for all the fields of an action.
+      properties:
+        fields:
+          type: array
+          description: A list of any required schema for each action (can be empty if no config required)
+          items:
+            $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
+      required:
+      - fields
     ActionConfigurationFieldSchemaDto:
       type: object
       title: Action Configuration Field Schema Dto
@@ -155,18 +145,28 @@ components:
       required:
       - status
       - message
-    ActionConfigurationSchemaDto:
+    ActionDto:
       type: object
-      title: Action Configuration Schema Dto
-      description: A list of schema for all the fields of an action.
+      title: Action Dto
+      description: Definition of a workflow action.
       properties:
-        fields:
+        name:
+          type: string
+          description: Computer name of the action
+        displayName:
+          type: string
+          description: Display name of the action
+        description:
+          type: string
+          description: Description of the action
+        schema:
+          $ref: '#/components/schemas/ActionConfigurationSchemaDto'
+          description: The configuration schema (expected fields and types) that this action requires
+        workflowTypes:
           type: array
-          description: A list of any required schema for each action (can be empty if no config required)
+          description: Types of workflows the action can be used in
           items:
-            $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
-      required:
-      - fields
+            $ref: '#/components/schemas/WorkflowType'
     MoogResponseListOfActionDto:
       type: object
       title: Moog Response List Of Action Dto

@@ -118,6 +118,24 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogResponseIncidentTagsConfigDto:
       type: object
       description: Alerts/Incidents API IncidentTagsConfigDto response body
@@ -168,24 +186,6 @@ components:
           x-deprecated: true
       required:
       - tags_propagation
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

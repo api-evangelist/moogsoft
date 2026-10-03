@@ -118,20 +118,83 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    ColumnsDto:
+    IncidentFilterStrDto:
       type: object
-      title: Columns Dto
+      title: Incident Filter Str Dto
+      description: An incident's filter string to validate
       properties:
-        fields:
+        filterString:
+          type: string
+          description: The incident's filter string to validate
+          pattern: \S
+          examples:
+          - severity = Clear AND source = www.my-source.com
+      required:
+      - filterString
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
           type: array
           items:
-            $ref: '#/components/schemas/ColumnInfo'
-    FieldCategory:
-      type: string
-      enum:
-      - primitive
-      - array
-      title: Field Category
+            type: string
+      required:
+      - status
+      - message
+    FilterOptions:
+      type: object
+      title: Filter Options
+      properties:
+        type:
+          type: string
+        operators:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComparisonType'
+        setValues:
+          type: array
+          items:
+            type: string
+        category:
+          $ref: '#/components/schemas/FieldCategory'
+    MoogResponseIncidentFilterStrResultDto:
+      type: object
+      description: Alerts/Incidents API IncidentFilterStrResultDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentFilterStrResultDto'
+      required:
+      - status
+      - data
+    ColumnInfo:
+      type: object
+      title: Column Info
+      properties:
+        colId:
+          type: string
+        headerName:
+          type: string
+        cellRenderer:
+          type: string
+        sortable:
+          type: boolean
+        hide:
+          type: boolean
+        filterOptions:
+          $ref: '#/components/schemas/FilterOptions'
     ComparisonType:
       type: string
       enum:
@@ -152,40 +215,6 @@ components:
       - notExactMatch
       title: Comparison Type
       description: Comparison operator type to use for the filter
-    ColumnInfo:
-      type: object
-      title: Column Info
-      properties:
-        colId:
-          type: string
-        headerName:
-          type: string
-        cellRenderer:
-          type: string
-        sortable:
-          type: boolean
-        hide:
-          type: boolean
-        filterOptions:
-          $ref: '#/components/schemas/FilterOptions'
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     IncidentFilterStrResultDto:
       type: object
       title: Incident Filter Str Result Dto
@@ -193,6 +222,20 @@ components:
       properties:
         isValid:
           type: boolean
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -211,36 +254,6 @@ components:
       required:
       - status
       - message
-    MoogResponseIncidentFilterStrResultDto:
-      type: object
-      description: Alerts/Incidents API IncidentFilterStrResultDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentFilterStrResultDto'
-      required:
-      - status
-      - data
-    FilterOptions:
-      type: object
-      title: Filter Options
-      properties:
-        type:
-          type: string
-        operators:
-          type: array
-          items:
-            $ref: '#/components/schemas/ComparisonType'
-        setValues:
-          type: array
-          items:
-            type: string
-        category:
-          $ref: '#/components/schemas/FieldCategory'
     MoogResponseColumnsDto:
       type: object
       description: Alerts/Incidents API ColumnsDto response body
@@ -255,19 +268,6 @@ components:
       required:
       - status
       - data
-    IncidentFilterStrDto:
-      type: object
-      title: Incident Filter Str Dto
-      description: An incident's filter string to validate
-      properties:
-        filterString:
-          type: string
-          description: The incident's filter string to validate
-          pattern: \S
-          examples:
-          - severity = Clear AND source = www.my-source.com
-      required:
-      - filterString
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

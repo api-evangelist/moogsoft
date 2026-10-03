@@ -254,39 +254,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseListOfApiKeyDto:
-      type: object
-      description: User API ApiKeyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiKeyDto'
-      required:
-      - status
-      - data
-    BaseApiKeyDto:
-      type: object
-      title: Base Api Key Dto
-      properties:
-        name:
-          type: string
-          pattern: \S
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-        permissions:
-          type: array
-          items:
-            type: string
-      required:
-      - name
     MoogFailureResponse:
       type: object
       description: User API failure response body
@@ -305,31 +272,7 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    Date:
-      type: number
-      title: Date
-      format: int64
-      examples:
-      - '2022-03-10'
-    MoogResponseApiKeyDto:
+    MoogResponseListOfApiKeyDto:
       type: object
       description: User API ApiKeyDto response body
       properties:
@@ -339,7 +282,9 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/ApiKeyDto'
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeyDto'
       required:
       - status
       - data
@@ -370,6 +315,61 @@ components:
           type: string
       required:
       - name
+    MoogResponseApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ApiKeyDto'
+      required:
+      - status
+      - data
+    BaseApiKeyDto:
+      type: object
+      title: Base Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+      required:
+      - name
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+      - '2022-03-10'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

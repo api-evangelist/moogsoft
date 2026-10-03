@@ -715,47 +715,99 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseCollectorMessageDto:
+    RegisterCollectorDto:
       type: object
-      description: Collector V2 API CollectorMessageDto response body
+      title: Register Collector Dto
+      description: Register collector attributes.
       properties:
-        status:
+        version:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CollectorMessageDto'
+          description: The version of the collector
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        vector_version:
+          type: string
+          description: The vector version of the collector
+          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+        host:
+          type: string
+          description: The host the collector is running on
+          pattern: \S
+        os:
+          $ref: '#/components/schemas/PlatformType'
+          description: The operating system of the collector's current host
+        id:
+          type: string
+          description: Optional collector provided id
+        seed_key:
+          type: string
+          description: Seed key for security key generation
+        proxy_url:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        base_url:
+          type: string
+          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
+        host_properties:
+          type: object
+          description: Additional properties available to the collector topology.
+          additionalProperties:
+            type: string
       required:
-      - status
-      - data
-    CollectorMessageRequestDto:
+      - version
+      - host
+      - os
+    CollectorAction:
+      type: string
+      enum:
+      - UPDATE_CONFIG
+      - SHUTDOWN
+      - UPGRADE_BINARY
+      title: Collector Action
+    CollectorLogDto:
       type: object
-      title: Collector Message Request Dto
-      description: Collector message request.
+      title: Collector Log Dto
+      description: Collector log message.
       properties:
-        collector_action:
-          $ref: '#/components/schemas/CollectorAction'
-          description: The collector action that is needed
-        action_message:
+        level:
+          $ref: '#/components/schemas/CollectorLogLevel'
+          description: The log level attributed to this log message
+        message:
           type: string
-          description: A message which can optionally be included with the action
-    MoogResponseListOfCollectorDto:
+          description: The log message
+        component:
+          type: string
+          description: The component that generated the log message
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+          description: The timestamp for when the log message was generated
+      required:
+      - level
+      - message
+      - timestamp
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogErrorResponse:
       type: object
-      description: Collector V2 API CollectorDto response body
+      description: Collector V2 API error response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Error status indicator (always "error")
           examples:
-          - success
-        data:
+          - error
+        message:
+          type: string
+        additional:
           type: array
           items:
-            $ref: '#/components/schemas/CollectorDto'
+            type: string
       required:
       - status
-      - data
+      - message
     MoogResponseCollectorLogResponse:
       type: object
       description: Collector V2 API CollectorLogResponse response body
@@ -767,6 +819,77 @@ components:
           - success
         data:
           $ref: '#/components/schemas/CollectorLogResponse'
+      required:
+      - status
+      - data
+    CollectorLogResponse:
+      type: object
+      title: Collector Log Response
+      properties:
+        totalHits:
+          type: integer
+          format: int64
+        collectorLogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorLogDto'
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    CollectorMessageDto:
+      type: object
+      title: Collector Message Dto
+      description: Collector message.
+      properties:
+        id:
+          type: string
+        collector_id:
+          type: string
+          description: The collector id that this message is associated with
+        collector_action:
+          $ref: '#/components/schemas/CollectorAction'
+          description: The collector action that is needed
+        action_message:
+          type: string
+          description: A message which can optionally be included with the action
+        status:
+          $ref: '#/components/schemas/CollectorMessageStatus'
+          description: The status of the collector message
+        response_message:
+          type: string
+          description: A message which can optionally contain a response from the collector
+        timestamp:
+          $ref: '#/components/schemas/Instant'
+          description: The time the message was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: The time the message was last updated
+    MoogResponseCollectorDto:
+      type: object
+      description: Collector V2 API CollectorDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorDto'
       required:
       - status
       - data
@@ -789,46 +912,29 @@ components:
       required:
       - version
       - uptime
-    CollectorLogResponse:
+    MoogResponseListOfCollectorDto:
       type: object
-      title: Collector Log Response
-      properties:
-        totalHits:
-          type: integer
-          format: int64
-        collectorLogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/CollectorLogDto'
-    CollectorLogLevel:
-      type: string
-      enum:
-      - TRACE
-      - DEBUG
-      - INFO
-      - WARN
-      - ERROR
-      title: Collector Log Level
-    CollectorMessageResponseDto:
-      type: object
-      title: Collector Message Response Dto
-      description: Collector message response.
+      description: Collector V2 API CollectorDto response body
       properties:
         status:
-          $ref: '#/components/schemas/CollectorMessageStatus'
-          description: The status of the collector message
-        response_message:
           type: string
-          description: A message which can optionally contain a response from the collector
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectorDto'
       required:
       - status
-    CollectorMessageStatus:
+      - data
+    PlatformType:
       type: string
       enum:
-      - OPEN
-      - SUCCESS
-      - FAIL
-      title: Collector Message Status
+      - MACOS
+      - LINUX
+      - WINDOWS
+      title: Platform Type
     CollectorDto:
       type: object
       title: Collector Dto
@@ -872,152 +978,47 @@ components:
           type: object
           additionalProperties:
             type: string
-    CollectorLogDto:
+    CollectorMessageRequestDto:
       type: object
-      title: Collector Log Dto
-      description: Collector log message.
+      title: Collector Message Request Dto
+      description: Collector message request.
       properties:
-        level:
-          $ref: '#/components/schemas/CollectorLogLevel'
-          description: The log level attributed to this log message
-        message:
-          type: string
-          description: The log message
-        component:
-          type: string
-          description: The component that generated the log message
-        timestamp:
-          $ref: '#/components/schemas/Instant'
-          description: The timestamp for when the log message was generated
-      required:
-      - level
-      - message
-      - timestamp
-    PlatformType:
-      type: string
-      enum:
-      - MACOS
-      - LINUX
-      - WINDOWS
-      title: Platform Type
-    CollectorAction:
-      type: string
-      enum:
-      - UPDATE_CONFIG
-      - SHUTDOWN
-      - UPGRADE_BINARY
-      title: Collector Action
-    RegisterCollectorDto:
-      type: object
-      title: Register Collector Dto
-      description: Register collector attributes.
-      properties:
-        version:
-          type: string
-          description: The version of the collector
-          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-        vector_version:
-          type: string
-          description: The vector version of the collector
-          pattern: ^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-        host:
-          type: string
-          description: The host the collector is running on
-          pattern: \S
-        os:
-          $ref: '#/components/schemas/PlatformType'
-          description: The operating system of the collector's current host
-        id:
-          type: string
-          description: Optional collector provided id
-        seed_key:
-          type: string
-          description: Seed key for security key generation
-        proxy_url:
-          type: string
-          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
-        base_url:
-          type: string
-          pattern: ^(https?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]
-        host_properties:
-          type: object
-          description: Additional properties available to the collector topology.
-          additionalProperties:
-            type: string
-      required:
-      - version
-      - host
-      - os
-    MoogErrorResponse:
-      type: object
-      description: Collector V2 API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    CollectorMessageDto:
-      type: object
-      title: Collector Message Dto
-      description: Collector message.
-      properties:
-        id:
-          type: string
-        collector_id:
-          type: string
-          description: The collector id that this message is associated with
         collector_action:
           $ref: '#/components/schemas/CollectorAction'
           description: The collector action that is needed
         action_message:
           type: string
           description: A message which can optionally be included with the action
-        status:
-          $ref: '#/components/schemas/CollectorMessageStatus'
-          description: The status of the collector message
-        response_message:
-          type: string
-          description: A message which can optionally contain a response from the collector
-        timestamp:
-          $ref: '#/components/schemas/Instant'
-          description: The time the message was created
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-          description: The time the message was last updated
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogFailureResponse:
+    MoogResponseCollectorMessageDto:
       type: object
-      description: Collector V2 API failure response body
+      description: Collector V2 API CollectorMessageDto response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Success status indicator (always "success")
           examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          - success
+        data:
+          $ref: '#/components/schemas/CollectorMessageDto'
       required:
       - status
-      - message
+      - data
+    CollectorMessageStatus:
+      type: string
+      enum:
+      - OPEN
+      - SUCCESS
+      - FAIL
+      title: Collector Message Status
+    CollectorLogLevel:
+      type: string
+      enum:
+      - TRACE
+      - DEBUG
+      - INFO
+      - WARN
+      - ERROR
+      title: Collector Log Level
     MoogResponseListOfCollectorMessageDto:
       type: object
       description: Collector V2 API CollectorMessageDto response body
@@ -1034,20 +1035,19 @@ components:
       required:
       - status
       - data
-    MoogResponseCollectorDto:
+    CollectorMessageResponseDto:
       type: object
-      description: Collector V2 API CollectorDto response body
+      title: Collector Message Response Dto
+      description: Collector message response.
       properties:
         status:
+          $ref: '#/components/schemas/CollectorMessageStatus'
+          description: The status of the collector message
+        response_message:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CollectorDto'
+          description: A message which can optionally contain a response from the collector
       required:
       - status
-      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

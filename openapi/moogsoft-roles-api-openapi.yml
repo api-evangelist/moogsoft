@@ -293,12 +293,24 @@ components:
       required:
       - status
       - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
+    BaseRoleDto:
+      type: object
+      title: Base Role Dto
+      properties:
+        name:
+          type: string
+          pattern: ^[a-zA-Z0-9.&()_\-\s]+$
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissionsAsString:
+          type: array
+          items:
+            type: string
+            minLength: 1
+      required:
+      - name
     MoogFailureResponse:
       type: object
       description: User API failure response body
@@ -308,24 +320,6 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
         message:
           type: string
         additional:
@@ -363,24 +357,12 @@ components:
           type: string
       required:
       - name
-    BaseRoleDto:
-      type: object
-      title: Base Role Dto
-      properties:
-        name:
-          type: string
-          pattern: ^[a-zA-Z0-9.&()_\-\s]+$
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-        permissionsAsString:
-          type: array
-          items:
-            type: string
-            minLength: 1
-      required:
-      - name
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
     MoogResponseListOfRoleDto:
       type: object
       description: User API RoleDto response body
@@ -397,6 +379,24 @@ components:
       required:
       - status
       - data
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

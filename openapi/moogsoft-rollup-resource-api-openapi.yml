@@ -105,6 +105,16 @@ components:
         total:
           type: integer
           format: int64
+    Granularity:
+      type: string
+      enum:
+      - RAW
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
     SlimRollupDto:
       type: object
       properties:
@@ -140,13 +150,3 @@ components:
           format: int64
         datasource:
           type: string
-    Granularity:
-      type: string
-      enum:
-      - RAW
-      - MINUTE
-      - HOUR
-      - DAY
-      - WEEK
-      - MONTH
-      - YEAR

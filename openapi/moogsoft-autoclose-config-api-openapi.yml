@@ -135,42 +135,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseAutoCloseConfigDto:
-      type: object
-      description: Alerts/Incidents API AutoCloseConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/AutoCloseConfigDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfAutoCloseConfigDto:
-      type: object
-      description: Alerts/Incidents API AutoCloseConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AutoCloseConfigDto'
-      required:
-      - status
-      - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -189,24 +153,22 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
+    MoogResponseListOfAutoCloseConfigDto:
       type: object
-      description: Alerts/Incidents API error response body
+      description: Alerts/Incidents API AutoCloseConfigDto response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
+          - success
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/AutoCloseConfigDto'
       required:
       - status
-      - message
+      - data
     AutoCloseConfigDto:
       type: object
       title: Auto Close Config Dto
@@ -242,6 +204,44 @@ components:
         last_updated_by:
           type: string
           description: Email of the user who last updated the configuration
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseAutoCloseConfigDto:
+      type: object
+      description: Alerts/Incidents API AutoCloseConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/AutoCloseConfigDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

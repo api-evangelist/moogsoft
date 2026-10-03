@@ -449,227 +449,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    IsgErrorSeverity:
-      type: string
-      enum:
-      - Info
-      - Warning
-      - Error
-      - Critical
-      title: Isg Error Severity
-      description: Severity of the message (should be treated as case-insensitive)
-    MoogResponseUserDto:
-      type: object
-      description: User API UserDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/UserDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfUserDto:
-      type: object
-      description: User API UserDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/UserDto'
-      required:
-      - status
-      - data
-    IsgListResponseUserDto:
-      type: object
-      description: User API UserDto response body
-      properties:
-        results:
-          type: object
-      required:
-      - results
-    NotificationPreference:
-      type: string
-      enum:
-      - EMAIL
-      - SMS
-      - VOICE
-      title: Notification Preference
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogFailureResponse:
-      type: object
-      description: User API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    IsgErrorMessage:
-      type: object
-      title: Isg Error Message
-      description: Message relating to the API error
-      properties:
-        code:
-          type: string
-          description: API-specific error code
-        timestamp:
-          type: string
-          description: ISO-8601 Date/time when the API error was reported
-          format: date-time
-          examples:
-          - '2024-06-01T13:14:32.431Z'
-        severity:
-          $ref: '#/components/schemas/IsgErrorSeverity'
-          description: Error severity
-        message:
-          type: string
-          description: Descriptive error message
-        message_l10n:
-          type: string
-          description: Localized error message
-        substitution_args:
-          type: array
-          description: Substitution arguments used for localization
-          items:
-            type: string
-    UserProfileDto:
-      type: object
-      title: User Profile Dto
-      properties:
-        familyName:
-          type: string
-          pattern: ^[a-zA-Z0-9()\-_ ]+$
-          minLength: 1
-          maxLength: 127
-        givenName:
-          type: string
-          pattern: ^[a-zA-Z0-9()\-_ ]+$
-          minLength: 1
-          maxLength: 127
-        countryCode:
-          type: string
-          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
-        phoneNumber:
-          type: string
-          pattern: ^(\d+|)$
-        notificationPreferences:
-          type: array
-          minItems: 1
-          maxItems: 3
-          items:
-            $ref: '#/components/schemas/NotificationPreference'
-    Date:
-      type: number
-      title: Date
-      format: int64
-      examples:
-      - '2022-03-10'
-    BaseUserDto:
-      type: object
-      title: Base User Dto
-      properties:
-        email:
-          type: string
-          pattern: \S
-        familyName:
-          type: string
-          pattern: ^[a-zA-Z0-9()\-_ ]+$
-          minLength: 1
-          maxLength: 127
-        givenName:
-          type: string
-          pattern: ^[a-zA-Z0-9()\-_ ]+$
-          minLength: 1
-          maxLength: 127
-        role:
-          type: string
-        roleId:
-          type: string
-        tenantName:
-          type: string
-        excludeUserDeletion:
-          type: boolean
-        isSSO:
-          type: boolean
-        countryCode:
-          type: string
-          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
-        phoneNumber:
-          type: string
-          pattern: ^(\d+|)$
-        notificationPreferences:
-          type: array
-          minItems: 1
-          maxItems: 3
-          items:
-            $ref: '#/components/schemas/NotificationPreference'
-      required:
-      - email
-      - familyName
-      - givenName
-      - roleId
-    UserStatus:
-      type: string
-      enum:
-      - INVITED
-      - ACTIVE
-      - DELETED
-      title: User Status
-    IsgErrorResponse:
-      type: object
-      title: Isg Error Response
-      description: Error response format for non-2XX responses
-      properties:
-        http_status_code:
-          type: integer
-          description: HTTP response code. This is the same as the standard HTTP response value
-          format: int32
-        messages:
-          type: array
-          description: List of messages providing additional information relating to the API error
-          items:
-            $ref: '#/components/schemas/IsgErrorMessage'
     UserDto:
       type: object
       title: User Dto
@@ -759,6 +538,64 @@ components:
       - familyName
       - givenName
       - roleId
+    NotificationPreference:
+      type: string
+      enum:
+      - EMAIL
+      - SMS
+      - VOICE
+      title: Notification Preference
+    UserStatus:
+      type: string
+      enum:
+      - INVITED
+      - ACTIVE
+      - DELETED
+      title: User Status
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    UserProfileDto:
+      type: object
+      title: User Profile Dto
+      properties:
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
     UpdateUserDto:
       type: object
       title: Update User Dto
@@ -796,6 +633,169 @@ components:
             $ref: '#/components/schemas/NotificationPreference'
       required:
       - roleId
+    IsgErrorResponse:
+      type: object
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
+      properties:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    IsgListResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        results:
+          type: object
+      required:
+      - results
+    MoogResponseUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/UserDto'
+      required:
+      - status
+      - data
+    IsgErrorMessage:
+      type: object
+      title: Isg Error Message
+      description: Message relating to the API error
+      properties:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: string
+          description: ISO-8601 Date/time when the API error was reported
+          format: date-time
+          examples:
+          - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
+          type: array
+          description: Substitution arguments used for localization
+          items:
+            type: string
+    MoogResponseListOfUserDto:
+      type: object
+      description: User API UserDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    BaseUserDto:
+      type: object
+      title: Base User Dto
+      properties:
+        email:
+          type: string
+          pattern: \S
+        familyName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        givenName:
+          type: string
+          pattern: ^[a-zA-Z0-9()\-_ ]+$
+          minLength: 1
+          maxLength: 127
+        role:
+          type: string
+        roleId:
+          type: string
+        tenantName:
+          type: string
+        excludeUserDeletion:
+          type: boolean
+        isSSO:
+          type: boolean
+        countryCode:
+          type: string
+          pattern: ^(\+?\d{1,3}|\d{1,4}|)$
+        phoneNumber:
+          type: string
+          pattern: ^(\d+|)$
+        notificationPreferences:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/NotificationPreference'
+      required:
+      - email
+      - familyName
+      - givenName
+      - roleId
+    IsgErrorSeverity:
+      type: string
+      enum:
+      - Info
+      - Warning
+      - Error
+      - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+      - '2022-03-10'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

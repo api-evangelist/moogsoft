@@ -166,6 +166,36 @@ components:
       required:
       - status
       - message
+    SupportFileDto:
+      type: object
+      title: Support File Dto
+      description: Plugin support file.
+      properties:
+        plugin_name:
+          type: string
+          description: The name of the plugin the support file is associated with
+        name:
+          type: string
+          description: The name of the support file
+        contents:
+          type: string
+          description: The contents of the support file
+    MoogResponseListOfPluginDto:
+      type: object
+      description: Collector V2 API PluginDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PluginDto'
+      required:
+      - status
+      - data
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -198,36 +228,6 @@ components:
       required:
       - status
       - data
-    MoogResponseListOfPluginDto:
-      type: object
-      description: Collector V2 API PluginDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PluginDto'
-      required:
-      - status
-      - data
-    SupportFileDto:
-      type: object
-      title: Support File Dto
-      description: Plugin support file.
-      properties:
-        plugin_name:
-          type: string
-          description: The name of the plugin the support file is associated with
-        name:
-          type: string
-          description: The name of the support file
-        contents:
-          type: string
-          description: The contents of the support file
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

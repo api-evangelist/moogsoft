@@ -618,6 +618,33 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    AppInsightsValidator:
+      type: object
+      title: App Insights Validator
+      description: Contains the name of the credentials to validate
+      properties:
+        credentialName:
+          type: string
+      required:
+      - credentialName
+    MoogFailureResponse:
+      type: object
+      description: API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogResponseAppInsightsIntegration:
       type: object
       title: Moog Response App Insights Integration
@@ -639,42 +666,6 @@ components:
       format: int64
       examples:
       - '2022-03-10T16:15:50Z'
-    MoogFailureResponse:
-      type: object
-      description: API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogResponseListOfAppInsightsIntegration:
       type: object
       title: Moog Response List Of App Insights Integration
@@ -733,15 +724,24 @@ components:
           description: When the integration was last updated
       required:
       - credentialName
-    AppInsightsValidator:
+    MoogErrorResponse:
       type: object
-      title: App Insights Validator
-      description: Contains the name of the credentials to validate
+      description: API error response body
       properties:
-        credentialName:
+        status:
           type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
       required:
-      - credentialName
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

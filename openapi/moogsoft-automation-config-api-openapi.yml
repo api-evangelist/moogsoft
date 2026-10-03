@@ -132,6 +132,24 @@ components:
       required:
       - status
       - data
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     AutomationConfigDto:
       type: object
       title: Automation Config Dto
@@ -161,24 +179,6 @@ components:
       - closeResolvedAlertsInSeconds
       - closeIncidentsInSeconds
       - closeAlertsInSeconds
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body

@@ -834,6 +834,100 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    Impact:
+      type: string
+      enum:
+      - high
+      - medium
+      - low
+      title: Impact
+      description: Impact of an incident
+    MoogResponseIncidentList:
+      type: object
+      description: Alerts/Incidents API IncidentList response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentList'
+      required:
+      - status
+      - data
+    AgGridSortColumn:
+      type: object
+      title: Ag Grid Sort Column
+      description: Sorting criteria to use for searches
+      properties:
+        colId:
+          type: string
+          description: The column on which to sort
+          minLength: 1
+        sort:
+          type: string
+          enum:
+          - asc
+          - desc
+          description: The direction in which to sort
+          pattern: asc|desc
+      required:
+      - colId
+      - sort
+    ActivityType:
+      type: string
+      enum:
+      - FIRST_EVENT
+      - INCIDENT_CREATED
+      - ALERT_ADDED
+      - ALERT_STATUS_CHANGE
+      - ALERT_ASSIGNMENT
+      - INCIDENT_STATUS_CHANGE
+      - INCIDENT_ASSIGNMENT
+      - COMMENT_ADDED
+      - COMMENT_EDITED
+      - DESCRIPTION_CHANGE
+      - INCIDENT_GROUP_ASSIGNMENT
+      - ALERT_GROUP_ASSIGNMENT
+      - ANNOUNCEMENT
+      - WATCHER_ADDED
+      - WATCHER_REMOVED
+      title: Activity Type
+      description: Activity type for incident timeline
+    SetIncidentTagsPayloadDto:
+      type: object
+      title: Set Incident Tags Payload Dto
+      properties:
+        tags:
+          type: object
+          description: The tags being added to the incident
+          additionalProperties:
+            type: array
+            items:
+              type: string
+      required:
+      - tags
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
     IncidentDto:
       type: object
       title: Incident Dto
@@ -1039,236 +1133,6 @@ components:
           type: integer
           description: Time taken to resolve, resolved or closed incidents (in seconds).
           format: int64
-    CommentDto:
-      type: object
-      title: Comment Dto
-      properties:
-        id:
-          type: string
-        comment:
-          type: string
-        created_by:
-          type: string
-        created_at:
-          type: integer
-          format: int64
-        is_resolving_step:
-          type: boolean
-          writeOnly: true
-        type:
-          $ref: '#/components/schemas/CommentType'
-        is_edited:
-          type: boolean
-    Impact:
-      type: string
-      enum:
-      - high
-      - medium
-      - low
-      title: Impact
-      description: Impact of an incident
-    MoogResponseIncidentDto:
-      type: object
-      description: Alerts/Incidents API IncidentDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfExternalSystemDto:
-      type: object
-      description: Alerts/Incidents API ExternalSystemDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalSystemDto'
-      required:
-      - status
-      - data
-    CommentType:
-      type: string
-      enum:
-      - STANDARD
-      - RESOLVING
-      - ANNOUNCEMENT
-      title: Comment Type
-      description: CommentType for incidents comments
-    MaintenanceWindowStatDto:
-      type: object
-      title: Maintenance Window Stat Dto
-      properties:
-        window_id:
-          type: string
-          description: unique id of the maintenance window
-        occurrence_id:
-          type: string
-          description: unique id of the maintenance window occurrence
-        enter:
-          type: integer
-          description: Epoch timestamp in millis of when the alert entered maintenance
-          format: int64
-        exit:
-          type: integer
-          description: Epoch timestamp in millis of when the alert left maintenance
-          format: int64
-    DateColumnFilter:
-      type: object
-      title: Date Column Filter
-      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        dateFrom:
-          type: string
-          description: Date filter value to used with comparison operator
-        dateTo:
-          type: string
-          description: Date filter value to used when comparison operator is inRange
-        filterType:
-          const: date
-          description: Declares date filterType
-      required:
-      - type
-      - filterType
-    ColumnFilter:
-      type: object
-      title: Column Filter
-      description: Polymorphic column filter, based upon filterType
-      oneOf:
-      - $ref: '#/components/schemas/DateColumnFilter'
-      - $ref: '#/components/schemas/NumberColumnFilter'
-      - $ref: '#/components/schemas/SetColumnFilter'
-      - $ref: '#/components/schemas/TextColumnFilter'
-      - $ref: '#/components/schemas/BooleanColumnFilter'
-      discriminator:
-        propertyName: filterType
-        mapping:
-          text: '#/components/schemas/TextColumnFilter'
-          set: '#/components/schemas/SetColumnFilter'
-          number: '#/components/schemas/NumberColumnFilter'
-          date: '#/components/schemas/DateColumnFilter'
-          boolean: '#/components/schemas/BooleanColumnFilter'
-    MoogResponseExternalSystemDto:
-      type: object
-      description: Alerts/Incidents API ExternalSystemDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ExternalSystemDto'
-      required:
-      - status
-      - data
-    ComparisonType:
-      type: string
-      enum:
-      - equals
-      - notEqual
-      - contains
-      - notContains
-      - startsWith
-      - endsWith
-      - lessThan
-      - lessThanOrEqual
-      - greaterThan
-      - greaterThanOrEqual
-      - inRange
-      - blank
-      - notBlank
-      - exactMatch
-      - notExactMatch
-      title: Comparison Type
-      description: Comparison operator type to use for the filter
-    Severity:
-      type: string
-      enum:
-      - clear
-      - unknown
-      - warning
-      - minor
-      - major
-      - critical
-      title: Severity
-      description: Severity Level (case-insensitive)
-    PatchPayloadDto:
-      type: object
-      title: Patch Payload Dto
-      description: Incident update payload
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-          description: status that gets assigned to the incident
-        assignee:
-          type: string
-          description: user email that gets assigned to the incident
-          examples:
-          - exampleUser@moogsoft.com
-        assigned_groups:
-          type: array
-          description: An array of group ids or group names, returns error if any of them not found
-          examples:
-          - - goupid1
-            - groupid2
-          items:
-            type: string
-        description:
-          type:
-          - string
-          - 'null'
-          description: Allows for overriding calculated description with a manual one. Restore calculated behavior by setting to an empty string.
-          maxLength: 32500
-          examples:
-          - New description text
-        priority:
-          $ref: '#/components/schemas/Priority'
-        impact:
-          $ref: '#/components/schemas/Impact'
-        urgency:
-          $ref: '#/components/schemas/Urgency'
-    MoogResponseIncidentList:
-      type: object
-      description: Alerts/Incidents API IncidentList response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentList'
-      required:
-      - status
-      - data
-    IncidentList:
-      type: object
-      title: Incident List
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/IncidentDto'
-        count:
-          type: integer
-          format: int64
-        search_after:
-          type: array
-          description: When needing to scroll through a large number of incidents, the value of this field can be provided to the 'searchAfter' parameter of the next query invocation.
     SetColumnFilter:
       type: object
       title: Set Column Filter
@@ -1289,63 +1153,17 @@ components:
       - type
       - values
       - filterType
-    NumberColumnFilter:
-      type: object
-      title: Number Column Filter
-      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: integer
-          description: Numeric filter value to used with comparison operator
-          format: int64
-        filterTo:
-          type: integer
-          description: Numeric filter value to used when comparison operator is inRange
-          format: int64
-        filterType:
-          const: number
-          description: Declares number filterType
-      required:
-      - type
-      - filterType
-    AgGridSortColumn:
-      type: object
-      title: Ag Grid Sort Column
-      description: Sorting criteria to use for searches
-      properties:
-        colId:
-          type: string
-          description: The column on which to sort
-          minLength: 1
-        sort:
-          type: string
-          enum:
-          - asc
-          - desc
-          description: The direction in which to sort
-          pattern: asc|desc
-      required:
-      - colId
-      - sort
-    MoogResponseListOfIncidentTimelineDto:
-      type: object
-      description: Alerts/Incidents API IncidentTimelineDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IncidentTimelineDto'
-      required:
-      - status
-      - data
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
     BulkPatchPayloadDto:
       type: object
       title: Bulk Patch Payload Dto
@@ -1391,28 +1209,6 @@ components:
             format: int64
       required:
       - ids
-    TimelineUserDto:
-      type: object
-      title: Timeline User Dto
-      properties:
-        id:
-          type: string
-        family_name:
-          type: string
-        given_name:
-          type: string
-        email:
-          type: string
-        picture:
-          type: string
-        familyName:
-          type: string
-          description: Use family_name instead
-          x-deprecated: true
-        givenName:
-          type: string
-          description: Use given_name instead
-          x-deprecated: true
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -1431,19 +1227,40 @@ components:
       required:
       - status
       - message
-    SetIncidentTagsPayloadDto:
+    ExternalSystemDto:
       type: object
-      title: Set Incident Tags Payload Dto
+      title: External System Dto
       properties:
-        tags:
-          type: object
-          description: The tags being added to the incident
-          additionalProperties:
-            type: array
-            items:
-              type: string
-      required:
-      - tags
+        integration_id:
+          type: string
+        external_name:
+          type: string
+        external_id:
+          type: string
+        external_link:
+          type: string
+        integration_name:
+          type: string
+        integration_type:
+          type: string
+    ColumnFilter:
+      type: object
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
     ListIncidentsRequest:
       type: object
       title: List Incidents Request
@@ -1505,17 +1322,108 @@ components:
           description: Subset of fields to return (default is all non-null incident fields
           items:
             type: string
-    Status:
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseIncidentDto:
+      type: object
+      description: Alerts/Incidents API IncidentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentDto'
+      required:
+      - status
+      - data
+    TimelineUserDto:
+      type: object
+      title: Timeline User Dto
+      properties:
+        id:
+          type: string
+        family_name:
+          type: string
+        given_name:
+          type: string
+        email:
+          type: string
+        picture:
+          type: string
+        familyName:
+          type: string
+          description: Use family_name instead
+          x-deprecated: true
+        givenName:
+          type: string
+          description: Use given_name instead
+          x-deprecated: true
+    CommentDto:
+      type: object
+      title: Comment Dto
+      properties:
+        id:
+          type: string
+        comment:
+          type: string
+        created_by:
+          type: string
+        created_at:
+          type: integer
+          format: int64
+        is_resolving_step:
+          type: boolean
+          writeOnly: true
+        type:
+          $ref: '#/components/schemas/CommentType'
+        is_edited:
+          type: boolean
+    Priority:
       type: string
       enum:
-      - error
-      - open
-      - in progress
-      - superseded
-      - resolved
-      - closed
-      title: Status
-      description: Status for incidents and alerts (case-insensitive)
+      - P1
+      - P2
+      - P3
+      - P4
+      - P5
+      title: Priority
+      description: Priority of an incident
+    MaintenanceWindowStatDto:
+      type: object
+      title: Maintenance Window Stat Dto
+      properties:
+        window_id:
+          type: string
+          description: unique id of the maintenance window
+        occurrence_id:
+          type: string
+          description: unique id of the maintenance window occurrence
+        enter:
+          type: integer
+          description: Epoch timestamp in millis of when the alert entered maintenance
+          format: int64
+        exit:
+          type: integer
+          description: Epoch timestamp in millis of when the alert left maintenance
+          format: int64
     MoogResponseListOfIncidentDto:
       type: object
       description: Alerts/Incidents API IncidentDto response body
@@ -1532,32 +1440,20 @@ components:
       required:
       - status
       - data
-    Priority:
-      type: string
-      enum:
-      - P1
-      - P2
-      - P3
-      - P4
-      - P5
-      title: Priority
-      description: Priority of an incident
-    ExternalSystemDto:
+    MoogResponseExternalSystemDto:
       type: object
-      title: External System Dto
+      description: Alerts/Incidents API ExternalSystemDto response body
       properties:
-        integration_id:
+        status:
           type: string
-        external_name:
-          type: string
-        external_id:
-          type: string
-        external_link:
-          type: string
-        integration_name:
-          type: string
-        integration_type:
-          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ExternalSystemDto'
+      required:
+      - status
+      - data
     BooleanColumnFilter:
       type: object
       title: Boolean Column Filter
@@ -1671,24 +1567,73 @@ components:
           type: boolean
           description: Use manual_description_set instead
           x-deprecated: true
-    MoogFailureResponse:
+    Urgency:
+      type: string
+      enum:
+      - high
+      - medium
+      - low
+      title: Urgency
+      description: Urgency of an incident
+    MoogResponseListOfExternalSystemDto:
       type: object
-      description: Alerts/Incidents API failure response body
+      description: Alerts/Incidents API ExternalSystemDto response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Success status indicator (always "success")
           examples:
-          - failure
-        message:
-          type: string
-        additional:
+          - success
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ExternalSystemDto'
       required:
       - status
-      - message
+      - data
+    CommentType:
+      type: string
+      enum:
+      - STANDARD
+      - RESOLVING
+      - ANNOUNCEMENT
+      title: Comment Type
+      description: CommentType for incidents comments
+    PatchPayloadDto:
+      type: object
+      title: Patch Payload Dto
+      description: Incident update payload
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+          description: status that gets assigned to the incident
+        assignee:
+          type: string
+          description: user email that gets assigned to the incident
+          examples:
+          - exampleUser@moogsoft.com
+        assigned_groups:
+          type: array
+          description: An array of group ids or group names, returns error if any of them not found
+          examples:
+          - - goupid1
+            - groupid2
+          items:
+            type: string
+        description:
+          type:
+          - string
+          - 'null'
+          description: Allows for overriding calculated description with a manual one. Restore calculated behavior by setting to an empty string.
+          maxLength: 32500
+          examples:
+          - New description text
+        priority:
+          $ref: '#/components/schemas/Priority'
+        impact:
+          $ref: '#/components/schemas/Impact'
+        urgency:
+          $ref: '#/components/schemas/Urgency'
     TextColumnFilter:
       type: object
       title: Text Column Filter
@@ -1706,34 +1651,89 @@ components:
       required:
       - type
       - filterType
-    Urgency:
+    NumberColumnFilter:
+      type: object
+      title: Number Column Filter
+      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: integer
+          description: Numeric filter value to used with comparison operator
+          format: int64
+        filterTo:
+          type: integer
+          description: Numeric filter value to used when comparison operator is inRange
+          format: int64
+        filterType:
+          const: number
+          description: Declares number filterType
+      required:
+      - type
+      - filterType
+    Status:
       type: string
       enum:
-      - high
-      - medium
-      - low
-      title: Urgency
-      description: Urgency of an incident
-    ActivityType:
-      type: string
-      enum:
-      - FIRST_EVENT
-      - INCIDENT_CREATED
-      - ALERT_ADDED
-      - ALERT_STATUS_CHANGE
-      - ALERT_ASSIGNMENT
-      - INCIDENT_STATUS_CHANGE
-      - INCIDENT_ASSIGNMENT
-      - COMMENT_ADDED
-      - COMMENT_EDITED
-      - DESCRIPTION_CHANGE
-      - INCIDENT_GROUP_ASSIGNMENT
-      - ALERT_GROUP_ASSIGNMENT
-      - ANNOUNCEMENT
-      - WATCHER_ADDED
-      - WATCHER_REMOVED
-      title: Activity Type
-      description: Activity type for incident timeline
+      - error
+      - open
+      - in progress
+      - superseded
+      - resolved
+      - closed
+      title: Status
+      description: Status for incidents and alerts (case-insensitive)
+    MoogResponseListOfIncidentTimelineDto:
+      type: object
+      description: Alerts/Incidents API IncidentTimelineDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentTimelineDto'
+      required:
+      - status
+      - data
+    IncidentList:
+      type: object
+      title: Incident List
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentDto'
+        count:
+          type: integer
+          format: int64
+        search_after:
+          type: array
+          description: When needing to scroll through a large number of incidents, the value of this field can be provided to the 'searchAfter' parameter of the next query invocation.
+    DateColumnFilter:
+      type: object
+      title: Date Column Filter
+      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        dateFrom:
+          type: string
+          description: Date filter value to used with comparison operator
+        dateTo:
+          type: string
+          description: Date filter value to used when comparison operator is inRange
+        filterType:
+          const: date
+          description: Declares date filterType
+      required:
+      - type
+      - filterType
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

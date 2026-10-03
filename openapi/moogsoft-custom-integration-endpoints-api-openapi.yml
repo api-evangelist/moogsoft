@@ -412,29 +412,6 @@ paths:
         value: []
 components:
   schemas:
-    BaseEndpointDto:
-      type: object
-      title: Base Endpoint Dto
-      properties:
-        endpointName:
-          type: string
-          pattern: ^[^\s]+$
-          minLength: 1
-          maxLength: 127
-        authRequired:
-          type: boolean
-        description:
-          type: string
-          maxLength: 500
-      required:
-      - endpointName
-      - authRequired
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     Endpoint:
       type: object
       title: Endpoint
@@ -475,42 +452,39 @@ components:
       required:
       - endpointName
       - authRequired
-    Mapping:
+    EndpointConfigDto:
       type: object
-      title: Mapping
-    MoogErrorResponse:
-      type: object
-      description: Create Your Own Integration API error response body
+      title: Endpoint Config Dto
+      description: Create your own endpoint configuration.
       properties:
-        status:
+        batchKey:
           type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
+          description: Optional batch key
+        mappings:
           type: array
+          description: List of the mappings.
+          minItems: 1
           items:
-            type: string
+            $ref: '#/components/schemas/Mapping'
       required:
-      - status
-      - message
-    MoogResponseEndpoint:
+      - mappings
+    BaseEndpointDto:
       type: object
-      title: Moog Response Endpoint
-      description: Create Your Own Integration API Endpoint response body
+      title: Base Endpoint Dto
       properties:
-        status:
+        endpointName:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/Endpoint'
+          pattern: ^[^\s]+$
+          minLength: 1
+          maxLength: 127
+        authRequired:
+          type: boolean
+        description:
+          type: string
+          maxLength: 500
       required:
-      - status
-      - data
+      - endpointName
+      - authRequired
     MoogFailureResponse:
       type: object
       description: Create Your Own Integration API failure response body
@@ -535,37 +509,6 @@ components:
       - EVENT
       - METRIC
       title: Type
-    IntegrationType:
-      type: string
-      enum:
-      - SPLUNK
-      - ANSIBLE_TOWER
-      - PROMETHEUS
-      - APPDYNAMICS
-      - PINGDOM
-      - DYNATRACE
-      - NEWRELIC
-      - ZABBIX
-      - AZURE
-      - NAGIOS
-      - SCOM
-      title: Integration Type
-    EndpointConfigDto:
-      type: object
-      title: Endpoint Config Dto
-      description: Create your own endpoint configuration.
-      properties:
-        batchKey:
-          type: string
-          description: Optional batch key
-        mappings:
-          type: array
-          description: List of the mappings.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/Mapping'
-      required:
-      - mappings
     MoogResponseListOfEndpoint:
       type: object
       title: Moog Response List Of Endpoint
@@ -583,6 +526,27 @@ components:
       required:
       - status
       - data
+    IntegrationType:
+      type: string
+      enum:
+      - SPLUNK
+      - ANSIBLE_TOWER
+      - PROMETHEUS
+      - APPDYNAMICS
+      - PINGDOM
+      - DYNATRACE
+      - NEWRELIC
+      - ZABBIX
+      - AZURE
+      - NAGIOS
+      - SCOM
+      title: Integration Type
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
     CreateEndpoint:
       type: object
       title: Create Endpoint
@@ -603,6 +567,21 @@ components:
       required:
       - endpointName
       - type
+    MoogResponseEndpoint:
+      type: object
+      title: Moog Response Endpoint
+      description: Create Your Own Integration API Endpoint response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/Endpoint'
+      required:
+      - status
+      - data
     EndpointStatus:
       type: string
       enum:
@@ -611,6 +590,27 @@ components:
       - INACTIVE
       - ERROR
       title: Endpoint Status
+    Mapping:
+      type: object
+      title: Mapping
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

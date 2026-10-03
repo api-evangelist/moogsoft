@@ -284,26 +284,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseViewConfigResponseDto:
-      type: object
-      description: User API ViewConfigResponseDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ViewConfigResponseDto'
-      required:
-      - status
-      - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     MoogFailureResponse:
       type: object
       description: User API failure response body
@@ -322,24 +302,82 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
+    MoogResponseViewConfigResponseDto:
       type: object
-      description: User API error response body
+      description: User API ViewConfigResponseDto response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          - success
+        data:
+          $ref: '#/components/schemas/ViewConfigResponseDto'
       required:
       - status
-      - message
+      - data
+    ViewConfigResponseDto:
+      type: object
+      title: View Config Response Dto
+      description: Incident view definition
+      properties:
+        id:
+          type: string
+          description: Unique id of the view
+          readOnly: true
+        owner:
+          type: string
+          description: View owner
+          readOnly: true
+        name:
+          type: string
+          description: Name of the view
+        is_shared:
+          type: boolean
+          description: Indicates whether the view is shared with other users
+        is_locked:
+          type: boolean
+          description: Indicates whether the view is locked
+          default: false
+        is_global:
+          type: boolean
+          description: Indicates whether the view is shared globally
+        shared_with_users:
+          type: array
+          description: List of users this view is shared with (if any)
+          items:
+            type: string
+        shared_with_groups:
+          type: array
+          description: List of groups this view is shared with (if any)
+          items:
+            type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was created
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: When the view was last updated
+        view_config:
+          type: object
+          description: View configuration data
+        view_type:
+          $ref: '#/components/schemas/ViewConfigType'
+          description: View type
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    ViewConfigType:
+      type: string
+      enum:
+      - INCIDENT
+      - ALERT
+      - METRIC
+      title: View Config Type
+      description: View types
     ViewConfigDto:
       type: object
       title: View Config Dto
@@ -392,54 +430,24 @@ components:
         view_type:
           $ref: '#/components/schemas/ViewConfigType'
           description: View type, indicates the type of view
-    ViewConfigResponseDto:
+    MoogErrorResponse:
       type: object
-      title: View Config Response Dto
-      description: Incident view definition
+      description: User API error response body
       properties:
-        id:
+        status:
           type: string
-          description: Unique id of the view
-          readOnly: true
-        owner:
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
           type: string
-          description: View owner
-          readOnly: true
-        name:
-          type: string
-          description: Name of the view
-        is_shared:
-          type: boolean
-          description: Indicates whether the view is shared with other users
-        is_locked:
-          type: boolean
-          description: Indicates whether the view is locked
-          default: false
-        is_global:
-          type: boolean
-          description: Indicates whether the view is shared globally
-        shared_with_users:
+        additional:
           type: array
-          description: List of users this view is shared with (if any)
           items:
             type: string
-        shared_with_groups:
-          type: array
-          description: List of groups this view is shared with (if any)
-          items:
-            type: string
-        created:
-          $ref: '#/components/schemas/Instant'
-          description: When the view was created
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-          description: When the view was last updated
-        view_config:
-          type: object
-          description: View configuration data
-        view_type:
-          $ref: '#/components/schemas/ViewConfigType'
-          description: View type
+      required:
+      - status
+      - message
     MoogResponseListOfViewConfigResponseDto:
       type: object
       description: User API ViewConfigResponseDto response body
@@ -456,14 +464,6 @@ components:
       required:
       - status
       - data
-    ViewConfigType:
-      type: string
-      enum:
-      - INCIDENT
-      - ALERT
-      - METRIC
-      title: View Config Type
-      description: View types
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

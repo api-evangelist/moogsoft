@@ -173,107 +173,6 @@ components:
           type: integer
           description: The time in millis when the general error occurred
           format: int64
-    WorkflowTriggerType:
-      type: string
-      enum:
-      - EVENT_CREATED
-      - ALERT_CREATED
-      - ALERT_UPDATED
-      - ALERT_DEDUPLICATED
-      - INCIDENT_CREATED
-      - INCIDENT_UPDATED
-      - ALERT_CREATED_OR_UPDATED
-      - ALERT_CREATED_OR_DEDUPLICATED
-      - INCIDENT_CREATED_OR_UPDATED
-      - ALERT_INVOKED
-      - INCIDENT_INVOKED
-      title: Workflow Trigger Type
-    WorkflowActionDto:
-      type: object
-      title: Workflow Action Dto
-      description: A configured action.
-      properties:
-        actionName:
-          type: string
-          description: Computer name of the action
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-          description: Description of the configured action
-        configuration:
-          type: object
-          description: Configuration for the action
-        error:
-          type: string
-          description: Error message associated with the configured action
-          readOnly: true
-        valid:
-          type: boolean
-          description: Indicates if the workflow action is valid
-          readOnly: true
-      required:
-      - actionName
-      - configuration
-    WorkflowTestStatus:
-      type: string
-      enum:
-      - RUNNING
-      - FAILED
-      - SUCCESS
-      title: Workflow Test Status
-    WorkflowStatus:
-      type: string
-      enum:
-      - DELETED
-      - NOT_RUNNING
-      - RUNNING
-      title: Workflow Status
-    MoogResponseWorkflowTestResultDto:
-      type: object
-      title: Moog Response Workflow Test Result Dto
-      description: Workflow Engine API WorkflowTestResultDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/WorkflowTestResultDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfBulkTestWorkflowResultsDto:
-      type: object
-      title: Moog Response List Of Bulk Test Workflow Results Dto
-      description: Workflow Engine API BulkTestWorkflowResultsDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/BulkTestWorkflowResultsDto'
-      required:
-      - status
-      - data
-    WorkflowTriggerDto:
-      type: object
-      title: Workflow Trigger Dto
-      description: The trigger definition for a workflow.
-      properties:
-        type:
-          $ref: '#/components/schemas/WorkflowTriggerType'
-          description: The workflow trigger type
-        entryFilter:
-          type: string
-          description: Entry filter for the workflow (can be empty)
-      required:
-      - type
     WorkflowTestResultDto:
       type: object
       title: Workflow Test Result Dto
@@ -316,6 +215,198 @@ components:
         discarded:
           type: boolean
           description: Input was discarded by one of the workflow actions
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    WorkflowActionDto:
+      type: object
+      title: Workflow Action Dto
+      description: A configured action.
+      properties:
+        actionName:
+          type: string
+          description: Computer name of the action
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Description of the configured action
+        configuration:
+          type: object
+          description: Configuration for the action
+        error:
+          type: string
+          description: Error message associated with the configured action
+          readOnly: true
+        valid:
+          type: boolean
+          description: Indicates if the workflow action is valid
+          readOnly: true
+      required:
+      - actionName
+      - configuration
+    FilterMetricsDto:
+      type: object
+      title: Filter Metrics Dto
+      description: Metrics about a running filter.
+      properties:
+        included:
+          type: integer
+          description: Number included in the workflow
+          format: int64
+        excluded:
+          type: integer
+          description: Number excluded from the workflow
+          format: int64
+        errors:
+          type: integer
+          description: Number processed with error
+          format: int64
+        processed:
+          type: integer
+          description: Number processed
+          format: int64
+        highWatermarkProcessingDurationMillis:
+          type: integer
+          description: The highest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        averageProcessingDurationMillis:
+          type: integer
+          description: The average processing duration (0 indicates less then 1ms)
+          format: int64
+        lowWatermarkProcessingDurationMillis:
+          type: integer
+          description: The lowest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+    MoogErrorResponse:
+      type: object
+      description: Workflow Engine API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    ActionMetricsDto:
+      type: object
+      title: Action Metrics Dto
+      description: Metrics about a running action.
+      properties:
+        actionName:
+          type: string
+          description: The computer name for the action
+        processed:
+          type: integer
+          description: Number processed
+          format: int64
+        errors:
+          type: integer
+          description: Number processed with error
+          format: int64
+        highWatermarkProcessingDurationMillis:
+          type: integer
+          description: The highest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        averageProcessingDurationMillis:
+          type: integer
+          description: The average processing duration (0 indicates less then 1ms)
+          format: int64
+        lowWatermarkProcessingDurationMillis:
+          type: integer
+          description: The lowest watermark for processing duration (0 indicates less then 1ms)
+          format: int64
+        skipped:
+          type: integer
+          description: Number of events skipped
+          format: int64
+        discarded:
+          type: integer
+          description: Number of events discarded
+          format: int64
+    WorkflowTestWrapperDto:
+      type: object
+      title: Workflow Test Wrapper Dto
+      description: A test workflow representing a workflow and test input.
+      properties:
+        name:
+          type: string
+          description: Name of the workflow. This name cannot be empty and must be unique.
+        description:
+          type: string
+          description: Optional description of the workflow.
+        trigger:
+          $ref: '#/components/schemas/WorkflowTriggerDto'
+          description: Trigger of the workflow.
+        type:
+          $ref: '#/components/schemas/WorkflowType'
+          description: Type of the workflow.
+        priority:
+          type: integer
+          description: The priority of the workflow.
+          format: int32
+        steps:
+          type: array
+          description: List of the configured workflow action(s).
+          items:
+            $ref: '#/components/schemas/WorkflowActionDto'
+        id:
+          type: string
+          description: ID of the workflow if it has already been saved
+        input:
+          type: array
+          description: The input or list of inputs for the workflow test
+          minItems: 1
+          items:
+            type: object
+      required:
+      - name
+      - trigger
+      - type
+      - priority
+      - steps
+      - input
+    MoogResponseListOfBulkTestWorkflowResultsDto:
+      type: object
+      title: Moog Response List Of Bulk Test Workflow Results Dto
+      description: Workflow Engine API BulkTestWorkflowResultsDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BulkTestWorkflowResultsDto'
+      required:
+      - status
+      - data
+    WorkflowTriggerDto:
+      type: object
+      title: Workflow Trigger Dto
+      description: The trigger definition for a workflow.
+      properties:
+        type:
+          $ref: '#/components/schemas/WorkflowTriggerType'
+          description: The workflow trigger type
+        entryFilter:
+          type: string
+          description: Entry filter for the workflow (can be empty)
+      required:
+      - type
     BulkTestWorkflowResultsDto:
       type: object
       title: Bulk Test Workflow Results Dto
@@ -329,6 +420,157 @@ components:
           description: Workflow status and test results for each workflow tested
           items:
             $ref: '#/components/schemas/WorkflowDto'
+    MoogFailureResponse:
+      type: object
+      description: Workflow Engine API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseWorkflowTestResultDto:
+      type: object
+      title: Moog Response Workflow Test Result Dto
+      description: Workflow Engine API WorkflowTestResultDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/WorkflowTestResultDto'
+      required:
+      - status
+      - data
+    WorkflowTestStatus:
+      type: string
+      enum:
+      - RUNNING
+      - FAILED
+      - SUCCESS
+      title: Workflow Test Status
+    WorkflowTriggerType:
+      type: string
+      enum:
+      - EVENT_CREATED
+      - ALERT_CREATED
+      - ALERT_UPDATED
+      - ALERT_DEDUPLICATED
+      - INCIDENT_CREATED
+      - INCIDENT_UPDATED
+      - ALERT_CREATED_OR_UPDATED
+      - ALERT_CREATED_OR_DEDUPLICATED
+      - INCIDENT_CREATED_OR_UPDATED
+      - ALERT_INVOKED
+      - INCIDENT_INVOKED
+      title: Workflow Trigger Type
+    ActionTestDto:
+      type: object
+      title: Action Test Dto
+      description: Test results for an action.
+      properties:
+        actionName:
+          type: string
+          description: The computer name of the action
+        input:
+          type: object
+          description: Input for the action
+        output:
+          type: object
+          description: Output from the action
+        startMillis:
+          type: integer
+          description: Start time in millis of the workflow action
+          format: int64
+        endMillis:
+          type: integer
+          description: End time in millis of the workflow action
+          format: int64
+        exception:
+          type: string
+          description: Description of any exceptions that occurred
+        skipped:
+          type: boolean
+          description: Input was skipped by the workflow action
+        discarded:
+          type: boolean
+          description: Input was discarded by the workflow action
+        outputViolations:
+          type: array
+          description: Validation error messages generated while validating the action output
+          items:
+            type: string
+    FilterTestDto:
+      type: object
+      title: Filter Test Dto
+      description: Test results for a filter.
+      properties:
+        input:
+          type: object
+          description: Input for the filter
+        startMillis:
+          type: integer
+          description: Start time in millis of the filter
+          format: int64
+        endMillis:
+          type: integer
+          description: End time in millis of the filter
+          format: int64
+        result:
+          type: boolean
+          description: Boolean result of running the filter
+        exception:
+          type: string
+          description: Description of any exceptions that occurred
+    WorkflowType:
+      type: string
+      enum:
+      - EVENT
+      - ALERT
+      - INCIDENT
+      - ALERT_STANDALONE
+      - INCIDENT_STANDALONE
+      title: Workflow Type
+    BulkTestWorkflowDto:
+      type: object
+      title: Bulk Test Workflow Dto
+      description: A bulk test workflow representing multiple workflows and test inputs.
+      properties:
+        triggerType:
+          $ref: '#/components/schemas/WorkflowTriggerType'
+          description: The workflow trigger type
+        workflows:
+          type: array
+          description: The list of workflows to test with
+          items:
+            $ref: '#/components/schemas/WorkflowDto'
+        inputs:
+          type: array
+          description: The list of inputs for the bulk workflow test
+          items:
+            type: object
+      required:
+      - triggerType
+      - workflows
+      - inputs
+    WorkflowStatus:
+      type: string
+      enum:
+      - DELETED
+      - NOT_RUNNING
+      - RUNNING
+      title: Workflow Status
     WorkflowDto:
       type: object
       title: Workflow Dto
@@ -392,248 +634,6 @@ components:
       - type
       - priority
       - steps
-    FilterMetricsDto:
-      type: object
-      title: Filter Metrics Dto
-      description: Metrics about a running filter.
-      properties:
-        included:
-          type: integer
-          description: Number included in the workflow
-          format: int64
-        excluded:
-          type: integer
-          description: Number excluded from the workflow
-          format: int64
-        errors:
-          type: integer
-          description: Number processed with error
-          format: int64
-        processed:
-          type: integer
-          description: Number processed
-          format: int64
-        highWatermarkProcessingDurationMillis:
-          type: integer
-          description: The highest watermark for processing duration (0 indicates less then 1ms)
-          format: int64
-        averageProcessingDurationMillis:
-          type: integer
-          description: The average processing duration (0 indicates less then 1ms)
-          format: int64
-        lowWatermarkProcessingDurationMillis:
-          type: integer
-          description: The lowest watermark for processing duration (0 indicates less then 1ms)
-          format: int64
-    BulkTestWorkflowDto:
-      type: object
-      title: Bulk Test Workflow Dto
-      description: A bulk test workflow representing multiple workflows and test inputs.
-      properties:
-        triggerType:
-          $ref: '#/components/schemas/WorkflowTriggerType'
-          description: The workflow trigger type
-        workflows:
-          type: array
-          description: The list of workflows to test with
-          items:
-            $ref: '#/components/schemas/WorkflowDto'
-        inputs:
-          type: array
-          description: The list of inputs for the bulk workflow test
-          items:
-            type: object
-      required:
-      - triggerType
-      - workflows
-      - inputs
-    MoogErrorResponse:
-      type: object
-      description: Workflow Engine API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    WorkflowTestWrapperDto:
-      type: object
-      title: Workflow Test Wrapper Dto
-      description: A test workflow representing a workflow and test input.
-      properties:
-        name:
-          type: string
-          description: Name of the workflow. This name cannot be empty and must be unique.
-        description:
-          type: string
-          description: Optional description of the workflow.
-        trigger:
-          $ref: '#/components/schemas/WorkflowTriggerDto'
-          description: Trigger of the workflow.
-        type:
-          $ref: '#/components/schemas/WorkflowType'
-          description: Type of the workflow.
-        priority:
-          type: integer
-          description: The priority of the workflow.
-          format: int32
-        steps:
-          type: array
-          description: List of the configured workflow action(s).
-          items:
-            $ref: '#/components/schemas/WorkflowActionDto'
-        id:
-          type: string
-          description: ID of the workflow if it has already been saved
-        input:
-          type: array
-          description: The input or list of inputs for the workflow test
-          minItems: 1
-          items:
-            type: object
-      required:
-      - name
-      - trigger
-      - type
-      - priority
-      - steps
-      - input
-    WorkflowType:
-      type: string
-      enum:
-      - EVENT
-      - ALERT
-      - INCIDENT
-      - ALERT_STANDALONE
-      - INCIDENT_STANDALONE
-      title: Workflow Type
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogFailureResponse:
-      type: object
-      description: Workflow Engine API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    ActionTestDto:
-      type: object
-      title: Action Test Dto
-      description: Test results for an action.
-      properties:
-        actionName:
-          type: string
-          description: The computer name of the action
-        input:
-          type: object
-          description: Input for the action
-        output:
-          type: object
-          description: Output from the action
-        startMillis:
-          type: integer
-          description: Start time in millis of the workflow action
-          format: int64
-        endMillis:
-          type: integer
-          description: End time in millis of the workflow action
-          format: int64
-        exception:
-          type: string
-          description: Description of any exceptions that occurred
-        skipped:
-          type: boolean
-          description: Input was skipped by the workflow action
-        discarded:
-          type: boolean
-          description: Input was discarded by the workflow action
-        outputViolations:
-          type: array
-          description: Validation error messages generated while validating the action output
-          items:
-            type: string
-    ActionMetricsDto:
-      type: object
-      title: Action Metrics Dto
-      description: Metrics about a running action.
-      properties:
-        actionName:
-          type: string
-          description: The computer name for the action
-        processed:
-          type: integer
-          description: Number processed
-          format: int64
-        errors:
-          type: integer
-          description: Number processed with error
-          format: int64
-        highWatermarkProcessingDurationMillis:
-          type: integer
-          description: The highest watermark for processing duration (0 indicates less then 1ms)
-          format: int64
-        averageProcessingDurationMillis:
-          type: integer
-          description: The average processing duration (0 indicates less then 1ms)
-          format: int64
-        lowWatermarkProcessingDurationMillis:
-          type: integer
-          description: The lowest watermark for processing duration (0 indicates less then 1ms)
-          format: int64
-        skipped:
-          type: integer
-          description: Number of events skipped
-          format: int64
-        discarded:
-          type: integer
-          description: Number of events discarded
-          format: int64
-    FilterTestDto:
-      type: object
-      title: Filter Test Dto
-      description: Test results for a filter.
-      properties:
-        input:
-          type: object
-          description: Input for the filter
-        startMillis:
-          type: integer
-          description: Start time in millis of the filter
-          format: int64
-        endMillis:
-          type: integer
-          description: End time in millis of the filter
-          format: int64
-        result:
-          type: boolean
-          description: Boolean result of running the filter
-        exception:
-          type: string
-          description: Description of any exceptions that occurred
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

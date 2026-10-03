@@ -69,56 +69,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    ColumnsDto:
-      type: object
-      title: Columns Dto
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColumnInfo'
-    FieldCategory:
-      type: string
-      enum:
-      - primitive
-      - array
-      title: Field Category
-    ComparisonType:
-      type: string
-      enum:
-      - equals
-      - notEqual
-      - contains
-      - notContains
-      - startsWith
-      - endsWith
-      - lessThan
-      - lessThanOrEqual
-      - greaterThan
-      - greaterThanOrEqual
-      - inRange
-      - blank
-      - notBlank
-      - exactMatch
-      - notExactMatch
-      title: Comparison Type
-      description: Comparison operator type to use for the filter
-    ColumnInfo:
-      type: object
-      title: Column Info
-      properties:
-        colId:
-          type: string
-        headerName:
-          type: string
-        cellRenderer:
-          type: string
-        sortable:
-          type: boolean
-        hide:
-          type: boolean
-        filterOptions:
-          $ref: '#/components/schemas/FilterOptions'
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -128,24 +78,6 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
         message:
           type: string
         additional:
@@ -171,6 +103,74 @@ components:
             type: string
         category:
           $ref: '#/components/schemas/FieldCategory'
+    ColumnInfo:
+      type: object
+      title: Column Info
+      properties:
+        colId:
+          type: string
+        headerName:
+          type: string
+        cellRenderer:
+          type: string
+        sortable:
+          type: boolean
+        hide:
+          type: boolean
+        filterOptions:
+          $ref: '#/components/schemas/FilterOptions'
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogResponseColumnsDto:
       type: object
       description: Alerts/Incidents API ColumnsDto response body

@@ -65,6 +65,24 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogResponseListOfPermissionDto:
       type: object
       description: User API PermissionDto response body
@@ -105,15 +123,15 @@ components:
           type: array
           items:
             type: string
-    MoogFailureResponse:
+    MoogErrorResponse:
       type: object
-      description: User API failure response body
+      description: User API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -136,24 +154,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

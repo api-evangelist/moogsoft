@@ -318,24 +318,20 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
+    MoogResponseManualCollectorConfigDto:
       type: object
-      description: Collector V2 API error response body
+      description: Collector V2 API ManualCollectorConfigDto response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          - success
+        data:
+          $ref: '#/components/schemas/ManualCollectorConfigDto'
       required:
       - status
-      - message
+      - data
     BaseManualCollectorConfigDto:
       type: object
       title: Base Manual Collector Config Dto
@@ -369,20 +365,24 @@ components:
       required:
       - status
       - data
-    MoogResponseManualCollectorConfigDto:
+    MoogErrorResponse:
       type: object
-      description: Collector V2 API ManualCollectorConfigDto response body
+      description: Collector V2 API error response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Error status indicator (always "error")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ManualCollectorConfigDto'
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
       required:
       - status
-      - data
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

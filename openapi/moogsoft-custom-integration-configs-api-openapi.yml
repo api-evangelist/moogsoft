@@ -297,6 +297,67 @@ paths:
         - integrations:edit
 components:
   schemas:
+    MoogResponseTestResult:
+      type: object
+      title: Moog Response Test Result
+      description: Create Your Own Integration API TestResult response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/TestResult'
+      required:
+      - status
+      - data
+    EndpointConfigDto:
+      type: object
+      title: Endpoint Config Dto
+      description: Create your own endpoint configuration.
+      properties:
+        batchKey:
+          type: string
+          description: Optional batch key
+        mappings:
+          type: array
+          description: List of the mappings.
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Mapping'
+      required:
+      - mappings
+    MoogFailureResponse:
+      type: object
+      description: Create Your Own Integration API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    DedupeKeyStatus:
+      type: string
+      enum:
+      - SUCCESS
+      - PARTIAL
+      - FAILURE
+      title: Dedupe Key Status
     WebEventDto:
       type: object
       title: Event
@@ -382,6 +443,30 @@ components:
       - check
       - severity
       - description
+    TestResult:
+      type: object
+      title: Test Result
+      description: The results of testing an endpoint config
+      properties:
+        mappingResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/TestMappingResultDto'
+        dedupeKeyStatus:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DedupeKeyStatus'
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
     TestMappingResultDto:
       type: object
       title: Test Mapping Result Dto
@@ -397,6 +482,39 @@ components:
         event:
           $ref: '#/components/schemas/WebEventDto'
         metric: {}
+    TestConfigAndPayloads:
+      type: object
+      title: Test Config And Payloads
+      description: The test config and json payloads required to run a test
+      properties:
+        testConfig:
+          $ref: '#/components/schemas/EndpointConfigDto'
+        testPayloads:
+          type: array
+          minItems: 1
+          items:
+            type: object
+      required:
+      - testConfig
+      - testPayloads
+    MoogResponseEndpointConfigDto:
+      type: object
+      title: Moog Response Endpoint Config Dto
+      description: Create Your Own Integration API EndpointConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/EndpointConfigDto'
+      required:
+      - status
+      - data
+    Mapping:
+      type: object
+      title: Mapping
     GeoLocationDto:
       type: object
       title: GeoLocation
@@ -407,27 +525,6 @@ components:
         long:
           type: number
           format: float
-    Severity:
-      type: string
-      enum:
-      - clear
-      - unknown
-      - warning
-      - minor
-      - major
-      - critical
-      title: Severity
-      description: Severity Level (case-insensitive)
-    Mapping:
-      type: object
-      title: Mapping
-    DedupeKeyStatus:
-      type: string
-      enum:
-      - SUCCESS
-      - PARTIAL
-      - FAILURE
-      title: Dedupe Key Status
     MoogErrorResponse:
       type: object
       description: Create Your Own Integration API error response body
@@ -437,39 +534,6 @@ components:
           description: Error status indicator (always "error")
           examples:
           - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseTestResult:
-      type: object
-      title: Moog Response Test Result
-      description: Create Your Own Integration API TestResult response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/TestResult'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Create Your Own Integration API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
         message:
           type: string
         additional:
@@ -520,70 +584,6 @@ components:
         geo_coordinates_long:
           type: integer
           format: int32
-    MoogResponseEndpointConfigDto:
-      type: object
-      title: Moog Response Endpoint Config Dto
-      description: Create Your Own Integration API EndpointConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/EndpointConfigDto'
-      required:
-      - status
-      - data
-    EndpointConfigDto:
-      type: object
-      title: Endpoint Config Dto
-      description: Create your own endpoint configuration.
-      properties:
-        batchKey:
-          type: string
-          description: Optional batch key
-        mappings:
-          type: array
-          description: List of the mappings.
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/Mapping'
-      required:
-      - mappings
-    TestConfigAndPayloads:
-      type: object
-      title: Test Config And Payloads
-      description: The test config and json payloads required to run a test
-      properties:
-        testConfig:
-          $ref: '#/components/schemas/EndpointConfigDto'
-        testPayloads:
-          type: array
-          minItems: 1
-          items:
-            type: object
-      required:
-      - testConfig
-      - testPayloads
-    TestResult:
-      type: object
-      title: Test Result
-      description: The results of testing an endpoint config
-      properties:
-        mappingResults:
-          type: array
-          items:
-            $ref: '#/components/schemas/TestMappingResultDto'
-        dedupeKeyStatus:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/DedupeKeyStatus'
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

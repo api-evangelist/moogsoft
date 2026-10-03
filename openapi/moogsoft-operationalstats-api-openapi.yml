@@ -71,55 +71,13 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    OperationalStatsRequest:
-      type: object
-      title: Operational Stats Request
-      description: Executive summary request body
-      properties:
-        start:
-          type: integer
-          description: Epoch timestamp(in milliseconds) used to filter out the results based on created at
-          format: int64
-          exclusiveMinimum: 0
-        end:
-          type: integer
-          description: Epoch timestamp(in milliseconds) used to filter out the results till this time
-          format: int64
-          exclusiveMinimum: 0
-        bucket_size:
-          $ref: '#/components/schemas/HistogramInterval'
-          description: Bucket size is used to fetch incident trend results per hour/day
-        utc_offset:
-          type: string
-          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time use for incident trend results
-          default: GMT
-          examples:
-          - GMT-7/GMT+7:30
-        resource:
-          $ref: '#/components/schemas/TopResourcesType'
-          description: resource type to fetch
-      required:
-      - start
-      - end
-      - bucket_size
-    IncidentTopResourcesDto:
-      type: object
-      title: Incident Top Resources Dto
-      description: Incident top resources for the provided time period
-      properties:
-        resource:
-          type: string
-          description: Incident resource name
-        incident_count:
-          type: integer
-          description: Total incident count against the resource
-          format: int64
-        incident_severity:
-          type: object
-          description: Incident counts by severity
-          additionalProperties:
-            type: integer
-            format: int64
+    HistogramInterval:
+      type: string
+      enum:
+      - hour
+      - day
+      title: Histogram Interval
+      description: Histogram calendar interval
     TopResourcesType:
       type: string
       enum:
@@ -127,20 +85,6 @@ components:
       - sources
       title: Top Resources Type
       description: Top Resources Type to fetch
-    TimeToResolveDto:
-      type: object
-      title: Time To Resolve Dto
-      description: Incidents resolution details
-      properties:
-        mttr_mins:
-          type: number
-          description: mean time to resolution(in minutes)
-          format: double
-        buckets:
-          type: array
-          description: List of time to resolve aggregated results
-          items:
-            $ref: '#/components/schemas/TimeToResolveBucketDto'
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -159,21 +103,24 @@ components:
       required:
       - status
       - message
-    IncidentTrendDto:
+    OperationalStatsWebResponse:
       type: object
-      title: Incident Trend Dto
-      description: Incident trend data for the provided time period
+      title: Operational Stats Web Response
+      description: Incident Operational stats response
       properties:
-        incident_time:
-          type: integer
-          description: Incident creation time
-          format: int64
-        incident_severity:
-          type: object
-          description: Incident counts by severity
-          additionalProperties:
-            type: integer
-            format: int64
+        time_to_resolve:
+          $ref: '#/components/schemas/TimeToResolveDto'
+          description: Time to resolve aggregated result of incidents
+        incident_trend:
+          type: array
+          description: Incident trend list by severity
+          items:
+            $ref: '#/components/schemas/IncidentTrendDto'
+        top_resources:
+          type: array
+          description: Incident top 20 resources list
+          items:
+            $ref: '#/components/schemas/IncidentTopResourcesDto'
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -206,31 +153,6 @@ components:
       required:
       - status
       - data
-    OperationalStatsWebResponse:
-      type: object
-      title: Operational Stats Web Response
-      description: Incident Operational stats response
-      properties:
-        time_to_resolve:
-          $ref: '#/components/schemas/TimeToResolveDto'
-          description: Time to resolve aggregated result of incidents
-        incident_trend:
-          type: array
-          description: Incident trend list by severity
-          items:
-            $ref: '#/components/schemas/IncidentTrendDto'
-        top_resources:
-          type: array
-          description: Incident top 20 resources list
-          items:
-            $ref: '#/components/schemas/IncidentTopResourcesDto'
-    HistogramInterval:
-      type: string
-      enum:
-      - hour
-      - day
-      title: Histogram Interval
-      description: Histogram calendar interval
     TimeToResolveBucketDto:
       type: object
       title: Time To Resolve Bucket Dto
@@ -245,6 +167,84 @@ components:
           type: integer
           description: Total incidents resolved
           format: int64
+    IncidentTrendDto:
+      type: object
+      title: Incident Trend Dto
+      description: Incident trend data for the provided time period
+      properties:
+        incident_time:
+          type: integer
+          description: Incident creation time
+          format: int64
+        incident_severity:
+          type: object
+          description: Incident counts by severity
+          additionalProperties:
+            type: integer
+            format: int64
+    IncidentTopResourcesDto:
+      type: object
+      title: Incident Top Resources Dto
+      description: Incident top resources for the provided time period
+      properties:
+        resource:
+          type: string
+          description: Incident resource name
+        incident_count:
+          type: integer
+          description: Total incident count against the resource
+          format: int64
+        incident_severity:
+          type: object
+          description: Incident counts by severity
+          additionalProperties:
+            type: integer
+            format: int64
+    OperationalStatsRequest:
+      type: object
+      title: Operational Stats Request
+      description: Executive summary request body
+      properties:
+        start:
+          type: integer
+          description: Epoch timestamp(in milliseconds) used to filter out the results based on created at
+          format: int64
+          exclusiveMinimum: 0
+        end:
+          type: integer
+          description: Epoch timestamp(in milliseconds) used to filter out the results till this time
+          format: int64
+          exclusiveMinimum: 0
+        bucket_size:
+          $ref: '#/components/schemas/HistogramInterval'
+          description: Bucket size is used to fetch incident trend results per hour/day
+        utc_offset:
+          type: string
+          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time use for incident trend results
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        resource:
+          $ref: '#/components/schemas/TopResourcesType'
+          description: resource type to fetch
+      required:
+      - start
+      - end
+      - bucket_size
+    TimeToResolveDto:
+      type: object
+      title: Time To Resolve Dto
+      description: Incidents resolution details
+      properties:
+        mttr_mins:
+          type: number
+          description: mean time to resolution(in minutes)
+          format: double
+        buckets:
+          type: array
+          description: List of time to resolve aggregated results
+          items:
+            $ref: '#/components/schemas/TimeToResolveBucketDto'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

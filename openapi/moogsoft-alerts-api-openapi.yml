@@ -1270,6 +1270,466 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    AlertUpdateRequest:
+      type: object
+      title: Alert Update Request
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        assignee:
+          type: string
+          description: Username of the assignee, specified as one string. Returns an error if the username is not found.
+          examples:
+          - john.doe@company.com
+        assigned_groups:
+          type: array
+          description: An array of group ids or group names, returns error if any of them not found
+          examples:
+          - - groupid1
+            - groupid2
+          uniqueItems: true
+          items:
+            type: string
+    PrcLabel:
+      type: string
+      enum:
+      - RootCause
+      - NonCausal
+      - DontKnow
+      title: Prc Label
+      description: Root-Cause Label (case-insensitive)
+    AgGridSortColumn:
+      type: object
+      title: Ag Grid Sort Column
+      description: Sorting criteria to use for searches
+      properties:
+        colId:
+          type: string
+          description: The column on which to sort
+          minLength: 1
+        sort:
+          type: string
+          enum:
+          - asc
+          - desc
+          description: The direction in which to sort
+          pattern: asc|desc
+      required:
+      - colId
+      - sort
+    SortCriteriaDto:
+      type: object
+      title: Sort Criteria Dto
+      properties:
+        sort_by:
+          type: string
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+    EventTimelineBucket:
+      type: object
+      title: Event Timeline Bucket
+      properties:
+        start_time:
+          type: integer
+          description: Bucket start time in epoch timestamp in milliseconds
+          format: int64
+          examples:
+          - 1720083965000
+        end_time:
+          type: integer
+          description: Bucket end time in epoch timestamp in milliseconds
+          format: int64
+          examples:
+          - 1720084565000
+        severity_count:
+          type: object
+          description: Bucket severity count
+          additionalProperties:
+            type: integer
+            format: int32
+          examples:
+          - critical: 5
+            major: 2
+            minor: 3
+    AlertList:
+      type: object
+      title: Alert List
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertDto'
+        count:
+          type: integer
+          format: int64
+        search_after:
+          type: array
+          description: When needing to scroll through a large number of alerts, the value of this field can be provided to the 'searchAfter' parameter of the next query invocation.
+        searchAfter:
+          type: array
+          description: Use search_after instead
+          readOnly: true
+          x-deprecated: true
+    MoogResponseAlertList:
+      type: object
+      description: Alerts/Incidents API AlertList response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/AlertList'
+      required:
+      - status
+      - data
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
+    SetColumnFilter:
+      type: object
+      title: Set Column Filter
+      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        values:
+          type: array
+          description: Set filter value(s) to used with comparison operator
+          items:
+            type: string
+        filterType:
+          const: set
+          description: Declares set filterType
+      required:
+      - type
+      - values
+      - filterType
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
+    SetAlertTagsPayloadDto:
+      type: object
+      title: Set Alert Tags Payload Dto
+      properties:
+        tags:
+          type: object
+          description: The tags being added to the alert.
+          additionalProperties:
+            type: string
+      required:
+      - tags
+    SituationJsonFilterDto:
+      type: object
+      title: Situation Json Filter Dto
+      properties:
+        type:
+          const: JSON
+          description: Declares json filter type
+        filter_object:
+          $ref: '#/components/schemas/ColumnFilterMap'
+          description: Return only alerts that match this AG-Grid-style JSON filter (See ColumnFilter schema).
+        sort_criteria:
+          type: array
+          description: Sort the results according to this AG-Grid-style JSON sort array.
+          examples:
+          - - sort: asc
+              colId: severity
+            - sort: desc
+              colId: alert_id
+          items:
+            $ref: '#/components/schemas/AgGridSortColumn'
+      required:
+      - type
+    ColumnFilter:
+      type: object
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
+    ExternalSystemDto:
+      type: object
+      title: External System Dto
+      properties:
+        integration_id:
+          type: string
+        external_name:
+          type: string
+        external_id:
+          type: string
+        external_link:
+          type: string
+        integration_name:
+          type: string
+        integration_type:
+          type: string
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseEventList:
+      type: object
+      description: Alerts/Incidents API EventList response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/EventList'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    SituationRoomAlertsRequestV2:
+      type: object
+      title: Situation Room Alerts Request V2
+      description: Situation Room alerts POST request body.
+      properties:
+        filter:
+          $ref: '#/components/schemas/QueryFilter'
+          description: The filter type and object to retrieve data by
+        start:
+          type: integer
+          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
+          format: int32
+          minimum: 0
+          default: 0
+        limit:
+          type: integer
+          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
+          format: int32
+          exclusiveMinimum: 0
+          maximum: 5000
+          default: 100
+        fields:
+          type: array
+          description: Subset of fields to return (default is all non-null alert fields
+          examples:
+          - []
+          items:
+            type: string
+      required:
+      - filter
+    AlertDto:
+      type: object
+      title: AlertDetails
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+          description: alert/incident status
+        severity:
+          $ref: '#/components/schemas/Severity'
+          description: alert/incident severity level
+        severity_high_water:
+          $ref: '#/components/schemas/Severity'
+          description: alert/incident high-water severity level
+        assignee:
+          type: string
+          description: email of the user who is assigned to the alert/incident
+          examples:
+          - test@moogsoft.com
+        assigned_groups:
+          type: array
+          description: An array of group ids
+          examples:
+          - - goupid1
+            - groupid2
+          items:
+            type: string
+        first_event_time:
+          type: integer
+          description: Epoch timestamp in seconds of the first event for this alert/incident
+          format: int64
+          examples:
+          - 1607985505
+        last_event_time:
+          type: integer
+          description: Epoch timestamp in seconds of the last event for this alert/incident
+          format: int64
+          examples:
+          - 1607985505
+        description:
+          type: string
+          description: description that usually contains the alert/incident ID, source and service
+          examples:
+          - '1 Source: www.your-source.com Affected retail, support
+
+            '
+        status_numeric:
+          type: integer
+          format: int32
+        severity_numeric:
+          type: integer
+          format: int32
+        severity_high_water_numeric:
+          type: integer
+          format: int32
+        alert_id:
+          type: integer
+          format: int64
+        class:
+          type: string
+        event_count:
+          type: integer
+          format: int32
+        manager_id:
+          type: string
+        location:
+          type: object
+          description: Mapping of location name/value pairs
+          examples:
+          - street: 1234 Battery St.
+            city: San Francisco
+            state: CA
+            postcode: '95454'
+        service:
+          type: array
+          items:
+            type: string
+        incidents:
+          type: array
+          items:
+            type: integer
+            format: int64
+        source:
+          type: string
+        in_maintenance:
+          type: boolean
+          description: Boolean indicating if the alert is currently in maintenance
+        maintenance:
+          type: string
+          description: The id of the current or most recent maintenance window occurrence the alert was in
+        maintenance_windows:
+          type: array
+          description: Set of all maintenance windows and occurrences the alert has been associated with
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/MaintenanceWindowStatDto'
+        tags:
+          type: object
+          description: Mapping of tag name/value pairs
+          examples:
+          - key1: value1
+            key2: value2
+        namespace:
+          type: string
+        manager:
+          type: string
+        dedupe_key:
+          type: string
+        created_at:
+          type: integer
+          description: Epoch timestamp in seconds indicating when the alert was created
+          format: int64
+          examples:
+          - 1607985505
+        last_status_change_time:
+          type: integer
+          format: int64
+        alias:
+          type: string
+        check:
+          type: string
+        type:
+          type: string
+        policy:
+          type: string
+        external_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSystemDto'
+        external_names:
+          type: array
+          items:
+            type: string
+    MoogResponseListOfAlertDto:
+      type: object
+      description: Alerts/Incidents API AlertDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertDto'
+      required:
+      - status
+      - data
     EventTimelineDto:
       type: object
       title: Event Timeline Dto
@@ -1325,191 +1785,6 @@ components:
       - check
       - severity
       - description
-    SituationRoomAlertsRequest:
-      type: object
-      title: Situation Room Alerts Request
-      description: Situation Room alerts POST request body.
-      properties:
-        json_filter:
-          type: object
-          description: Return only alerts that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
-          additionalProperties:
-            $ref: '#/components/schemas/ColumnFilter'
-          examples:
-          - status:
-              values:
-              - open
-              - in progress
-              - resolved
-              filterType: set
-        json_sort:
-          type: array
-          description: Sort the results according to this AG-Grid-style JSON sort array.
-          examples:
-          - - sort: asc
-              colId: severity
-            - sort: desc
-              colId: alert_id
-          items:
-            $ref: '#/components/schemas/AgGridSortColumn'
-        start:
-          type: integer
-          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
-          format: int32
-          minimum: 0
-          default: 0
-        limit:
-          type: integer
-          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
-          format: int32
-          exclusiveMinimum: 0
-          maximum: 5000
-          default: 100
-        fields:
-          type: array
-          description: Subset of fields to return (default is all non-null alert fields
-          items:
-            type: string
-    EventTimelineBucket:
-      type: object
-      title: Event Timeline Bucket
-      properties:
-        start_time:
-          type: integer
-          description: Bucket start time in epoch timestamp in milliseconds
-          format: int64
-          examples:
-          - 1720083965000
-        end_time:
-          type: integer
-          description: Bucket end time in epoch timestamp in milliseconds
-          format: int64
-          examples:
-          - 1720084565000
-        severity_count:
-          type: object
-          description: Bucket severity count
-          additionalProperties:
-            type: integer
-            format: int32
-          examples:
-          - critical: 5
-            major: 2
-            minor: 3
-    MoogResponseUnlabeledResponseDto:
-      type: object
-      description: Alerts/Incidents API UnlabeledResponseDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/UnlabeledResponseDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfExternalSystemDto:
-      type: object
-      description: Alerts/Incidents API ExternalSystemDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalSystemDto'
-      required:
-      - status
-      - data
-    SituationTextFilterDto:
-      type: object
-      title: Situation Text Filter Dto
-      properties:
-        type:
-          const: TEXT
-          description: Declares text filter type
-        filter_object:
-          type: string
-        sort_criteria:
-          $ref: '#/components/schemas/SortCriteriaDto'
-      required:
-      - type
-    SituationRoomAlertList:
-      type: object
-      title: Situation Room Alert List
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/SituationRoomAlertDto'
-        count:
-          type: integer
-          format: int64
-    AlertList:
-      type: object
-      title: Alert List
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertDto'
-        count:
-          type: integer
-          format: int64
-        search_after:
-          type: array
-          description: When needing to scroll through a large number of alerts, the value of this field can be provided to the 'searchAfter' parameter of the next query invocation.
-        searchAfter:
-          type: array
-          description: Use search_after instead
-          readOnly: true
-          x-deprecated: true
-    BulkAlertUpdateRequest:
-      type: object
-      title: Bulk Alert Update Request
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-        assignee:
-          type: string
-          description: Username of the assignee, specified as one string. Returns an error if the username is not found.
-          examples:
-          - john.doe@company.com
-        assigned_groups:
-          type: array
-          description: An array of group ids or group names, returns error if any of them not found
-          examples:
-          - - groupid1
-            - groupid2
-          uniqueItems: true
-          items:
-            type: string
-        ids:
-          type: array
-          description: Unique alert ids to update
-          minItems: 1
-          examples:
-          - - 12
-            - 29
-          uniqueItems: true
-          items:
-            type: integer
-            format: int64
-      required:
-      - ids
-    SortCriteriaDto:
-      type: object
-      title: Sort Criteria Dto
-      properties:
-        sort_by:
-          type: string
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
     MaintenanceWindowStatDto:
       type: object
       title: Maintenance Window Stat Dto
@@ -1528,227 +1803,6 @@ components:
           type: integer
           description: Epoch timestamp in millis of when the alert left maintenance
           format: int64
-    MoogResponseListOfEventTimelineBucket:
-      type: object
-      description: Alerts/Incidents API EventTimelineBucket response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTimelineBucket'
-      required:
-      - status
-      - data
-    DateColumnFilter:
-      type: object
-      title: Date Column Filter
-      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        dateFrom:
-          type: string
-          description: Date filter value to used with comparison operator
-        dateTo:
-          type: string
-          description: Date filter value to used when comparison operator is inRange
-        filterType:
-          const: date
-          description: Declares date filterType
-      required:
-      - type
-      - filterType
-    ColumnFilter:
-      type: object
-      title: Column Filter
-      description: Polymorphic column filter, based upon filterType
-      oneOf:
-      - $ref: '#/components/schemas/DateColumnFilter'
-      - $ref: '#/components/schemas/NumberColumnFilter'
-      - $ref: '#/components/schemas/SetColumnFilter'
-      - $ref: '#/components/schemas/TextColumnFilter'
-      - $ref: '#/components/schemas/BooleanColumnFilter'
-      discriminator:
-        propertyName: filterType
-        mapping:
-          text: '#/components/schemas/TextColumnFilter'
-          set: '#/components/schemas/SetColumnFilter'
-          number: '#/components/schemas/NumberColumnFilter'
-          date: '#/components/schemas/DateColumnFilter'
-          boolean: '#/components/schemas/BooleanColumnFilter'
-    MoogResponseExternalSystemDto:
-      type: object
-      description: Alerts/Incidents API ExternalSystemDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ExternalSystemDto'
-      required:
-      - status
-      - data
-    ListAlertsRequest:
-      type: object
-      title: List Alerts Request
-      description: List alerts POST request body.
-      properties:
-        filter:
-          type: string
-          description: Return only alerts that match this filter.<br>Returns **400 (Invalid parameters)** if the filter format is invalid.
-          examples:
-          - '''event count'' > 3 AND severity in (Critical, Major, Minor, Warning)'
-        json_filter:
-          type: object
-          description: Return only alerts that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
-          additionalProperties:
-            $ref: '#/components/schemas/ColumnFilter'
-          examples:
-          - status:
-              values:
-              - open
-              - in progress
-              - resolved
-              filterType: set
-        json_sort:
-          type: array
-          description: Sort the results according to this AG-Grid-style JSON sort array.
-          examples:
-          - - sort: asc
-              colId: severity
-            - sort: desc
-              colId: alert_id
-          items:
-            $ref: '#/components/schemas/AgGridSortColumn'
-        keyword:
-          type: string
-          description: Return only alerts that contain these keywords.
-        utc_offset:
-          type: string
-          description: UTC Offset
-          default: GMT-0
-        start:
-          type: integer
-          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
-          format: int32
-          minimum: 0
-          default: 0
-        limit:
-          type: integer
-          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
-          format: int32
-          exclusiveMinimum: 0
-          maximum: 5000
-          default: 100
-        sort_by:
-          type: string
-          description: Field to sort by
-        sort_order:
-          $ref: '#/components/schemas/SortOrder'
-          description: Sort order
-        search_after:
-          type: array
-          description: When needing to scroll through a large number of alerts, this parameter can be used instead of 'start' to proceed with alerts that follow the previous search result. The 'searchAfter' from the previous response must be provided along with the same filter and sort criteria. All results are exhausted when a search response includes no more alerts.
-        fields:
-          type: array
-          description: Subset of fields to return (default is all non-null alert fields
-          items:
-            type: string
-    ComparisonType:
-      type: string
-      enum:
-      - equals
-      - notEqual
-      - contains
-      - notContains
-      - startsWith
-      - endsWith
-      - lessThan
-      - lessThanOrEqual
-      - greaterThan
-      - greaterThanOrEqual
-      - inRange
-      - blank
-      - notBlank
-      - exactMatch
-      - notExactMatch
-      title: Comparison Type
-      description: Comparison operator type to use for the filter
-    UnlabeledRequestDto:
-      type: object
-      title: Unlabeled Request Dto
-      properties:
-        incident_ids:
-          type: array
-          description: Set of unique incident IDs which are to be queried
-          minItems: 1
-          uniqueItems: true
-          items:
-            type: integer
-            format: int64
-      required:
-      - incident_ids
-    Severity:
-      type: string
-      enum:
-      - clear
-      - unknown
-      - warning
-      - minor
-      - major
-      - critical
-      title: Severity
-      description: Severity Level (case-insensitive)
-    AlertPrc:
-      type: object
-      title: SituationRoomAlertDetails
-      properties:
-        rc_probability:
-          type: number
-          description: The computed root cause probability, 0.0 - 1.0, if any
-        rc_label:
-          $ref: '#/components/schemas/PrcLabel'
-          description: The user-assigned label, if any
-        rc_bucket:
-          $ref: '#/components/schemas/PrcBucket'
-          description: 'The computed level: high, medium, low'
-    UnlabeledResponseDto:
-      type: object
-      title: Unlabeled Response Dto
-      properties:
-        total_incidents:
-          type: integer
-          format: int64
-        total_alerts:
-          type: integer
-          format: int64
-        unlabeled_counts:
-          type: object
-          additionalProperties:
-            type: integer
-            format: int64
-    MoogResponseEventList:
-      type: object
-      description: Alerts/Incidents API EventList response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/EventList'
-      required:
-      - status
-      - data
     SituationRoomAlertDto:
       type: object
       title: SituationRoomAlertDetails
@@ -1883,13 +1937,241 @@ components:
             type: string
         root_cause:
           $ref: '#/components/schemas/AlertPrc'
-    QueryFilter:
+    MoogResponseAlertDto:
       type: object
-      title: Query Filter
-      description: Types of inputs for the queryFilter.
-      oneOf:
-      - $ref: '#/components/schemas/SituationTextFilterDto'
-      - $ref: '#/components/schemas/SituationJsonFilterDto'
+      description: Alerts/Incidents API AlertDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/AlertDto'
+      required:
+      - status
+      - data
+    MoogResponseExternalSystemDto:
+      type: object
+      description: Alerts/Incidents API ExternalSystemDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ExternalSystemDto'
+      required:
+      - status
+      - data
+    BooleanColumnFilter:
+      type: object
+      title: Boolean Column Filter
+      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: boolean
+          description: Boolean value to used for comparison
+        filterType:
+          const: boolean
+          description: Declares boolean filterType
+      required:
+      - type
+      - filter
+      - filterType
+    BulkAlertUpdateRequest:
+      type: object
+      title: Bulk Alert Update Request
+      properties:
+        status:
+          $ref: '#/components/schemas/Status'
+        assignee:
+          type: string
+          description: Username of the assignee, specified as one string. Returns an error if the username is not found.
+          examples:
+          - john.doe@company.com
+        assigned_groups:
+          type: array
+          description: An array of group ids or group names, returns error if any of them not found
+          examples:
+          - - groupid1
+            - groupid2
+          uniqueItems: true
+          items:
+            type: string
+        ids:
+          type: array
+          description: Unique alert ids to update
+          minItems: 1
+          examples:
+          - - 12
+            - 29
+          uniqueItems: true
+          items:
+            type: integer
+            format: int64
+      required:
+      - ids
+    UnlabeledRequestDto:
+      type: object
+      title: Unlabeled Request Dto
+      properties:
+        incident_ids:
+          type: array
+          description: Set of unique incident IDs which are to be queried
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: integer
+            format: int64
+      required:
+      - incident_ids
+    MoogResponseListOfExternalSystemDto:
+      type: object
+      description: Alerts/Incidents API ExternalSystemDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExternalSystemDto'
+      required:
+      - status
+      - data
+    TextColumnFilter:
+      type: object
+      title: Text Column Filter
+      description: Filter a text column based on a string comparison<br>filterType = "text"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: string
+          description: Text filter value to used with comparison operator
+        filterType:
+          const: text
+          description: Declares text filterType
+      required:
+      - type
+      - filterType
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      title: Sort Order
+      default: desc
+    MoogResponseSituationRoomAlertList:
+      type: object
+      description: Alerts/Incidents API SituationRoomAlertList response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SituationRoomAlertList'
+      required:
+      - status
+      - data
+    NumberColumnFilter:
+      type: object
+      title: Number Column Filter
+      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: integer
+          description: Numeric filter value to used with comparison operator
+          format: int64
+        filterTo:
+          type: integer
+          description: Numeric filter value to used when comparison operator is inRange
+          format: int64
+        filterType:
+          const: number
+          description: Declares number filterType
+      required:
+      - type
+      - filterType
+    SituationRoomAlertsRequest:
+      type: object
+      title: Situation Room Alerts Request
+      description: Situation Room alerts POST request body.
+      properties:
+        json_filter:
+          type: object
+          description: Return only alerts that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
+          additionalProperties:
+            $ref: '#/components/schemas/ColumnFilter'
+          examples:
+          - status:
+              values:
+              - open
+              - in progress
+              - resolved
+              filterType: set
+        json_sort:
+          type: array
+          description: Sort the results according to this AG-Grid-style JSON sort array.
+          examples:
+          - - sort: asc
+              colId: severity
+            - sort: desc
+              colId: alert_id
+          items:
+            $ref: '#/components/schemas/AgGridSortColumn'
+        start:
+          type: integer
+          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
+          format: int32
+          minimum: 0
+          default: 0
+        limit:
+          type: integer
+          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
+          format: int32
+          exclusiveMinimum: 0
+          maximum: 5000
+          default: 100
+        fields:
+          type: array
+          description: Subset of fields to return (default is all non-null alert fields
+          items:
+            type: string
+    GeoLocationDto:
+      type: object
+      title: GeoLocation
+      properties:
+        lat:
+          type: number
+          format: float
+        long:
+          type: number
+          format: float
+    SituationRoomAlertList:
+      type: object
+      title: Situation Room Alert List
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/SituationRoomAlertDto'
+        count:
+          type: integer
+          format: int64
     LocationDto:
       type: object
       title: Location
@@ -1931,9 +2213,107 @@ components:
         geo_coordinates_long:
           type: integer
           format: int32
-    MoogResponseAlertDto:
+    PrcBucket:
+      type: string
+      enum:
+      - High
+      - Medium
+      - Low
+      title: Prc Bucket
+      description: Root-Cause Level (case-insensitive)
+    ListAlertsRequest:
       type: object
-      description: Alerts/Incidents API AlertDto response body
+      title: List Alerts Request
+      description: List alerts POST request body.
+      properties:
+        filter:
+          type: string
+          description: Return only alerts that match this filter.<br>Returns **400 (Invalid parameters)** if the filter format is invalid.
+          examples:
+          - '''event count'' > 3 AND severity in (Critical, Major, Minor, Warning)'
+        json_filter:
+          type: object
+          description: Return only alerts that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
+          additionalProperties:
+            $ref: '#/components/schemas/ColumnFilter'
+          examples:
+          - status:
+              values:
+              - open
+              - in progress
+              - resolved
+              filterType: set
+        json_sort:
+          type: array
+          description: Sort the results according to this AG-Grid-style JSON sort array.
+          examples:
+          - - sort: asc
+              colId: severity
+            - sort: desc
+              colId: alert_id
+          items:
+            $ref: '#/components/schemas/AgGridSortColumn'
+        keyword:
+          type: string
+          description: Return only alerts that contain these keywords.
+        utc_offset:
+          type: string
+          description: UTC Offset
+          default: GMT-0
+        start:
+          type: integer
+          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
+          format: int32
+          minimum: 0
+          default: 0
+        limit:
+          type: integer
+          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
+          format: int32
+          exclusiveMinimum: 0
+          maximum: 5000
+          default: 100
+        sort_by:
+          type: string
+          description: Field to sort by
+        sort_order:
+          $ref: '#/components/schemas/SortOrder'
+          description: Sort order
+        search_after:
+          type: array
+          description: When needing to scroll through a large number of alerts, this parameter can be used instead of 'start' to proceed with alerts that follow the previous search result. The 'searchAfter' from the previous response must be provided along with the same filter and sort criteria. All results are exhausted when a search response includes no more alerts.
+        fields:
+          type: array
+          description: Subset of fields to return (default is all non-null alert fields
+          items:
+            type: string
+    Status:
+      type: string
+      enum:
+      - error
+      - open
+      - in progress
+      - superseded
+      - resolved
+      - closed
+      title: Status
+      description: Status for incidents and alerts (case-insensitive)
+    SituationTextFilterDto:
+      type: object
+      title: Situation Text Filter Dto
+      properties:
+        type:
+          const: TEXT
+          description: Declares text filter type
+        filter_object:
+          type: string
+        sort_criteria:
+          $ref: '#/components/schemas/SortCriteriaDto'
+      required:
+      - type
+    MoogResponseUnlabeledResponseDto:
+      type: object
+      description: Alerts/Incidents API UnlabeledResponseDto response body
       properties:
         status:
           type: string
@@ -1941,30 +2321,28 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/AlertDto'
+          $ref: '#/components/schemas/UnlabeledResponseDto'
       required:
       - status
       - data
-    SetColumnFilter:
+    QueryFilter:
       type: object
-      title: Set Column Filter
-      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
+      title: Query Filter
+      description: Types of inputs for the queryFilter.
+      oneOf:
+      - $ref: '#/components/schemas/SituationTextFilterDto'
+      - $ref: '#/components/schemas/SituationJsonFilterDto'
+    EventList:
+      type: object
+      title: Event List
       properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        values:
+        total_results:
+          type: integer
+          format: int32
+        results:
           type: array
-          description: Set filter value(s) to used with comparison operator
           items:
-            type: string
-        filterType:
-          const: set
-          description: Declares set filterType
-      required:
-      - type
-      - values
-      - filterType
+            $ref: '#/components/schemas/EventTimelineDto'
     ListSnapshotRequest:
       type: object
       title: List Snapshot Request
@@ -1987,409 +2365,57 @@ components:
             type: string
       required:
       - ids
-    NumberColumnFilter:
+    AlertPrc:
       type: object
-      title: Number Column Filter
-      description: Filter a numeric column based on numeric value(s) and a comparison type<br>filterType = "number"
+      title: SituationRoomAlertDetails
       properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: integer
-          description: Numeric filter value to used with comparison operator
-          format: int64
-        filterTo:
-          type: integer
-          description: Numeric filter value to used when comparison operator is inRange
-          format: int64
-        filterType:
-          const: number
-          description: Declares number filterType
-      required:
-      - type
-      - filterType
-    AgGridSortColumn:
+        rc_probability:
+          type: number
+          description: The computed root cause probability, 0.0 - 1.0, if any
+        rc_label:
+          $ref: '#/components/schemas/PrcLabel'
+          description: The user-assigned label, if any
+        rc_bucket:
+          $ref: '#/components/schemas/PrcBucket'
+          description: 'The computed level: high, medium, low'
+    UnlabeledResponseDto:
       type: object
-      title: Ag Grid Sort Column
-      description: Sorting criteria to use for searches
+      title: Unlabeled Response Dto
       properties:
-        colId:
-          type: string
-          description: The column on which to sort
-          minLength: 1
-        sort:
-          type: string
-          enum:
-          - asc
-          - desc
-          description: The direction in which to sort
-          pattern: asc|desc
-      required:
-      - colId
-      - sort
-    MoogResponseListOfAlertDto:
-      type: object
-      description: Alerts/Incidents API AlertDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlertDto'
-      required:
-      - status
-      - data
-    MoogResponseAlertList:
-      type: object
-      description: Alerts/Incidents API AlertList response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/AlertList'
-      required:
-      - status
-      - data
-    SortOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      title: Sort Order
-      default: desc
-    AlertDto:
-      type: object
-      title: AlertDetails
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-          description: alert/incident status
-        severity:
-          $ref: '#/components/schemas/Severity'
-          description: alert/incident severity level
-        severity_high_water:
-          $ref: '#/components/schemas/Severity'
-          description: alert/incident high-water severity level
-        assignee:
-          type: string
-          description: email of the user who is assigned to the alert/incident
-          examples:
-          - test@moogsoft.com
-        assigned_groups:
-          type: array
-          description: An array of group ids
-          examples:
-          - - goupid1
-            - groupid2
-          items:
-            type: string
-        first_event_time:
-          type: integer
-          description: Epoch timestamp in seconds of the first event for this alert/incident
-          format: int64
-          examples:
-          - 1607985505
-        last_event_time:
-          type: integer
-          description: Epoch timestamp in seconds of the last event for this alert/incident
-          format: int64
-          examples:
-          - 1607985505
-        description:
-          type: string
-          description: description that usually contains the alert/incident ID, source and service
-          examples:
-          - '1 Source: www.your-source.com Affected retail, support
-
-            '
-        status_numeric:
-          type: integer
-          format: int32
-        severity_numeric:
-          type: integer
-          format: int32
-        severity_high_water_numeric:
-          type: integer
-          format: int32
-        alert_id:
+        total_incidents:
           type: integer
           format: int64
-        class:
-          type: string
-        event_count:
+        total_alerts:
           type: integer
-          format: int32
-        manager_id:
-          type: string
-        location:
+          format: int64
+        unlabeled_counts:
           type: object
-          description: Mapping of location name/value pairs
-          examples:
-          - street: 1234 Battery St.
-            city: San Francisco
-            state: CA
-            postcode: '95454'
-        service:
-          type: array
-          items:
-            type: string
-        incidents:
-          type: array
-          items:
+          additionalProperties:
             type: integer
             format: int64
-        source:
-          type: string
-        in_maintenance:
-          type: boolean
-          description: Boolean indicating if the alert is currently in maintenance
-        maintenance:
-          type: string
-          description: The id of the current or most recent maintenance window occurrence the alert was in
-        maintenance_windows:
-          type: array
-          description: Set of all maintenance windows and occurrences the alert has been associated with
-          uniqueItems: true
-          items:
-            $ref: '#/components/schemas/MaintenanceWindowStatDto'
-        tags:
-          type: object
-          description: Mapping of tag name/value pairs
-          examples:
-          - key1: value1
-            key2: value2
-        namespace:
-          type: string
-        manager:
-          type: string
-        dedupe_key:
-          type: string
-        created_at:
-          type: integer
-          description: Epoch timestamp in seconds indicating when the alert was created
-          format: int64
-          examples:
-          - 1607985505
-        last_status_change_time:
-          type: integer
-          format: int64
-        alias:
-          type: string
-        check:
-          type: string
-        type:
-          type: string
-        policy:
-          type: string
-        external_details:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExternalSystemDto'
-        external_names:
-          type: array
-          items:
-            type: string
-    MoogErrorResponse:
+    DateColumnFilter:
       type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    SituationJsonFilterDto:
-      type: object
-      title: Situation Json Filter Dto
-      properties:
-        type:
-          const: JSON
-          description: Declares json filter type
-        filter_object:
-          $ref: '#/components/schemas/ColumnFilterMap'
-          description: Return only alerts that match this AG-Grid-style JSON filter (See ColumnFilter schema).
-        sort_criteria:
-          type: array
-          description: Sort the results according to this AG-Grid-style JSON sort array.
-          examples:
-          - - sort: asc
-              colId: severity
-            - sort: desc
-              colId: alert_id
-          items:
-            $ref: '#/components/schemas/AgGridSortColumn'
-      required:
-      - type
-    AlertUpdateRequest:
-      type: object
-      title: Alert Update Request
-      properties:
-        status:
-          $ref: '#/components/schemas/Status'
-        assignee:
-          type: string
-          description: Username of the assignee, specified as one string. Returns an error if the username is not found.
-          examples:
-          - john.doe@company.com
-        assigned_groups:
-          type: array
-          description: An array of group ids or group names, returns error if any of them not found
-          examples:
-          - - groupid1
-            - groupid2
-          uniqueItems: true
-          items:
-            type: string
-    Status:
-      type: string
-      enum:
-      - error
-      - open
-      - in progress
-      - superseded
-      - resolved
-      - closed
-      title: Status
-      description: Status for incidents and alerts (case-insensitive)
-    SetAlertTagsPayloadDto:
-      type: object
-      title: Set Alert Tags Payload Dto
-      properties:
-        tags:
-          type: object
-          description: The tags being added to the alert.
-          additionalProperties:
-            type: string
-      required:
-      - tags
-    ExternalSystemDto:
-      type: object
-      title: External System Dto
-      properties:
-        integration_id:
-          type: string
-        external_name:
-          type: string
-        external_id:
-          type: string
-        external_link:
-          type: string
-        integration_name:
-          type: string
-        integration_type:
-          type: string
-    GeoLocationDto:
-      type: object
-      title: GeoLocation
-      properties:
-        lat:
-          type: number
-          format: float
-        long:
-          type: number
-          format: float
-    BooleanColumnFilter:
-      type: object
-      title: Boolean Column Filter
-      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      title: Date Column Filter
+      description: Filter a date-based column based on date or date ranges, and a comparison type<br>filterType = "date"
       properties:
         type:
           $ref: '#/components/schemas/ComparisonType'
           description: Comparison operator
-        filter:
-          type: boolean
-          description: Boolean value to used for comparison
+        dateFrom:
+          type: string
+          description: Date filter value to used with comparison operator
+        dateTo:
+          type: string
+          description: Date filter value to used when comparison operator is inRange
         filterType:
-          const: boolean
-          description: Declares boolean filterType
+          const: date
+          description: Declares date filterType
       required:
       - type
-      - filter
       - filterType
-    PrcLabel:
-      type: string
-      enum:
-      - RootCause
-      - NonCausal
-      - DontKnow
-      title: Prc Label
-      description: Root-Cause Label (case-insensitive)
-    SituationRoomAlertsRequestV2:
+    MoogResponseListOfEventTimelineBucket:
       type: object
-      title: Situation Room Alerts Request V2
-      description: Situation Room alerts POST request body.
-      properties:
-        filter:
-          $ref: '#/components/schemas/QueryFilter'
-          description: The filter type and object to retrieve data by
-        start:
-          type: integer
-          description: The starting offset of alerts to retrieve. The initial offset to use is 0 and thereafter is typically multiples of 'limit'. <b>NOTE:</b> 'start' + 'limit' must not exceed 10,000 -- use 'searchAfter' instead.
-          format: int32
-          minimum: 0
-          default: 0
-        limit:
-          type: integer
-          description: Maximum number of alerts to return. This is equivalent to the maximum number of alerts per page. Between 1 and 5000
-          format: int32
-          exclusiveMinimum: 0
-          maximum: 5000
-          default: 100
-        fields:
-          type: array
-          description: Subset of fields to return (default is all non-null alert fields
-          examples:
-          - []
-          items:
-            type: string
-      required:
-      - filter
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    PrcBucket:
-      type: string
-      enum:
-      - High
-      - Medium
-      - Low
-      title: Prc Bucket
-      description: Root-Cause Level (case-insensitive)
-    MoogResponseSituationRoomAlertList:
-      type: object
-      description: Alerts/Incidents API SituationRoomAlertList response body
+      description: Alerts/Incidents API EventTimelineBucket response body
       properties:
         status:
           type: string
@@ -2397,38 +2423,12 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/SituationRoomAlertList'
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTimelineBucket'
       required:
       - status
       - data
-    EventList:
-      type: object
-      title: Event List
-      properties:
-        total_results:
-          type: integer
-          format: int32
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTimelineDto'
-    TextColumnFilter:
-      type: object
-      title: Text Column Filter
-      description: Filter a text column based on a string comparison<br>filterType = "text"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: string
-          description: Text filter value to used with comparison operator
-        filterType:
-          const: text
-          description: Declares text filterType
-      required:
-      - type
-      - filterType
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

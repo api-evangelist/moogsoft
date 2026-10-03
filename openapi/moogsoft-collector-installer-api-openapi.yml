@@ -389,20 +389,6 @@ components:
       - LINUX
       - WINDOWS
       title: Platform Type
-    FileType:
-      type: string
-      enum:
-      - ZIP
-      - TAR
-      - MSI
-      title: File Type
-    LIBC:
-      type: string
-      enum:
-      - GNU
-      - MUSL
-      - NONLINUX
-      title: LIBC
     MoogFailureResponse:
       type: object
       description: Collector V2 API failure response body
@@ -421,6 +407,13 @@ components:
       required:
       - status
       - message
+    ArchType:
+      type: string
+      enum:
+      - X86_64
+      - ARMV7
+      - ARM64
+      title: Arch Type
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -439,13 +432,20 @@ components:
       required:
       - status
       - message
-    ArchType:
+    LIBC:
       type: string
       enum:
-      - X86_64
-      - ARMV7
-      - ARM64
-      title: Arch Type
+      - GNU
+      - MUSL
+      - NONLINUX
+      title: LIBC
+    FileType:
+      type: string
+      enum:
+      - ZIP
+      - TAR
+      - MSI
+      title: File Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

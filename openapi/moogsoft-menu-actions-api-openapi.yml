@@ -342,144 +342,6 @@ paths:
         - integrations:edit
 components:
   schemas:
-    SetTagsOperationDto:
-      type: object
-      title: Set Tags Operation Dto
-      description: Menu action set tags operation attributes.
-      properties:
-        type:
-          const: SET_TAGS
-        tags:
-          type: object
-          description: The tags for the operation to set.
-          additionalProperties:
-            type: string
-      required:
-      - tags
-    ResponseDisplayType:
-      type: string
-      enum:
-      - NEW_TAB
-      - POPUP
-      - NONE
-      title: Response Display Type
-    MenuActionDto:
-      type: object
-      title: Menu Action Dto
-      description: Menu action attributes.
-      properties:
-        name:
-          type: string
-          description: The name of the menu action.
-          pattern: \S
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-          description: Optional description of the menu action
-        category_id:
-          type: string
-          description: Optional ID of the menu action category
-        context_type:
-          $ref: '#/components/schemas/ContextType'
-          description: The context type this menu action is associated with.
-        prompted_fields:
-          type: array
-          description: Optional list of prompted fields for the menu action.
-          items:
-            $ref: '#/components/schemas/PromptedField'
-        operation:
-          $ref: '#/components/schemas/MenuActionOperation'
-          description: The operation this menu action is associated with.
-        id:
-          type: string
-          description: ID of the menu action
-      required:
-      - name
-      - context_type
-      - operation
-    MoogResponseMenuActionDto:
-      type: object
-      description: Config API MenuActionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MenuActionDto'
-      required:
-      - status
-      - data
-    MenuActionOperation:
-      type: object
-      title: Menu Action Operation
-      description: The operation which menu action is associated with.
-      oneOf:
-      - $ref: '#/components/schemas/WebhookOperationDto'
-      - $ref: '#/components/schemas/ServerApiOperationDto'
-      - $ref: '#/components/schemas/SetTagsOperationDto'
-      - $ref: '#/components/schemas/StandaloneWorkflowOperationDto'
-    BaseMenuActionDto:
-      type: object
-      title: Base Menu Action Dto
-      description: Base menu action attributes.
-      properties:
-        name:
-          type: string
-          description: The name of the menu action.
-          pattern: \S
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-          description: Optional description of the menu action
-        category_id:
-          type: string
-          description: Optional ID of the menu action category
-        context_type:
-          $ref: '#/components/schemas/ContextType'
-          description: The context type this menu action is associated with.
-        prompted_fields:
-          type: array
-          description: Optional list of prompted fields for the menu action.
-          items:
-            $ref: '#/components/schemas/PromptedField'
-        operation:
-          $ref: '#/components/schemas/MenuActionOperation'
-          description: The operation this menu action is associated with.
-      required:
-      - name
-      - context_type
-      - operation
-    HttpRequestMethod:
-      type: string
-      enum:
-      - GET
-      - PATCH
-      - POST
-      - PUT
-      - DELETE
-      title: Http Request Method
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     StandaloneWorkflowOperationDto:
       type: object
       title: Standalone Workflow Operation Dto
@@ -495,6 +357,47 @@ components:
           description: Additional workflow context information.
       required:
       - workflow_id
+    StringPromptedFieldDto:
+      type: object
+      title: String Prompted Field Dto
+      description: String prompted field attributes.
+      properties:
+        type:
+          const: STRING
+        name:
+          type: string
+          description: The name of the prompted field.
+          pattern: ^[a-zA-Z0-9-_]+$
+          minLength: 1
+          maxLength: 64
+        display_name:
+          type: string
+          description: The display name of the prompted field.
+          maxLength: 64
+        default_value:
+          type: string
+          description: Optional default value of the string prompted field.
+        min:
+          type: integer
+          description: Optional minimum length of the string prompted field.
+          format: int32
+          minimum: 0
+        max:
+          type: integer
+          description: Optional maximum length of the string prompted field.
+          format: int32
+          minimum: 0
+      required:
+      - name
+    MenuActionOperation:
+      type: object
+      title: Menu Action Operation
+      description: The operation which menu action is associated with.
+      oneOf:
+      - $ref: '#/components/schemas/WebhookOperationDto'
+      - $ref: '#/components/schemas/ServerApiOperationDto'
+      - $ref: '#/components/schemas/SetTagsOperationDto'
+      - $ref: '#/components/schemas/StandaloneWorkflowOperationDto'
     ServerApiOperationDto:
       type: object
       title: Server Api Operation Dto
@@ -534,38 +437,123 @@ components:
       - request_method
       - url
       - response_display_type
-    StringPromptedFieldDto:
+    MoogResponseMenuActionDto:
       type: object
-      title: String Prompted Field Dto
-      description: String prompted field attributes.
+      description: Config API MenuActionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MenuActionDto'
+      required:
+      - status
+      - data
+    SelectionListValue:
+      type: object
+      title: Selection List Value
+      description: Selection List Value.
+      oneOf:
+      - $ref: '#/components/schemas/SelectionListStringValueDto'
+      - $ref: '#/components/schemas/SelectionListNumberValueDto'
+    HttpRequestMethod:
+      type: string
+      enum:
+      - GET
+      - PATCH
+      - POST
+      - PUT
+      - DELETE
+      title: Http Request Method
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfMenuActionDto:
+      type: object
+      description: Config API MenuActionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MenuActionDto'
+      required:
+      - status
+      - data
+    SetTagsOperationDto:
+      type: object
+      title: Set Tags Operation Dto
+      description: Menu action set tags operation attributes.
+      properties:
+        type:
+          const: SET_TAGS
+        tags:
+          type: object
+          description: The tags for the operation to set.
+          additionalProperties:
+            type: string
+      required:
+      - tags
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    SelectionListStringValueDto:
+      type: object
+      title: Selection List String Value Dto
+      description: Selection list string value field attributes.
       properties:
         type:
           const: STRING
-        name:
+        value:
           type: string
-          description: The name of the prompted field.
-          pattern: ^[a-zA-Z0-9-_]+$
-          minLength: 1
-          maxLength: 64
-        display_name:
-          type: string
-          description: The display name of the prompted field.
-          maxLength: 64
-        default_value:
-          type: string
-          description: Optional default value of the string prompted field.
-        min:
-          type: integer
-          description: Optional minimum length of the string prompted field.
-          format: int32
-          minimum: 0
-        max:
-          type: integer
-          description: Optional maximum length of the string prompted field.
-          format: int32
-          minimum: 0
+          description: String value.
+          pattern: \S
       required:
-      - name
+      - value
+    PromptedField:
+      type: object
+      title: Prompted Field
+      description: Prompted fields for the menu action.
+      oneOf:
+      - $ref: '#/components/schemas/StringPromptedFieldDto'
+      - $ref: '#/components/schemas/NumberPromptedFieldDto'
+      - $ref: '#/components/schemas/SelectionListPromptedFieldDto'
     SelectionListPromptedFieldDto:
       type: object
       title: Selection List Prompted Field Dto
@@ -634,60 +622,6 @@ components:
       - request_method
       - url
       - response_display_type
-    SelectionListValue:
-      type: object
-      title: Selection List Value
-      description: Selection List Value.
-      oneOf:
-      - $ref: '#/components/schemas/SelectionListStringValueDto'
-      - $ref: '#/components/schemas/SelectionListNumberValueDto'
-    MoogResponseListOfMenuActionDto:
-      type: object
-      description: Config API MenuActionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/MenuActionDto'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Config API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    SelectionListStringValueDto:
-      type: object
-      title: Selection List String Value Dto
-      description: Selection list string value field attributes.
-      properties:
-        type:
-          const: STRING
-        value:
-          type: string
-          description: String value.
-          pattern: \S
-      required:
-      - value
     NumberPromptedFieldDto:
       type: object
       title: Number Prompted Field Dto
@@ -718,14 +652,12 @@ components:
           format: int32
       required:
       - name
-    PromptedField:
-      type: object
-      title: Prompted Field
-      description: Prompted fields for the menu action.
-      oneOf:
-      - $ref: '#/components/schemas/StringPromptedFieldDto'
-      - $ref: '#/components/schemas/NumberPromptedFieldDto'
-      - $ref: '#/components/schemas/SelectionListPromptedFieldDto'
+    ContextType:
+      type: string
+      enum:
+      - ALERT
+      - INCIDENT
+      title: Context Type
     SelectionListNumberValueDto:
       type: object
       title: Selection List Number Value Dto
@@ -738,12 +670,80 @@ components:
           description: Number value.
       required:
       - value
-    ContextType:
+    MenuActionDto:
+      type: object
+      title: Menu Action Dto
+      description: Menu action attributes.
+      properties:
+        name:
+          type: string
+          description: The name of the menu action.
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Optional description of the menu action
+        category_id:
+          type: string
+          description: Optional ID of the menu action category
+        context_type:
+          $ref: '#/components/schemas/ContextType'
+          description: The context type this menu action is associated with.
+        prompted_fields:
+          type: array
+          description: Optional list of prompted fields for the menu action.
+          items:
+            $ref: '#/components/schemas/PromptedField'
+        operation:
+          $ref: '#/components/schemas/MenuActionOperation'
+          description: The operation this menu action is associated with.
+        id:
+          type: string
+          description: ID of the menu action
+      required:
+      - name
+      - context_type
+      - operation
+    BaseMenuActionDto:
+      type: object
+      title: Base Menu Action Dto
+      description: Base menu action attributes.
+      properties:
+        name:
+          type: string
+          description: The name of the menu action.
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+          description: Optional description of the menu action
+        category_id:
+          type: string
+          description: Optional ID of the menu action category
+        context_type:
+          $ref: '#/components/schemas/ContextType'
+          description: The context type this menu action is associated with.
+        prompted_fields:
+          type: array
+          description: Optional list of prompted fields for the menu action.
+          items:
+            $ref: '#/components/schemas/PromptedField'
+        operation:
+          $ref: '#/components/schemas/MenuActionOperation'
+          description: The operation this menu action is associated with.
+      required:
+      - name
+      - context_type
+      - operation
+    ResponseDisplayType:
       type: string
       enum:
-      - ALERT
-      - INCIDENT
-      title: Context Type
+      - NEW_TAB
+      - POPUP
+      - NONE
+      title: Response Display Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -135,39 +135,6 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
-      type: object
-      description: Similar Incidents Service API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseSimilaritySettingsDto:
-      type: object
-      title: Moog Response Similarity Settings Dto
-      description: Similar Incidents Service API SimilaritySettingsDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/SimilaritySettingsDto'
-      required:
-      - status
-      - data
     SimilaritySettingsDto:
       type: object
       title: Similarity Settings Dto
@@ -188,6 +155,39 @@ components:
       - dedupe
       - custom
       title: Similarity Key Type
+    MoogResponseSimilaritySettingsDto:
+      type: object
+      title: Moog Response Similarity Settings Dto
+      description: Similar Incidents Service API SimilaritySettingsDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/SimilaritySettingsDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Similar Incidents Service API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

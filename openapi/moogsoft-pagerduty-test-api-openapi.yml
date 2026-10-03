@@ -128,24 +128,14 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    PagerDutyPostEventResponse:
-      type: object
-      title: Pager Duty Post Event Response
-      properties:
-        status:
-          type: string
-        dedup_key:
-          type: string
-        message:
-          type: string
-    PagerDutyIntegrationType:
+    PagerDutyWebhookSubscriptionType:
       type: string
       enum:
-      - alert
-      - incident
-      - both
-      title: Pager Duty Integration Type
-      description: The event type of your PagerDuty integration (alert, incidents or both)
+      - account_reference
+      - service_reference
+      - team_reference
+      title: Pager Duty Webhook Subscription Type
+      description: PagerDuty webhook subscription type
     MoogFailureResponse:
       type: object
       description: Pager Duty API failure response body
@@ -164,24 +154,16 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
+    PagerDutyPostEventResponse:
       type: object
-      description: Pager Duty API error response body
+      title: Pager Duty Post Event Response
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
+        dedup_key:
+          type: string
         message:
           type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     WebhookFilterDto:
       type: object
       title: Webhook Filter Dto
@@ -209,14 +191,32 @@ components:
       required:
       - status
       - data
-    PagerDutyWebhookSubscriptionType:
+    MoogErrorResponse:
+      type: object
+      description: Pager Duty API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    PagerDutyIntegrationType:
       type: string
       enum:
-      - account_reference
-      - service_reference
-      - team_reference
-      title: Pager Duty Webhook Subscription Type
-      description: PagerDuty webhook subscription type
+      - alert
+      - incident
+      - both
+      title: Pager Duty Integration Type
+      description: The event type of your PagerDuty integration (alert, incidents or both)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

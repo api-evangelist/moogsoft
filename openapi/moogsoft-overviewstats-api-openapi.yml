@@ -84,51 +84,6 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
-    OverviewWebResponse:
-      type: object
-      title: Overview Web Response
-      properties:
-        incident_count:
-          type: integer
-          format: int64
-        alert_count:
-          type: integer
-          format: int64
-        event_count:
-          type: integer
-          format: int64
-    MoogResponseOverviewWebResponse:
-      type: object
-      description: Alerts/Incidents API OverviewWebResponse response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/OverviewWebResponse'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -147,6 +102,51 @@ components:
       required:
       - status
       - message
+    OverviewWebResponse:
+      type: object
+      title: Overview Web Response
+      properties:
+        incident_count:
+          type: integer
+          format: int64
+        alert_count:
+          type: integer
+          format: int64
+        event_count:
+          type: integer
+          format: int64
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseOverviewWebResponse:
+      type: object
+      description: Alerts/Incidents API OverviewWebResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/OverviewWebResponse'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

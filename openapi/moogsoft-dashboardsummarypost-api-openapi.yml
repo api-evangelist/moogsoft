@@ -70,6 +70,24 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    BooleanColumnFilter:
+      type: object
+      title: Boolean Column Filter
+      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: boolean
+          description: Boolean value to used for comparison
+        filterType:
+          const: boolean
+          description: Declares boolean filterType
+      required:
+      - type
+      - filter
+      - filterType
     DashboardSummaryRequest:
       type: object
       title: Dashboard Summary Request
@@ -103,24 +121,63 @@ components:
       required:
       - tile_by
       - sort_by
-    BooleanColumnFilter:
+    MoogFailureResponse:
       type: object
-      title: Boolean Column Filter
-      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      description: Alerts/Incidents API failure response body
       properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: boolean
-          description: Boolean value to used for comparison
-        filterType:
-          const: boolean
-          description: Declares boolean filterType
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
       required:
-      - type
-      - filter
-      - filterType
+      - status
+      - message
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseIncidentSummaryResponse:
+      type: object
+      description: Alerts/Incidents API IncidentSummaryResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentSummaryResponse'
+      required:
+      - status
+      - data
+    SortBy:
+      type: string
+      enum:
+      - severity
+      - priority
+      title: Sort By
+      description: Dashboard sort by options
     ComparisonType:
       type: string
       enum:
@@ -141,6 +198,43 @@ components:
       - notExactMatch
       title: Comparison Type
       description: Comparison operator type to use for the filter
+    SetColumnFilter:
+      type: object
+      title: Set Column Filter
+      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        values:
+          type: array
+          description: Set filter value(s) to used with comparison operator
+          items:
+            type: string
+        filterType:
+          const: set
+          description: Declares set filterType
+      required:
+      - type
+      - values
+      - filterType
+    TextColumnFilter:
+      type: object
+      title: Text Column Filter
+      description: Filter a text column based on a string comparison<br>filterType = "text"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: string
+          description: Text filter value to used with comparison operator
+        filterType:
+          const: text
+          description: Declares text filterType
+      required:
+      - type
+      - filterType
     NumberColumnFilter:
       type: object
       title: Number Column Filter
@@ -196,63 +290,6 @@ components:
           type: number
           description: mean time to acknowledge(in seconds) for incidents in summary view
           format: double
-    SortBy:
-      type: string
-      enum:
-      - severity
-      - priority
-      title: Sort By
-      description: Dashboard sort by options
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseIncidentSummaryResponse:
-      type: object
-      description: Alerts/Incidents API IncidentSummaryResponse response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentSummaryResponse'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     DashboardTile:
       type: object
       title: Dashboard Tile
@@ -284,43 +321,24 @@ components:
             format: int64
           examples:
           - '{P1: 10, P2: 10}'
-    TextColumnFilter:
+    ColumnFilter:
       type: object
-      title: Text Column Filter
-      description: Filter a text column based on a string comparison<br>filterType = "text"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: string
-          description: Text filter value to used with comparison operator
-        filterType:
-          const: text
-          description: Declares text filterType
-      required:
-      - type
-      - filterType
-    SetColumnFilter:
-      type: object
-      title: Set Column Filter
-      description: Filter a column based on a set of values provided for comparison<br>filterType = "set"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        values:
-          type: array
-          description: Set filter value(s) to used with comparison operator
-          items:
-            type: string
-        filterType:
-          const: set
-          description: Declares set filterType
-      required:
-      - type
-      - values
-      - filterType
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
     DateColumnFilter:
       type: object
       title: Date Column Filter
@@ -341,24 +359,6 @@ components:
       required:
       - type
       - filterType
-    ColumnFilter:
-      type: object
-      title: Column Filter
-      description: Polymorphic column filter, based upon filterType
-      oneOf:
-      - $ref: '#/components/schemas/DateColumnFilter'
-      - $ref: '#/components/schemas/NumberColumnFilter'
-      - $ref: '#/components/schemas/SetColumnFilter'
-      - $ref: '#/components/schemas/TextColumnFilter'
-      - $ref: '#/components/schemas/BooleanColumnFilter'
-      discriminator:
-        propertyName: filterType
-        mapping:
-          text: '#/components/schemas/TextColumnFilter'
-          set: '#/components/schemas/SetColumnFilter'
-          number: '#/components/schemas/NumberColumnFilter'
-          date: '#/components/schemas/DateColumnFilter'
-          boolean: '#/components/schemas/BooleanColumnFilter'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

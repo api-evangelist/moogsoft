@@ -371,31 +371,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseListOfGroupDto:
-      type: object
-      description: User API GroupDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupDto'
-      required:
-      - status
-      - data
-    IsgErrorSeverity:
-      type: string
-      enum:
-      - Info
-      - Warning
-      - Error
-      - Critical
-      title: Isg Error Severity
-      description: Severity of the message (should be treated as case-insensitive)
     MoogResponseGroupDto:
       type: object
       description: User API GroupDto response body
@@ -410,12 +385,6 @@ components:
       required:
       - status
       - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     MoogFailureResponse:
       type: object
       description: User API failure response body
@@ -434,52 +403,20 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
+    IsgErrorResponse:
       type: object
-      description: User API error response body
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
       properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
+        http_status_code:
+          type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
+          format: int32
+        messages:
           type: array
+          description: List of messages providing additional information relating to the API error
           items:
-            type: string
-      required:
-      - status
-      - message
-    IsgErrorMessage:
-      type: object
-      title: Isg Error Message
-      description: Message relating to the API error
-      properties:
-        code:
-          type: string
-          description: API-specific error code
-        timestamp:
-          type: string
-          description: ISO-8601 Date/time when the API error was reported
-          format: date-time
-          examples:
-          - '2024-06-01T13:14:32.431Z'
-        severity:
-          $ref: '#/components/schemas/IsgErrorSeverity'
-          description: Error severity
-        message:
-          type: string
-          description: Descriptive error message
-        message_l10n:
-          type: string
-          description: Localized error message
-        substitution_args:
-          type: array
-          description: Substitution arguments used for localization
-          items:
-            type: string
+            $ref: '#/components/schemas/IsgErrorMessage'
     GroupDto:
       type: object
       title: Group Dto
@@ -528,20 +465,83 @@ components:
       required:
       - name
       - id
-    IsgErrorResponse:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    IsgErrorMessage:
       type: object
-      title: Isg Error Response
-      description: Error response format for non-2XX responses
+      title: Isg Error Message
+      description: Message relating to the API error
       properties:
-        http_status_code:
-          type: integer
-          description: HTTP response code. This is the same as the standard HTTP response value
-          format: int32
-        messages:
+        code:
+          type: string
+          description: API-specific error code
+        timestamp:
+          type: string
+          description: ISO-8601 Date/time when the API error was reported
+          format: date-time
+          examples:
+          - '2024-06-01T13:14:32.431Z'
+        severity:
+          $ref: '#/components/schemas/IsgErrorSeverity'
+          description: Error severity
+        message:
+          type: string
+          description: Descriptive error message
+        message_l10n:
+          type: string
+          description: Localized error message
+        substitution_args:
           type: array
-          description: List of messages providing additional information relating to the API error
+          description: Substitution arguments used for localization
           items:
-            $ref: '#/components/schemas/IsgErrorMessage'
+            type: string
+    MoogResponseListOfGroupDto:
+      type: object
+      description: User API GroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IsgErrorSeverity:
+      type: string
+      enum:
+      - Info
+      - Warning
+      - Error
+      - Critical
+      title: Isg Error Severity
+      description: Severity of the message (should be treated as case-insensitive)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

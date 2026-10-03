@@ -94,17 +94,14 @@ components:
               example: 'on'
       xml:
         name: FeaturesResponse
-    ErrorResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: error
-        message:
-          type: string
-          example: Detailed error message when available
+    LicenseType:
+      type: string
+      enum:
+      - enterprise
+      - team
+      - free
       xml:
-        name: ErrorResponse
+        name: LicenseType
     NoSplitResponse:
       type: object
       properties:
@@ -116,14 +113,17 @@ components:
           example: Split not initialised
       xml:
         name: NoSplitResponse
-    LicenseType:
-      type: string
-      enum:
-      - enterprise
-      - team
-      - free
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: Detailed error message when available
       xml:
-        name: LicenseType
+        name: ErrorResponse
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

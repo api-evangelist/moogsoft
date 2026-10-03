@@ -125,12 +125,6 @@ paths:
         - integrations:edit
 components:
   schemas:
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     MoogFailureResponse:
       type: object
       description: Create Your Own Integration API failure response body
@@ -140,24 +134,6 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogErrorResponse:
-      type: object
-      description: Create Your Own Integration API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
         message:
           type: string
         additional:
@@ -184,6 +160,12 @@ components:
       required:
       - status
       - data
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
     ByoErrorLogDto:
       type: object
       title: Byo Error Log Dto
@@ -198,6 +180,24 @@ components:
             type: string
         reason:
           type: string
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

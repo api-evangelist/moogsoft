@@ -78,54 +78,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    SupportFileDto:
-      type: object
-      title: Support File Dto
-      description: Plugin support file.
-      properties:
-        plugin_name:
-          type: string
-          description: The name of the plugin the support file is associated with
-        name:
-          type: string
-          description: The name of the support file
-        contents:
-          type: string
-          description: The contents of the support file
-    MoogResponseListOfSupportFileDto:
-      type: object
-      description: Collector V2 API SupportFileDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupportFileDto'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Collector V2 API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogErrorResponse:
       type: object
       description: Collector V2 API error response body
@@ -144,6 +96,54 @@ components:
       required:
       - status
       - message
+    SupportFileDto:
+      type: object
+      title: Support File Dto
+      description: Plugin support file.
+      properties:
+        plugin_name:
+          type: string
+          description: The name of the plugin the support file is associated with
+        name:
+          type: string
+          description: The name of the support file
+        contents:
+          type: string
+          description: The contents of the support file
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfSupportFileDto:
+      type: object
+      description: Collector V2 API SupportFileDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportFileDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

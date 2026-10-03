@@ -201,35 +201,6 @@ components:
       required:
       - status
       - message
-    MoogErrorResponse:
-      type: object
-      description: Metrics API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    TelegrafMetricsDto:
-      type: object
-      title: Telegraf Metrics Dto
-      properties:
-        metrics:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/TelegrafMetric'
-      required:
-      - metrics
     WebMetricDto:
       type: object
       title: Web Metric Dto
@@ -311,6 +282,35 @@ components:
       - fields
       - name
       - timestamp
+    TelegrafMetricsDto:
+      type: object
+      title: Telegraf Metrics Dto
+      properties:
+        metrics:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/TelegrafMetric'
+      required:
+      - metrics
+    MoogErrorResponse:
+      type: object
+      description: Metrics API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

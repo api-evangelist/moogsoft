@@ -484,6 +484,47 @@ components:
       - REPLACE
       - REMOVE
       title: Watchers Operation
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    EmailTemplateDto:
+      type: object
+      title: Email Template Dto
+      description: Definition for an email template
+      properties:
+        id:
+          type: string
+          description: Unique ID for the template
+          readOnly: true
+        name:
+          type: string
+          description: Name of the template
+        template:
+          type: string
+          description: The actual template, which can contain embedded HTML
+    WatchersRequestSelfDto:
+      type: object
+      title: Watchers Request Self Dto
+      description: Request to add or remove self to/from a Watchers group
+      properties:
+        operation:
+          $ref: '#/components/schemas/WatchersOperation'
+          description: 'Request operation: ADD, or REMOVE'
     WatchersRequestDto:
       type: object
       title: Watchers Request Dto
@@ -517,39 +558,6 @@ components:
         operation:
           $ref: '#/components/schemas/WatchersOperation'
           description: 'Request operation: ADD, REMOVE, or REPLACE'
-    EmailTemplateDto:
-      type: object
-      title: Email Template Dto
-      description: Definition for an email template
-      properties:
-        id:
-          type: string
-          description: Unique ID for the template
-          readOnly: true
-        name:
-          type: string
-          description: Name of the template
-        template:
-          type: string
-          description: The actual template, which can contain embedded HTML
-    MoogFailureResponse:
-      type: object
-      description: Config API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogResponseListOfEmailTemplateDto:
       type: object
       description: Config API EmailTemplateDto response body
@@ -566,32 +574,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    WatchersRequestSelfDto:
-      type: object
-      title: Watchers Request Self Dto
-      description: Request to add or remove self to/from a Watchers group
-      properties:
-        operation:
-          $ref: '#/components/schemas/WatchersOperation'
-          description: 'Request operation: ADD, or REMOVE'
     MoogResponseListOfIncidentWatchersDto:
       type: object
       description: Config API IncidentWatchersDto response body
@@ -622,6 +604,24 @@ components:
       required:
       - status
       - data
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     IncidentWatchersDto:
       type: object
       title: Incident Watchers Dto

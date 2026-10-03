@@ -125,19 +125,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    WebhookMetrics:
-      type: object
-      title: Webhook Metrics
-      properties:
-        errors:
-          type: integer
-          format: int64
-        successes:
-          type: integer
-          format: int64
-        total:
-          type: integer
-          format: int64
     MoogResponseWebhookMetrics:
       type: object
       title: Moog Response Webhook Metrics
@@ -153,24 +140,6 @@ components:
       required:
       - status
       - data
-    MoogFailureResponse:
-      type: object
-      description: Webhook API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogErrorResponse:
       type: object
       description: Webhook API error response body
@@ -189,6 +158,37 @@ components:
       required:
       - status
       - message
+    MoogFailureResponse:
+      type: object
+      description: Webhook API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    WebhookMetrics:
+      type: object
+      title: Webhook Metrics
+      properties:
+        errors:
+          type: integer
+          format: int64
+        successes:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

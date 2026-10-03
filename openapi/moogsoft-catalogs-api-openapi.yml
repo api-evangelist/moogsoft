@@ -1681,11 +1681,6 @@ paths:
         - catalog:edit
 components:
   schemas:
-    SearchFieldsDto:
-      type: array
-      title: Search Fields Dto
-      items:
-        $ref: '#/components/schemas/SearchFieldDto'
     CatalogFieldSchema:
       type: object
       title: Catalog Field Schema
@@ -1702,51 +1697,6 @@ components:
       - name
       - required
       - type
-    DocumentDto:
-      type: object
-      title: Document Dto
-      additionalProperties:
-        type: string
-    MoogResponseDocumentDto:
-      type: object
-      description: Config API DocumentDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/DocumentDto'
-      required:
-      - status
-      - data
-    SearchMatchType:
-      type: string
-      enum:
-      - STRING
-      - REGEX
-      - RANGE
-      title: Search Match Type
-    CatalogSchema:
-      type: object
-      title: Catalog Schema
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CatalogFieldSchema'
-      required:
-      - fields
-    CatalogFieldSchemaType:
-      type: string
-      enum:
-      - STRING
-      - NUMBER
-      - BOOLEAN
-      - JSON_OBJECT
-      - JSON_ARRAY
-      title: Catalog Field Schema Type
     MoogResponseCatalogSettings:
       type: object
       description: Config API CatalogSettings response body
@@ -1779,20 +1729,6 @@ components:
       required:
       - status
       - message
-    MoogResponseCatalog:
-      type: object
-      description: Config API Catalog response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/Catalog'
-      required:
-      - status
-      - data
     MoogResponseListOfDocumentDto:
       type: object
       description: Config API DocumentDto response body
@@ -1809,24 +1745,42 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
+    ComparisonOperator:
+      type: string
+      enum:
+      - equals
+      - contains
+      title: Comparison Operator
+      description: Comparison operator type to use for the filter
+    SearchFieldsDto:
+      type: array
+      title: Search Fields Dto
+      items:
+        $ref: '#/components/schemas/SearchFieldDto'
+    CatalogSchema:
       type: object
-      description: Config API error response body
+      title: Catalog Schema
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogFieldSchema'
+      required:
+      - fields
+    MoogResponseCatalog:
+      type: object
+      description: Config API Catalog response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
+          - success
+        data:
+          $ref: '#/components/schemas/Catalog'
       required:
       - status
-      - message
+      - data
     MoogResponseListOfCatalog:
       type: object
       description: Config API Catalog response body
@@ -1843,37 +1797,41 @@ components:
       required:
       - status
       - data
-    CatalogSettings:
-      type: object
-      title: Catalog Settings
-      properties:
-        max_catalogs:
-          type: integer
-          description: Maximum number of allowed catalogs
-          format: int64
-          readOnly: true
-        num_catalogs:
-          type: integer
-          description: Current number of catalogs
-          format: int64
-          readOnly: true
-        maxCatalogs:
-          type: integer
-          description: Use max_catalogs instead
-          format: int64
-          readOnly: true
-        numCatalogs:
-          type: integer
-          description: Use num_catalogs instead
-          format: int64
-          readOnly: true
-    ComparisonOperator:
+    CatalogFieldSchemaType:
       type: string
       enum:
-      - equals
-      - contains
-      title: Comparison Operator
-      description: Comparison operator type to use for the filter
+      - STRING
+      - NUMBER
+      - BOOLEAN
+      - JSON_OBJECT
+      - JSON_ARRAY
+      title: Catalog Field Schema Type
+    MoogResponseDocumentDto:
+      type: object
+      description: Config API DocumentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/DocumentDto'
+      required:
+      - status
+      - data
+    SearchMatchType:
+      type: string
+      enum:
+      - STRING
+      - REGEX
+      - RANGE
+      title: Search Match Type
+    DocumentDto:
+      type: object
+      title: Document Dto
+      additionalProperties:
+        type: string
     Catalog:
       type: object
       title: Catalog
@@ -1952,6 +1910,48 @@ components:
       required:
       - name
       - description
+    CatalogSettings:
+      type: object
+      title: Catalog Settings
+      properties:
+        max_catalogs:
+          type: integer
+          description: Maximum number of allowed catalogs
+          format: int64
+          readOnly: true
+        num_catalogs:
+          type: integer
+          description: Current number of catalogs
+          format: int64
+          readOnly: true
+        maxCatalogs:
+          type: integer
+          description: Use max_catalogs instead
+          format: int64
+          readOnly: true
+        numCatalogs:
+          type: integer
+          description: Use num_catalogs instead
+          format: int64
+          readOnly: true
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     SearchFieldDto:
       type: object
       title: Search Field Dto
