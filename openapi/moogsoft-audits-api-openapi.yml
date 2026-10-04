@@ -87,6 +87,42 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ServiceName:
+      type: string
+      enum:
+      - prc-model
+      - prc-features
+      - prc-training
+      - prc-labels
+      - automation
+      - ums-user
+      - ums-apikey
+      - ums-sso
+      - ums-role
+      - ums-group
+      - appinsights
+      - cloudwatch
+      - datadog
+      - sig_alert_history
+      - maintenance-windows
+      - alerts
+      - incidents
+      - incident-watchers
+      - catalogs
+      - workflows
+      - correlation-engine
+      - correlation-engine-webserver
+      - webhooks
+      - notification-policies
+      - on-call-schedules
+      - on-call-notifications-sent
+      - on-call-notifications-acknowledged
+      - on-call-open-issues
+      - pagerduty
+      - byoapi
+      - metrics-policies
+      xml:
+        name: ServiceName
     ErrorResponse:
       type: object
       properties:
@@ -98,6 +134,13 @@ components:
           example: Detailed error message when available
       xml:
         name: ErrorResponse
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      xml:
+        name: SortOrder
     AuditResponse:
       type: object
       properties:
@@ -155,49 +198,6 @@ components:
                   originalValues: {}
       xml:
         name: AuditResponse
-    SortOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      xml:
-        name: SortOrder
-    ServiceName:
-      type: string
-      enum:
-      - prc-model
-      - prc-features
-      - prc-training
-      - prc-labels
-      - automation
-      - ums-user
-      - ums-apikey
-      - ums-sso
-      - ums-role
-      - ums-group
-      - appinsights
-      - cloudwatch
-      - datadog
-      - sig_alert_history
-      - maintenance-windows
-      - alerts
-      - incidents
-      - incident-watchers
-      - catalogs
-      - workflows
-      - correlation-engine
-      - correlation-engine-webserver
-      - webhooks
-      - notification-policies
-      - on-call-schedules
-      - on-call-notifications-sent
-      - on-call-notifications-acknowledged
-      - on-call-open-issues
-      - pagerduty
-      - byoapi
-      - metrics-policies
-      xml:
-        name: ServiceName
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -325,15 +325,15 @@ components:
       required:
       - status
       - data
-    MoogFailureResponse:
+    MoogErrorResponse:
       type: object
-      description: Config API failure response body
+      description: Config API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -374,21 +374,15 @@ components:
       required:
       - name
       - context_type
-    ContextType:
-      type: string
-      enum:
-      - ALERT
-      - INCIDENT
-      title: Context Type
-    MoogErrorResponse:
+    MoogFailureResponse:
       type: object
-      description: Config API error response body
+      description: Config API failure response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Failure status indicator (always "failure")
           examples:
-          - error
+          - failure
         message:
           type: string
         additional:
@@ -398,6 +392,12 @@ components:
       required:
       - status
       - message
+    ContextType:
+      type: string
+      enum:
+      - ALERT
+      - INCIDENT
+      title: Context Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -118,20 +118,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseAutomationConfigDto:
-      type: object
-      description: Alerts/Incidents API AutomationConfigDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/AutomationConfigDto'
-      required:
-      - status
-      - data
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -150,6 +136,20 @@ components:
       required:
       - status
       - message
+    MoogResponseAutomationConfigDto:
+      type: object
+      description: Alerts/Incidents API AutomationConfigDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/AutomationConfigDto'
+      required:
+      - status
+      - data
     AutomationConfigDto:
       type: object
       title: Automation Config Dto

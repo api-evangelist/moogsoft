@@ -80,6 +80,16 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Granularity:
+      type: string
+      enum:
+      - RAW
+      - MINUTE
+      - HOUR
+      - DAY
+      - WEEK
+      - MONTH
+      - YEAR
     GetSlimRollupResultsDto:
       type: object
       properties:
@@ -105,16 +115,6 @@ components:
         total:
           type: integer
           format: int64
-    Granularity:
-      type: string
-      enum:
-      - RAW
-      - MINUTE
-      - HOUR
-      - DAY
-      - WEEK
-      - MONTH
-      - YEAR
     SlimRollupDto:
       type: object
       properties:

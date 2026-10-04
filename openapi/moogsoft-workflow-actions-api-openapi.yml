@@ -71,6 +71,36 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
+    ActionConfigurationSchemaDto:
+      type: object
+      title: Action Configuration Schema Dto
+      description: A list of schema for all the fields of an action.
+      properties:
+        fields:
+          type: array
+          description: A list of any required schema for each action (can be empty if no config required)
+          items:
+            $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
+      required:
+      - fields
+    MoogErrorResponse:
+      type: object
+      description: Workflow Engine API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     WorkflowType:
       type: string
       enum:
@@ -98,53 +128,23 @@ components:
       required:
       - status
       - message
-    ActionConfigurationSchemaDto:
+    MoogResponseListOfActionDto:
       type: object
-      title: Action Configuration Schema Dto
-      description: A list of schema for all the fields of an action.
-      properties:
-        fields:
-          type: array
-          description: A list of any required schema for each action (can be empty if no config required)
-          items:
-            $ref: '#/components/schemas/ActionConfigurationFieldSchemaDto'
-      required:
-      - fields
-    ActionConfigurationFieldSchemaDto:
-      type: object
-      title: Action Configuration Field Schema Dto
-      description: Schema for a field of an action.
-      properties:
-        name:
-          type: string
-          description: Computer name of the action field
-        displayName:
-          type: string
-          description: Display name of the action field
-        description:
-          type: string
-          description: Description of the action field
-        type:
-          type: string
-          description: Type of the action field (Special pre-defined types)
-    MoogErrorResponse:
-      type: object
-      description: Workflow Engine API error response body
+      title: Moog Response List Of Action Dto
+      description: Workflow Engine API ActionDto response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Success status indicator (always "success")
           examples:
-          - error
-        message:
-          type: string
-        additional:
+          - success
+        data:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ActionDto'
       required:
       - status
-      - message
+      - data
     ActionDto:
       type: object
       title: Action Dto
@@ -167,23 +167,23 @@ components:
           description: Types of workflows the action can be used in
           items:
             $ref: '#/components/schemas/WorkflowType'
-    MoogResponseListOfActionDto:
+    ActionConfigurationFieldSchemaDto:
       type: object
-      title: Moog Response List Of Action Dto
-      description: Workflow Engine API ActionDto response body
+      title: Action Configuration Field Schema Dto
+      description: Schema for a field of an action.
       properties:
-        status:
+        name:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ActionDto'
-      required:
-      - status
-      - data
+          description: Computer name of the action field
+        displayName:
+          type: string
+          description: Display name of the action field
+        description:
+          type: string
+          description: Description of the action field
+        type:
+          type: string
+          description: Type of the action field (Special pre-defined types)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

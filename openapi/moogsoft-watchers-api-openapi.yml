@@ -477,6 +477,22 @@ paths:
         - incidents:edit
 components:
   schemas:
+    MoogResponseListOfIncidentWatchersDto:
+      type: object
+      description: Config API IncidentWatchersDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IncidentWatchersDto'
+      required:
+      - status
+      - data
     WatchersOperation:
       type: string
       enum:
@@ -484,6 +500,48 @@ components:
       - REPLACE
       - REMOVE
       title: Watchers Operation
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    WatchersRequestSelfDto:
+      type: object
+      title: Watchers Request Self Dto
+      description: Request to add or remove self to/from a Watchers group
+      properties:
+        operation:
+          $ref: '#/components/schemas/WatchersOperation'
+          description: 'Request operation: ADD, or REMOVE'
+    MoogResponseListOfEmailTemplateDto:
+      type: object
+      description: Config API EmailTemplateDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmailTemplateDto'
+      required:
+      - status
+      - data
     MoogFailureResponse:
       type: object
       description: Config API failure response body
@@ -502,29 +560,6 @@ components:
       required:
       - status
       - message
-    EmailTemplateDto:
-      type: object
-      title: Email Template Dto
-      description: Definition for an email template
-      properties:
-        id:
-          type: string
-          description: Unique ID for the template
-          readOnly: true
-        name:
-          type: string
-          description: Name of the template
-        template:
-          type: string
-          description: The actual template, which can contain embedded HTML
-    WatchersRequestSelfDto:
-      type: object
-      title: Watchers Request Self Dto
-      description: Request to add or remove self to/from a Watchers group
-      properties:
-        operation:
-          $ref: '#/components/schemas/WatchersOperation'
-          description: 'Request operation: ADD, or REMOVE'
     WatchersRequestDto:
       type: object
       title: Watchers Request Dto
@@ -558,70 +593,21 @@ components:
         operation:
           $ref: '#/components/schemas/WatchersOperation'
           description: 'Request operation: ADD, REMOVE, or REPLACE'
-    MoogResponseListOfEmailTemplateDto:
+    EmailTemplateDto:
       type: object
-      description: Config API EmailTemplateDto response body
+      title: Email Template Dto
+      description: Definition for an email template
       properties:
-        status:
+        id:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/EmailTemplateDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfIncidentWatchersDto:
-      type: object
-      description: Config API IncidentWatchersDto response body
-      properties:
-        status:
+          description: Unique ID for the template
+          readOnly: true
+        name:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/IncidentWatchersDto'
-      required:
-      - status
-      - data
-    MoogResponseEmailTemplateDto:
-      type: object
-      description: Config API EmailTemplateDto response body
-      properties:
-        status:
+          description: Name of the template
+        template:
           type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/EmailTemplateDto'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+          description: The actual template, which can contain embedded HTML
     IncidentWatchersDto:
       type: object
       title: Incident Watchers Dto
@@ -658,6 +644,20 @@ components:
           format: int64
       required:
       - incident_id
+    MoogResponseEmailTemplateDto:
+      type: object
+      description: Config API EmailTemplateDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/EmailTemplateDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

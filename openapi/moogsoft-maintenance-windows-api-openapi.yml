@@ -1034,32 +1034,75 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
-    SchedulePeriod:
-      type: string
-      enum:
-      - daily
-      - weekly
-      - monthly
-      - monthly_nth_day
-      title: Schedule Period
-      description: Scheduling Periodicity
-    Repeatable:
+    MaintenanceWindowListDto:
       type: object
-      title: Repeatable
+      title: Maintenance Window List Dto
       properties:
-        period:
-          $ref: '#/components/schemas/SchedulePeriod'
-          description: Periodicity of the schedule
-        until:
-          $ref: '#/components/schemas/Timestamp'
-          description: (Optional) Final run time of the schedule, milliseconds since Jan 1, 1970 GMT
-        times:
+        result:
+          type: array
+          description: List of maintenance windows, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/MaintenanceWindowDto'
+        count:
           type: integer
-          description: '(Optional) Maximum number of times to run the schedule (note: only one of ''until'' and ''times'' is allowed to be used)'
-          format: int32
-          exclusiveMinimum: 0
+          description: Total number of maintenace windows that would have been returned in the absence of offset and limit
+          format: int64
+    MaintenanceOccurrenceListDto:
+      type: object
+      title: Maintenance Occurrence List Dto
+      properties:
+        result:
+          type: array
+          description: List of maintenance window occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/MaintenanceOccurrenceDto'
+        count:
+          type: integer
+          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
+          format: int64
+    MoogResponseMaintenanceOccurrenceListDto:
+      type: object
+      description: Config API MaintenanceOccurrenceListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceOccurrenceListDto'
       required:
-      - period
+      - status
+      - data
+    MoogResponseListOfTimezoneDto:
+      type: object
+      description: Config API TimezoneDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimezoneDto'
+      required:
+      - status
+      - data
+    TimezoneDto:
+      type: object
+      title: Timezone Dto
+      properties:
+        zoneId:
+          type: string
+        offset:
+          type: string
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
     MaintenanceStatusDto:
       type: object
       title: Maintenance Status Dto
@@ -1085,19 +1128,20 @@ components:
         pending_occurrence:
           $ref: '#/components/schemas/MaintenanceOccurrenceDto'
           description: Next pending occurrence, if any
-    MaintenanceOccurrenceListDto:
+    MoogResponseMaintenanceWindowDto:
       type: object
-      title: Maintenance Occurrence List Dto
+      description: Config API MaintenanceWindowDto response body
       properties:
-        result:
-          type: array
-          description: List of maintenance window occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
-          items:
-            $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-        count:
-          type: integer
-          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
-          format: int64
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceWindowDto'
+      required:
+      - status
+      - data
     BaseMaintenanceWindowDto:
       type: object
       title: Base Maintenance Window Dto
@@ -1141,9 +1185,9 @@ components:
       - filter
       - start
       - duration
-    MoogResponseListOfTimezoneDto:
+    MoogResponseMaintenanceOccurrenceDto:
       type: object
-      description: Config API TimezoneDto response body
+      description: Config API MaintenanceOccurrenceDto response body
       properties:
         status:
           type: string
@@ -1151,33 +1195,13 @@ components:
           examples:
           - success
         data:
-          type: array
-          items:
-            $ref: '#/components/schemas/TimezoneDto'
+          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
       required:
       - status
       - data
-    MoogErrorResponse:
+    MoogResponseMaintenanceStatusDto:
       type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseMaintenanceOccurrenceListDto:
-      type: object
-      description: Config API MaintenanceOccurrenceListDto response body
+      description: Config API MaintenanceStatusDto response body
       properties:
         status:
           type: string
@@ -1185,23 +1209,41 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/MaintenanceOccurrenceListDto'
+          $ref: '#/components/schemas/MaintenanceStatusDto'
       required:
       - status
       - data
-    MaintenanceWindowListDto:
+    MoogResponseMaintenanceWindowListDto:
       type: object
-      title: Maintenance Window List Dto
+      description: Config API MaintenanceWindowListDto response body
       properties:
-        result:
-          type: array
-          description: List of maintenance windows, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
-          items:
-            $ref: '#/components/schemas/MaintenanceWindowDto'
-        count:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/MaintenanceWindowListDto'
+      required:
+      - status
+      - data
+    Repeatable:
+      type: object
+      title: Repeatable
+      properties:
+        period:
+          $ref: '#/components/schemas/SchedulePeriod'
+          description: Periodicity of the schedule
+        until:
+          $ref: '#/components/schemas/Timestamp'
+          description: (Optional) Final run time of the schedule, milliseconds since Jan 1, 1970 GMT
+        times:
           type: integer
-          description: Total number of maintenace windows that would have been returned in the absence of offset and limit
-          format: int64
+          description: '(Optional) Maximum number of times to run the schedule (note: only one of ''until'' and ''times'' is allowed to be used)'
+          format: int32
+          exclusiveMinimum: 0
+      required:
+      - period
     MoogFailureResponse:
       type: object
       description: Config API failure response body
@@ -1211,6 +1253,101 @@ components:
           description: Failure status indicator (always "failure")
           examples:
           - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MaintenanceWindowDto:
+      type: object
+      title: Maintenance Window Dto
+      description: Definition for a given scheduled maintenance window
+      properties:
+        name:
+          type: string
+          description: Name of the maintenance window
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: Description of the maintenance window
+        external_link:
+          type: string
+          description: Optional change Record link to an external system
+        filter:
+          type: string
+          description: Required filter string
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
+        duration:
+          type: integer
+          description: Duration of the maintenance window, in seconds
+          format: int32
+          minimum: 60
+        timezone:
+          type: string
+          description: Optional timezone of the maintenance window; used for display purposes
+        repeats:
+          $ref: '#/components/schemas/Repeatable'
+          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
+          discriminator:
+            propertyName: period
+            mapping:
+              daily: '#/components/schemas/DailyRepeatable'
+              weekly: '#/components/schemas/WeeklyRepeatable'
+              monthly: '#/components/schemas/MonthlyRepeatable'
+              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
+        status:
+          $ref: '#/components/schemas/MaintenanceStatus'
+          description: Status of the maintenance window, based upon occurrences
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: When the maintenance window was last updated
+        created_by:
+          type: string
+          description: User who created the maintenance window
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: User who last updated the maintenance window
+          readOnly: true
+        id:
+          type: string
+          description: Unique id of the maintenance window
+          readOnly: true
+        deleted:
+          type: boolean
+          description: Indicates whether the maintenance window was DELETED
+          readOnly: true
+      required:
+      - filter
+      - start
+      - duration
+    SchedulePeriod:
+      type: string
+      enum:
+      - daily
+      - weekly
+      - monthly
+      - monthly_nth_day
+      title: Schedule Period
+      description: Scheduling Periodicity
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
         message:
           type: string
         additional:
@@ -1296,20 +1433,6 @@ components:
       - filter
       - start
       - duration
-    MoogResponseMaintenanceWindowDto:
-      type: object
-      description: Config API MaintenanceWindowDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceWindowDto'
-      required:
-      - status
-      - data
     MaintenanceStatus:
       type: string
       enum:
@@ -1320,129 +1443,6 @@ components:
       - cancelled
       title: Maintenance Status
       description: Maintenance Status
-    MaintenanceWindowDto:
-      type: object
-      title: Maintenance Window Dto
-      description: Definition for a given scheduled maintenance window
-      properties:
-        name:
-          type: string
-          description: Name of the maintenance window
-          pattern: ^[a-zA-Z0-9()_\-\s]+$
-        description:
-          type: string
-          description: Description of the maintenance window
-        external_link:
-          type: string
-          description: Optional change Record link to an external system
-        filter:
-          type: string
-          description: Required filter string
-        start:
-          $ref: '#/components/schemas/Timestamp'
-          description: Start time of the maintenance window, milliseconds since Jan 1, 1970 GMT
-        duration:
-          type: integer
-          description: Duration of the maintenance window, in seconds
-          format: int32
-          minimum: 60
-        timezone:
-          type: string
-          description: Optional timezone of the maintenance window; used for display purposes
-        repeats:
-          $ref: '#/components/schemas/Repeatable'
-          description: 'Optional repeating operation (note: only one of ''until'' and ''times'' is allowed to be used)'
-          discriminator:
-            propertyName: period
-            mapping:
-              daily: '#/components/schemas/DailyRepeatable'
-              weekly: '#/components/schemas/WeeklyRepeatable'
-              monthly: '#/components/schemas/MonthlyRepeatable'
-              monthly_nth_day: '#/components/schemas/MonthlyDaysRepeatable'
-        status:
-          $ref: '#/components/schemas/MaintenanceStatus'
-          description: Status of the maintenance window, based upon occurrences
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: When the maintenance window was created
-        last_updated:
-          $ref: '#/components/schemas/Timestamp'
-          description: When the maintenance window was last updated
-        created_by:
-          type: string
-          description: User who created the maintenance window
-          readOnly: true
-        last_updated_by:
-          type: string
-          description: User who last updated the maintenance window
-          readOnly: true
-        id:
-          type: string
-          description: Unique id of the maintenance window
-          readOnly: true
-        deleted:
-          type: boolean
-          description: Indicates whether the maintenance window was DELETED
-          readOnly: true
-      required:
-      - filter
-      - start
-      - duration
-    MoogResponseMaintenanceWindowListDto:
-      type: object
-      description: Config API MaintenanceWindowListDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceWindowListDto'
-      required:
-      - status
-      - data
-    MoogResponseMaintenanceOccurrenceDto:
-      type: object
-      description: Config API MaintenanceOccurrenceDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceOccurrenceDto'
-      required:
-      - status
-      - data
-    MoogResponseMaintenanceStatusDto:
-      type: object
-      description: Config API MaintenanceStatusDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/MaintenanceStatusDto'
-      required:
-      - status
-      - data
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
-    TimezoneDto:
-      type: object
-      title: Timezone Dto
-      properties:
-        zoneId:
-          type: string
-        offset:
-          type: string
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

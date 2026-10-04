@@ -119,24 +119,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogFailureResponse:
-      type: object
-      description: User API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogResponseInstanceDto:
       type: object
       description: User API InstanceDto response body
@@ -157,14 +139,6 @@ components:
       properties:
         instance_type:
           $ref: '#/components/schemas/InstanceType'
-    InstanceType:
-      type: string
-      enum:
-      - NOT_DEFINED
-      - PRODUCTION
-      - UAT
-      - TEST_AND_DEV
-      title: Instance Type
     MoogErrorResponse:
       type: object
       description: User API error response body
@@ -183,6 +157,32 @@ components:
       required:
       - status
       - message
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    InstanceType:
+      type: string
+      enum:
+      - NOT_DEFINED
+      - PRODUCTION
+      - UAT
+      - TEST_AND_DEV
+      title: Instance Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

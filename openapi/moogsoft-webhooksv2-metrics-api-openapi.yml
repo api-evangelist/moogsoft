@@ -125,39 +125,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseWebhookMetrics:
-      type: object
-      title: Moog Response Webhook Metrics
-      description: Webhook API WebhookMetrics response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/WebhookMetrics'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Webhook API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogFailureResponse:
       type: object
       description: Webhook API failure response body
@@ -176,6 +143,21 @@ components:
       required:
       - status
       - message
+    MoogResponseWebhookMetrics:
+      type: object
+      title: Moog Response Webhook Metrics
+      description: Webhook API WebhookMetrics response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/WebhookMetrics'
+      required:
+      - status
+      - data
     WebhookMetrics:
       type: object
       title: Webhook Metrics
@@ -189,6 +171,24 @@ components:
         total:
           type: integer
           format: int64
+    MoogErrorResponse:
+      type: object
+      description: Webhook API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

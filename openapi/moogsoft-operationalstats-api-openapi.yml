@@ -71,117 +71,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    HistogramInterval:
-      type: string
-      enum:
-      - hour
-      - day
-      title: Histogram Interval
-      description: Histogram calendar interval
-    TopResourcesType:
-      type: string
-      enum:
-      - services
-      - sources
-      title: Top Resources Type
-      description: Top Resources Type to fetch
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    OperationalStatsWebResponse:
-      type: object
-      title: Operational Stats Web Response
-      description: Incident Operational stats response
-      properties:
-        time_to_resolve:
-          $ref: '#/components/schemas/TimeToResolveDto'
-          description: Time to resolve aggregated result of incidents
-        incident_trend:
-          type: array
-          description: Incident trend list by severity
-          items:
-            $ref: '#/components/schemas/IncidentTrendDto'
-        top_resources:
-          type: array
-          description: Incident top 20 resources list
-          items:
-            $ref: '#/components/schemas/IncidentTopResourcesDto'
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseOperationalStatsWebResponse:
-      type: object
-      description: Alerts/Incidents API OperationalStatsWebResponse response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/OperationalStatsWebResponse'
-      required:
-      - status
-      - data
-    TimeToResolveBucketDto:
-      type: object
-      title: Time To Resolve Bucket Dto
-      properties:
-        index:
-          type: integer
-          description: Time taken to resolve incident in hours range
-          format: int64
-          examples:
-          - 0, 2, 5 where 0 means incidents resolved in 0 to 1hr, 5 means 5 to 6hr
-        incident_count:
-          type: integer
-          description: Total incidents resolved
-          format: int64
-    IncidentTrendDto:
-      type: object
-      title: Incident Trend Dto
-      description: Incident trend data for the provided time period
-      properties:
-        incident_time:
-          type: integer
-          description: Incident creation time
-          format: int64
-        incident_severity:
-          type: object
-          description: Incident counts by severity
-          additionalProperties:
-            type: integer
-            format: int64
     IncidentTopResourcesDto:
       type: object
       title: Incident Top Resources Dto
@@ -200,6 +89,131 @@ components:
           additionalProperties:
             type: integer
             format: int64
+    TimeToResolveBucketDto:
+      type: object
+      title: Time To Resolve Bucket Dto
+      properties:
+        index:
+          type: integer
+          description: Time taken to resolve incident in hours range
+          format: int64
+          examples:
+          - 0, 2, 5 where 0 means incidents resolved in 0 to 1hr, 5 means 5 to 6hr
+        incident_count:
+          type: integer
+          description: Total incidents resolved
+          format: int64
+    HistogramInterval:
+      type: string
+      enum:
+      - hour
+      - day
+      title: Histogram Interval
+      description: Histogram calendar interval
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    TimeToResolveDto:
+      type: object
+      title: Time To Resolve Dto
+      description: Incidents resolution details
+      properties:
+        mttr_mins:
+          type: number
+          description: mean time to resolution(in minutes)
+          format: double
+        buckets:
+          type: array
+          description: List of time to resolve aggregated results
+          items:
+            $ref: '#/components/schemas/TimeToResolveBucketDto'
+    MoogResponseOperationalStatsWebResponse:
+      type: object
+      description: Alerts/Incidents API OperationalStatsWebResponse response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/OperationalStatsWebResponse'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IncidentTrendDto:
+      type: object
+      title: Incident Trend Dto
+      description: Incident trend data for the provided time period
+      properties:
+        incident_time:
+          type: integer
+          description: Incident creation time
+          format: int64
+        incident_severity:
+          type: object
+          description: Incident counts by severity
+          additionalProperties:
+            type: integer
+            format: int64
+    TopResourcesType:
+      type: string
+      enum:
+      - services
+      - sources
+      title: Top Resources Type
+      description: Top Resources Type to fetch
+    OperationalStatsWebResponse:
+      type: object
+      title: Operational Stats Web Response
+      description: Incident Operational stats response
+      properties:
+        time_to_resolve:
+          $ref: '#/components/schemas/TimeToResolveDto'
+          description: Time to resolve aggregated result of incidents
+        incident_trend:
+          type: array
+          description: Incident trend list by severity
+          items:
+            $ref: '#/components/schemas/IncidentTrendDto'
+        top_resources:
+          type: array
+          description: Incident top 20 resources list
+          items:
+            $ref: '#/components/schemas/IncidentTopResourcesDto'
     OperationalStatsRequest:
       type: object
       title: Operational Stats Request
@@ -231,20 +245,6 @@ components:
       - start
       - end
       - bucket_size
-    TimeToResolveDto:
-      type: object
-      title: Time To Resolve Dto
-      description: Incidents resolution details
-      properties:
-        mttr_mins:
-          type: number
-          description: mean time to resolution(in minutes)
-          format: double
-        buckets:
-          type: array
-          description: List of time to resolve aggregated results
-          items:
-            $ref: '#/components/schemas/TimeToResolveBucketDto'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

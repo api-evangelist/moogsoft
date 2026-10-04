@@ -284,15 +284,21 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogFailureResponse:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogErrorResponse:
       type: object
-      description: User API failure response body
+      description: User API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -316,6 +322,14 @@ components:
       required:
       - status
       - data
+    ViewConfigType:
+      type: string
+      enum:
+      - INCIDENT
+      - ALERT
+      - METRIC
+      title: View Config Type
+      description: View types
     ViewConfigResponseDto:
       type: object
       title: View Config Response Dto
@@ -364,20 +378,24 @@ components:
         view_type:
           $ref: '#/components/schemas/ViewConfigType'
           description: View type
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    ViewConfigType:
-      type: string
-      enum:
-      - INCIDENT
-      - ALERT
-      - METRIC
-      title: View Config Type
-      description: View types
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     ViewConfigDto:
       type: object
       title: View Config Dto
@@ -430,24 +448,6 @@ components:
         view_type:
           $ref: '#/components/schemas/ViewConfigType'
           description: View type, indicates the type of view
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogResponseListOfViewConfigResponseDto:
       type: object
       description: User API ViewConfigResponseDto response body

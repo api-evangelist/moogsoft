@@ -65,15 +65,15 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
-    MoogFailureResponse:
+    MoogErrorResponse:
       type: object
-      description: User API failure response body
+      description: User API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -83,22 +83,6 @@ components:
       required:
       - status
       - message
-    MoogResponseListOfPermissionDto:
-      type: object
-      description: User API PermissionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermissionDto'
-      required:
-      - status
-      - data
     Permission:
       type: object
       title: Permission
@@ -123,24 +107,6 @@ components:
           type: array
           items:
             type: string
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     PermissionDto:
       type: object
       title: Permission Dto
@@ -154,6 +120,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
+    MoogResponseListOfPermissionDto:
+      type: object
+      description: User API PermissionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

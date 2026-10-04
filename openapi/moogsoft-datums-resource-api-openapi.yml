@@ -77,27 +77,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SlimDatumDto:
-      type: object
-      properties:
-        tags:
-          type: object
-        engine:
-          $ref: '#/components/schemas/Engine'
-        data: {}
-        instance:
-          type: string
-        timed_at_ms:
-          type: integer
-          format: int64
-        unit:
-          type: string
-        uuid:
-          type: string
-        additional_data:
-          type: object
-        datasource:
-          type: string
     Engine:
       type: object
       properties:
@@ -147,3 +126,24 @@ components:
         total:
           type: integer
           format: int64
+    SlimDatumDto:
+      type: object
+      properties:
+        tags:
+          type: object
+        engine:
+          $ref: '#/components/schemas/Engine'
+        data: {}
+        instance:
+          type: string
+        timed_at_ms:
+          type: integer
+          format: int64
+        unit:
+          type: string
+        uuid:
+          type: string
+        additional_data:
+          type: object
+        datasource:
+          type: string

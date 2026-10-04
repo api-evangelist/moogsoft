@@ -309,29 +309,28 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogResponseNotificationPolicyListDto:
+    NotificationPolicyListDto:
       type: object
-      description: On-Call API NotificationPolicyListDto response body
+      title: Notification Policy List Dto
+      properties:
+        result:
+          type: array
+          description: List of on-call notification policies, as per sortOrder/sortBy/offset/limit
+          items:
+            $ref: '#/components/schemas/NotificationPolicyDto'
+        count:
+          type: integer
+          description: Total number of on-call notification policies that would have been returned in the absence of offset and limit
+          format: int64
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Error status indicator (always "error")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/NotificationPolicyListDto'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: On-Call API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -341,59 +340,6 @@ components:
       required:
       - status
       - message
-    BaseNotificationPolicyDto:
-      type: object
-      title: Base Notification Policy Dto
-      description: A notification policy for paging a set of on-call schedules
-      properties:
-        name:
-          type: string
-          description: The name of the notification policy.
-          pattern: ^[a-zA-Z0-9()_\-\s]+$
-          minLength: 1
-          maxLength: 127
-        enabled:
-          type: boolean
-          description: Indicates whether the policy is enabled/disabled
-          default: true
-        description:
-          type: string
-          description: (optional) A description for the notification policy.
-          maxLength: 280
-        incident_filter:
-          type: string
-          description: An filter expression to query.
-          pattern: \S
-        notification_actions:
-          type: array
-          description: A list of actions for the notification policy to step through once triggered.
-          minItems: 1
-          maxItems: 40
-          items:
-            $ref: '#/components/schemas/NotificationAction'
-      required:
-      - name
-      - incident_filter
-      - notification_actions
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
-    MoogResponseNotificationPolicyDto:
-      type: object
-      description: On-Call API NotificationPolicyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/NotificationPolicyDto'
-      required:
-      - status
-      - data
     NotificationPolicyDto:
       type: object
       title: Notification Policy Dto
@@ -445,6 +391,20 @@ components:
       - name
       - incident_filter
       - notification_actions
+    MoogResponseNotificationPolicyListDto:
+      type: object
+      description: On-Call API NotificationPolicyListDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/NotificationPolicyListDto'
+      required:
+      - status
+      - data
     NotificationAction:
       type: object
       title: Notification Action
@@ -457,15 +417,15 @@ components:
           DELAY: '#/components/schemas/DelayAction'
           NOTIFY: '#/components/schemas/NotifyScheduleAction'
           NOTIFY_USER: '#/components/schemas/NotifyUserAction'
-    MoogErrorResponse:
+    MoogFailureResponse:
       type: object
-      description: On-Call API error response body
+      description: On-Call API failure response body
       properties:
         status:
           type: string
-          description: Error status indicator (always "error")
+          description: Failure status indicator (always "failure")
           examples:
-          - error
+          - failure
         message:
           type: string
         additional:
@@ -475,19 +435,59 @@ components:
       required:
       - status
       - message
-    NotificationPolicyListDto:
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    BaseNotificationPolicyDto:
       type: object
-      title: Notification Policy List Dto
+      title: Base Notification Policy Dto
+      description: A notification policy for paging a set of on-call schedules
       properties:
-        result:
+        name:
+          type: string
+          description: The name of the notification policy.
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+          minLength: 1
+          maxLength: 127
+        enabled:
+          type: boolean
+          description: Indicates whether the policy is enabled/disabled
+          default: true
+        description:
+          type: string
+          description: (optional) A description for the notification policy.
+          maxLength: 280
+        incident_filter:
+          type: string
+          description: An filter expression to query.
+          pattern: \S
+        notification_actions:
           type: array
-          description: List of on-call notification policies, as per sortOrder/sortBy/offset/limit
+          description: A list of actions for the notification policy to step through once triggered.
+          minItems: 1
+          maxItems: 40
           items:
-            $ref: '#/components/schemas/NotificationPolicyDto'
-        count:
-          type: integer
-          description: Total number of on-call notification policies that would have been returned in the absence of offset and limit
-          format: int64
+            $ref: '#/components/schemas/NotificationAction'
+      required:
+      - name
+      - incident_filter
+      - notification_actions
+    MoogResponseNotificationPolicyDto:
+      type: object
+      description: On-Call API NotificationPolicyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/NotificationPolicyDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

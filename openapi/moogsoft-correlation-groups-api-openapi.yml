@@ -439,6 +439,30 @@ paths:
         - correlation:edit
 components:
   schemas:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     CorrelationGroupDto:
       type: object
       title: CorrelationDefinitionGroup
@@ -506,6 +530,22 @@ components:
           anyOf:
           - $ref: '#/components/schemas/Instant'
           - type: 'null'
+    IncidentMergeThreshold:
+      type: string
+      enum:
+      - default
+      - any
+      - ten
+      - twenty
+      - thirty
+      - forty
+      - fifty
+      - sixty
+      - seventy
+      - eighty
+      - ninety
+      - never
+      title: Incident Merge Threshold
     MoogFailureResponse:
       type: object
       description: Config API failure response body
@@ -524,22 +564,20 @@ components:
       required:
       - status
       - message
-    IncidentMergeThreshold:
-      type: string
-      enum:
-      - default
-      - any
-      - ten
-      - twenty
-      - thirty
-      - forty
-      - fifty
-      - sixty
-      - seventy
-      - eighty
-      - ninety
-      - never
-      title: Incident Merge Threshold
+    MoogResponseCorrelationGroupDto:
+      type: object
+      description: Config API CorrelationGroupDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CorrelationGroupDto'
+      required:
+      - status
+      - data
     MoogResponseListOfCorrelationGroupDto:
       type: object
       description: Config API CorrelationGroupDto response body
@@ -567,44 +605,6 @@ components:
           type: boolean
       required:
       - uuid
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogResponseCorrelationGroupDto:
-      type: object
-      description: Config API CorrelationGroupDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CorrelationGroupDto'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

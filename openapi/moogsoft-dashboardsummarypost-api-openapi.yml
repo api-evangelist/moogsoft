@@ -70,75 +70,13 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    BooleanColumnFilter:
-      type: object
-      title: Boolean Column Filter
-      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
-      properties:
-        type:
-          $ref: '#/components/schemas/ComparisonType'
-          description: Comparison operator
-        filter:
-          type: boolean
-          description: Boolean value to used for comparison
-        filterType:
-          const: boolean
-          description: Declares boolean filterType
-      required:
-      - type
-      - filter
-      - filterType
-    DashboardSummaryRequest:
-      type: object
-      title: Dashboard Summary Request
-      description: Dashboard summary POST request body
-      properties:
-        json_filter:
-          type: object
-          description: Return only incidents that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
-          additionalProperties:
-            $ref: '#/components/schemas/ColumnFilter'
-          examples:
-          - status:
-              values:
-              - open
-              - in progress
-              - resolved
-              filterType: set
-        utc_offset:
-          type: string
-          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time.
-          default: GMT
-          examples:
-          - GMT-7/GMT+7:30
-        tile_by:
-          type: string
-          description: defines the grouping of alert/incident summary data
-          pattern: services|classes|types|^tags\..*
-        sort_by:
-          $ref: '#/components/schemas/SortBy'
-          description: defines the sorting of incident summary data
-      required:
-      - tile_by
-      - sort_by
-    MoogFailureResponse:
-      type: object
-      description: Alerts/Incidents API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+    SortBy:
+      type: string
+      enum:
+      - severity
+      - priority
+      title: Sort By
+      description: Dashboard sort by options
     MoogErrorResponse:
       type: object
       description: Alerts/Incidents API error response body
@@ -171,33 +109,6 @@ components:
       required:
       - status
       - data
-    SortBy:
-      type: string
-      enum:
-      - severity
-      - priority
-      title: Sort By
-      description: Dashboard sort by options
-    ComparisonType:
-      type: string
-      enum:
-      - equals
-      - notEqual
-      - contains
-      - notContains
-      - startsWith
-      - endsWith
-      - lessThan
-      - lessThanOrEqual
-      - greaterThan
-      - greaterThanOrEqual
-      - inRange
-      - blank
-      - notBlank
-      - exactMatch
-      - notExactMatch
-      title: Comparison Type
-      description: Comparison operator type to use for the filter
     SetColumnFilter:
       type: object
       title: Set Column Filter
@@ -235,6 +146,42 @@ components:
       required:
       - type
       - filterType
+    BooleanColumnFilter:
+      type: object
+      title: Boolean Column Filter
+      description: Filter a boolean column based on a boolean comparison<br>filterType = "boolean"
+      properties:
+        type:
+          $ref: '#/components/schemas/ComparisonType'
+          description: Comparison operator
+        filter:
+          type: boolean
+          description: Boolean value to used for comparison
+        filterType:
+          const: boolean
+          description: Declares boolean filterType
+      required:
+      - type
+      - filter
+      - filterType
+    ColumnFilter:
+      type: object
+      title: Column Filter
+      description: Polymorphic column filter, based upon filterType
+      oneOf:
+      - $ref: '#/components/schemas/DateColumnFilter'
+      - $ref: '#/components/schemas/NumberColumnFilter'
+      - $ref: '#/components/schemas/SetColumnFilter'
+      - $ref: '#/components/schemas/TextColumnFilter'
+      - $ref: '#/components/schemas/BooleanColumnFilter'
+      discriminator:
+        propertyName: filterType
+        mapping:
+          text: '#/components/schemas/TextColumnFilter'
+          set: '#/components/schemas/SetColumnFilter'
+          number: '#/components/schemas/NumberColumnFilter'
+          date: '#/components/schemas/DateColumnFilter'
+          boolean: '#/components/schemas/BooleanColumnFilter'
     NumberColumnFilter:
       type: object
       title: Number Column Filter
@@ -257,6 +204,24 @@ components:
       required:
       - type
       - filterType
+    MoogFailureResponse:
+      type: object
+      description: Alerts/Incidents API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     IncidentSummaryResponse:
       type: object
       title: Incident Summary Response
@@ -290,6 +255,26 @@ components:
           type: number
           description: mean time to acknowledge(in seconds) for incidents in summary view
           format: double
+    ComparisonType:
+      type: string
+      enum:
+      - equals
+      - notEqual
+      - contains
+      - notContains
+      - startsWith
+      - endsWith
+      - lessThan
+      - lessThanOrEqual
+      - greaterThan
+      - greaterThanOrEqual
+      - inRange
+      - blank
+      - notBlank
+      - exactMatch
+      - notExactMatch
+      title: Comparison Type
+      description: Comparison operator type to use for the filter
     DashboardTile:
       type: object
       title: Dashboard Tile
@@ -321,24 +306,39 @@ components:
             format: int64
           examples:
           - '{P1: 10, P2: 10}'
-    ColumnFilter:
+    DashboardSummaryRequest:
       type: object
-      title: Column Filter
-      description: Polymorphic column filter, based upon filterType
-      oneOf:
-      - $ref: '#/components/schemas/DateColumnFilter'
-      - $ref: '#/components/schemas/NumberColumnFilter'
-      - $ref: '#/components/schemas/SetColumnFilter'
-      - $ref: '#/components/schemas/TextColumnFilter'
-      - $ref: '#/components/schemas/BooleanColumnFilter'
-      discriminator:
-        propertyName: filterType
-        mapping:
-          text: '#/components/schemas/TextColumnFilter'
-          set: '#/components/schemas/SetColumnFilter'
-          number: '#/components/schemas/NumberColumnFilter'
-          date: '#/components/schemas/DateColumnFilter'
-          boolean: '#/components/schemas/BooleanColumnFilter'
+      title: Dashboard Summary Request
+      description: Dashboard summary POST request body
+      properties:
+        json_filter:
+          type: object
+          description: Return only incidents that match this AG-Grid-style JSON filter. Each filter can be of a different filterType.
+          additionalProperties:
+            $ref: '#/components/schemas/ColumnFilter'
+          examples:
+          - status:
+              values:
+              - open
+              - in progress
+              - resolved
+              filterType: set
+        utc_offset:
+          type: string
+          description: The difference in hours from Coordinated Universal Time (UTC) to user's local time.
+          default: GMT
+          examples:
+          - GMT-7/GMT+7:30
+        tile_by:
+          type: string
+          description: defines the grouping of alert/incident summary data
+          pattern: services|classes|types|^tags\..*
+        sort_by:
+          $ref: '#/components/schemas/SortBy'
+          description: defines the sorting of incident summary data
+      required:
+      - tile_by
+      - sort_by
     DateColumnFilter:
       type: object
       title: Date Column Filter

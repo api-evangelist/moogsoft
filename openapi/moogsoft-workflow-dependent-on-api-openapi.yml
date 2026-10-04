@@ -82,33 +82,10 @@ paths:
         value: []
 components:
   schemas:
-    WorkflowType:
-      type: string
-      enum:
-      - EVENT
-      - ALERT
-      - INCIDENT
-      - ALERT_STANDALONE
-      - INCIDENT_STANDALONE
-      title: Workflow Type
-    MoogFailureResponse:
-      type: object
-      description: Workflow Engine API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+    ResourceType:
+      const: CATALOG
+      title: Resource Type
+      description: Representing different types of resources used by workflow action
     MoogErrorResponse:
       type: object
       description: Workflow Engine API error response body
@@ -127,10 +104,6 @@ components:
       required:
       - status
       - message
-    ResourceType:
-      const: CATALOG
-      title: Resource Type
-      description: Representing different types of resources used by workflow action
     MoogResponseListOfWorkflowDependentOnResponseDto:
       type: object
       title: Moog Response List Of Workflow Dependent On Response Dto
@@ -162,6 +135,33 @@ components:
         type:
           $ref: '#/components/schemas/WorkflowType'
           description: Type of the workflow
+    WorkflowType:
+      type: string
+      enum:
+      - EVENT
+      - ALERT
+      - INCIDENT
+      - ALERT_STANDALONE
+      - INCIDENT_STANDALONE
+      title: Workflow Type
+    MoogFailureResponse:
+      type: object
+      description: Workflow Engine API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

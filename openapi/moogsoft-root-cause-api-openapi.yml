@@ -304,124 +304,12 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogFailureResponse:
-      type: object
-      description: Probable Root Cause API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    PrcFeaturesDto:
-      type: object
-      title: Prc Features Dto
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        medium_threshold:
-          type: number
-          format: double
-        high_threshold:
-          type: number
-          format: double
-        enabled:
-          type: boolean
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-        last_updated_by:
-          type: string
-        created:
-          $ref: '#/components/schemas/Instant'
-        created_by:
-          type: string
-        active_features:
-          type: array
-          items:
-            type: string
-        feature_definitions:
-          type: array
-          items:
-            type: object
-    MoogResponsePrcFeaturesDto:
-      type: object
-      title: Moog Response Prc Features Dto
-      description: Probable Root Cause API PrcFeaturesDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/PrcFeaturesDto'
-      required:
-      - status
-      - data
-    MoogResponseListOfPrcRootCauseDto:
-      type: object
-      title: Moog Response List Of Prc Root Cause Dto
-      description: Probable Root Cause API PrcRootCauseDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrcRootCauseDto'
-      required:
-      - status
-      - data
     Instant:
       type: number
       title: Instant
       format: int64
       examples:
       - '2022-03-10T16:15:50Z'
-    PrcLabelRequestDto:
-      type: object
-      title: Prc Label Request Dto
-      properties:
-        labels:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ERcLabel'
-      required:
-      - labels
-    PrcTrainingRequestDto:
-      type: object
-      title: Prc Training Request Dto
-      properties:
-        type:
-          $ref: '#/components/schemas/TrainingType'
-          description: Training request type
-        features:
-          type: array
-          description: Optional retraining features to use when type='full
-          items:
-            type: string
-        ids:
-          type: array
-          description: IDs to retrain when type='incremental'
-          items:
-            type: integer
-            format: int64
-      required:
-      - type
     RcBucket:
       type: string
       enum:
@@ -430,13 +318,6 @@ components:
       - Low
       title: Rc Bucket
       description: Root-Cause Level (case-insensitive)
-    TrainingType:
-      type: string
-      enum:
-      - incremental
-      - full
-      title: Training Type
-      description: Root-Cause training type
     PrcRootCauseDto:
       type: object
       title: Prc Root Cause Dto
@@ -482,6 +363,125 @@ components:
       - Unlabelled
       title: E Rc Label
       description: Root-Cause Label (case-insensitive)
+    PrcFeaturesDto:
+      type: object
+      title: Prc Features Dto
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        medium_threshold:
+          type: number
+          format: double
+        high_threshold:
+          type: number
+          format: double
+        enabled:
+          type: boolean
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+        last_updated_by:
+          type: string
+        created:
+          $ref: '#/components/schemas/Instant'
+        created_by:
+          type: string
+        active_features:
+          type: array
+          items:
+            type: string
+        feature_definitions:
+          type: array
+          items:
+            type: object
+    PrcTrainingRequestDto:
+      type: object
+      title: Prc Training Request Dto
+      properties:
+        type:
+          $ref: '#/components/schemas/TrainingType'
+          description: Training request type
+        features:
+          type: array
+          description: Optional retraining features to use when type='full
+          items:
+            type: string
+        ids:
+          type: array
+          description: IDs to retrain when type='incremental'
+          items:
+            type: integer
+            format: int64
+      required:
+      - type
+    TrainingType:
+      type: string
+      enum:
+      - incremental
+      - full
+      title: Training Type
+      description: Root-Cause training type
+    PrcLabelRequestDto:
+      type: object
+      title: Prc Label Request Dto
+      properties:
+        labels:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ERcLabel'
+      required:
+      - labels
+    MoogResponseListOfPrcRootCauseDto:
+      type: object
+      title: Moog Response List Of Prc Root Cause Dto
+      description: Probable Root Cause API PrcRootCauseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrcRootCauseDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Probable Root Cause API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponsePrcFeaturesDto:
+      type: object
+      title: Moog Response Prc Features Dto
+      description: Probable Root Cause API PrcFeaturesDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/PrcFeaturesDto'
+      required:
+      - status
+      - data
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

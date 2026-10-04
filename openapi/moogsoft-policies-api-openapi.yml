@@ -488,6 +488,42 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseGetPolicyListResponseDto:
+      type: object
+      title: Moog Response Get Policy List Response Dto
+      description: Metrics API GetPolicyListResponseDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/GetPolicyListResponseDto'
+      required:
+      - status
+      - data
+    MoogResponseAlgorithmPolicyDto:
+      type: object
+      title: Moog Response Algorithm Policy Dto
+      description: Metrics API AlgorithmPolicyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/AlgorithmPolicyDto'
+      required:
+      - status
+      - data
     MetricKeyDto:
       type: object
       title: Metric Key Dto
@@ -509,28 +545,42 @@ components:
           type: string
       required:
       - metric
-    MetricStrategy:
-      type: string
-      enum:
-      - DROP
-      - STORE_ONLY
-      - DETECT_AND_STORE
-      title: Metric Strategy
-    MoogResponseGetPolicyListResponseDto:
+    MoogErrorResponse:
       type: object
-      title: Moog Response Get Policy List Response Dto
-      description: Metrics API GetPolicyListResponseDto response body
+      description: Metrics API error response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Error status indicator (always "error")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/GetPolicyListResponseDto'
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
       required:
       - status
-      - data
+      - message
+    PolicyMetrics:
+      type: object
+      title: Policy Metrics
+      description: Metrics tracked on a per-Policy basis
+      properties:
+        last_updated:
+          $ref: '#/components/schemas/Instant'
+          description: Date/time of last update to the metrics
+        num_metrics_matched:
+          type: integer
+          description: Number of metrics that match the policy's MoogQL query string
+          format: int64
+          readOnly: true
+        num_anomalies_created:
+          type: integer
+          description: Number of anomalies generated against the policy
+          format: int64
+          readOnly: true
     MoogFailureResponse:
       type: object
       description: Metrics API failure response body
@@ -549,9 +599,59 @@ components:
       required:
       - status
       - message
-    MoogResponseAlgorithmPolicyDto:
+    AlgorithmType:
+      type: string
+      enum:
+      - adaptive
+      - threshold
+      - boolean
+      title: Algorithm Type
+      description: Anomaly Algorithm Type
+    BaseAlgorithmProperties:
       type: object
-      title: Moog Response Algorithm Policy Dto
+      title: Base Algorithm Properties
+      properties:
+        type:
+          $ref: '#/components/schemas/AlgorithmType'
+          description: Algorithm to be used with this policy
+        hold_for:
+          type: integer
+          description: Number of consecutive anomalies before generating a failure event
+          format: int32
+          minimum: 0
+          default: 1
+        reset_hold_for:
+          type: integer
+          description: Number of consecutive resets before generating a restore event
+          format: int32
+          minimum: 0
+          default: 1
+        stateful:
+          type: boolean
+          description: Boolean indicating whether the algorithm is stateful
+          default: true
+    GetPolicyListResponseDto:
+      type: object
+      title: Get Policy List Response Dto
+      description: Response to /integrations/metrics-policies paged query
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlgorithmPolicyDto'
+        count:
+          type: integer
+          format: int64
+    MetricStrategy:
+      type: string
+      enum:
+      - DROP
+      - STORE_ONLY
+      - DETECT_AND_STORE
+      title: Metric Strategy
+    MoogResponseListOfAlgorithmPolicyDto:
+      type: object
+      title: Moog Response List Of Algorithm Policy Dto
       description: Metrics API AlgorithmPolicyDto response body
       properties:
         status:
@@ -560,10 +660,35 @@ components:
           examples:
           - success
         data:
-          $ref: '#/components/schemas/AlgorithmPolicyDto'
+          type: array
+          items:
+            $ref: '#/components/schemas/AlgorithmPolicyDto'
       required:
       - status
       - data
+    SortOrder:
+      type: string
+      enum:
+      - asc
+      - desc
+      title: Sort Order
+      default: desc
+    AlgorithmPolicyPriorityDto:
+      type: object
+      title: Algorithm Policy Priority Dto
+      description: Algorithm policy update priority.
+      properties:
+        id:
+          type: string
+          description: ID of the policy
+        priority:
+          type: integer
+          description: Relative priority of this policy, processed in increasing numeric order
+          format: int32
+          maximum: 2147483646
+      required:
+      - id
+      - priority
     AlgorithmPolicyDto:
       type: object
       title: Algorithm Policy Dto
@@ -630,131 +755,6 @@ components:
           description: Metrics for this policy
       required:
       - properties
-    PolicyMetrics:
-      type: object
-      title: Policy Metrics
-      description: Metrics tracked on a per-Policy basis
-      properties:
-        last_updated:
-          $ref: '#/components/schemas/Instant'
-          description: Date/time of last update to the metrics
-        num_metrics_matched:
-          type: integer
-          description: Number of metrics that match the policy's MoogQL query string
-          format: int64
-          readOnly: true
-        num_anomalies_created:
-          type: integer
-          description: Number of anomalies generated against the policy
-          format: int64
-          readOnly: true
-    BaseAlgorithmProperties:
-      type: object
-      title: Base Algorithm Properties
-      properties:
-        type:
-          $ref: '#/components/schemas/AlgorithmType'
-          description: Algorithm to be used with this policy
-        hold_for:
-          type: integer
-          description: Number of consecutive anomalies before generating a failure event
-          format: int32
-          minimum: 0
-          default: 1
-        reset_hold_for:
-          type: integer
-          description: Number of consecutive resets before generating a restore event
-          format: int32
-          minimum: 0
-          default: 1
-        stateful:
-          type: boolean
-          description: Boolean indicating whether the algorithm is stateful
-          default: true
-    AlgorithmPolicyPriorityDto:
-      type: object
-      title: Algorithm Policy Priority Dto
-      description: Algorithm policy update priority.
-      properties:
-        id:
-          type: string
-          description: ID of the policy
-        priority:
-          type: integer
-          description: Relative priority of this policy, processed in increasing numeric order
-          format: int32
-          maximum: 2147483646
-      required:
-      - id
-      - priority
-    SortOrder:
-      type: string
-      enum:
-      - asc
-      - desc
-      title: Sort Order
-      default: desc
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogResponseListOfAlgorithmPolicyDto:
-      type: object
-      title: Moog Response List Of Algorithm Policy Dto
-      description: Metrics API AlgorithmPolicyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlgorithmPolicyDto'
-      required:
-      - status
-      - data
-    GetPolicyListResponseDto:
-      type: object
-      title: Get Policy List Response Dto
-      description: Response to /integrations/metrics-policies paged query
-      properties:
-        result:
-          type: array
-          items:
-            $ref: '#/components/schemas/AlgorithmPolicyDto'
-        count:
-          type: integer
-          format: int64
-    MoogErrorResponse:
-      type: object
-      description: Metrics API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    AlgorithmType:
-      type: string
-      enum:
-      - adaptive
-      - threshold
-      - boolean
-      title: Algorithm Type
-      description: Anomaly Algorithm Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

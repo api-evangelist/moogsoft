@@ -118,25 +118,6 @@ components:
           x-deprecated: true
         last_updated:
           $ref: '#/components/schemas/Instant'
-    GetSlimDatumIndexResultsDto:
-      type: object
-      properties:
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/SlimDatumIndexDto'
-        total:
-          type: integer
-          format: int64
-        source:
-          type: string
-        alternateResults:
-          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
-    SortByDirection:
-      type: string
-      enum:
-      - ASC
-      - DESC
     Instant:
       type: string
       format: date-time
@@ -157,6 +138,25 @@ components:
           format: int32
         filter:
           type: string
+    GetSlimDatumIndexResultsDto:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlimDatumIndexDto'
+        total:
+          type: integer
+          format: int64
+        source:
+          type: string
+        alternateResults:
+          $ref: '#/components/schemas/GetSlimDatumIndexResultsDto'
+    SortByDirection:
+      type: string
+      enum:
+      - ASC
+      - DESC
     DatumIndexSortBy:
       type: string
       enum:

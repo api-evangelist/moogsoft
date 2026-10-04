@@ -61,13 +61,6 @@ paths:
       - url: https://api.dev.moogsoft.cloud
 components:
   schemas:
-    ProductFeedbackCategory:
-      type: string
-      enum:
-      - GENERAL
-      - PLUGIN
-      - INTEGRATION
-      title: Product Feedback Category
     MoogFailureResponse:
       type: object
       description: Collector V2 API failure response body
@@ -86,6 +79,13 @@ components:
       required:
       - status
       - message
+    ProductFeedbackCategory:
+      type: string
+      enum:
+      - GENERAL
+      - PLUGIN
+      - INTEGRATION
+      title: Product Feedback Category
     ProductFeedbackDto:
       type: object
       title: Product Feedback Dto

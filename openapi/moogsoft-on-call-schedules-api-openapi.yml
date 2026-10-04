@@ -786,161 +786,45 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    ScheduleOccurrenceDto:
+    ScheduleOccurrenceListDto:
       type: object
-      title: Schedule Occurrence Dto
-      description: Definition for a specific occurrence of an on-call schedule
+      title: Schedule Occurrence List Dto
+      description: Definition for a list of on-call schedule occurrences
       properties:
-        start:
-          $ref: '#/components/schemas/Timestamp'
-          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
-        end:
-          $ref: '#/components/schemas/Timestamp'
-          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
-        user:
-          type: string
-          description: The user "on-call" between this occurrence's start and end time
-          pattern: \S
-          readOnly: true
-        id:
-          type: string
-          description: The unique id of this on-call schedule occurrence
-          readOnly: true
-        schedule_id:
-          type: string
-          description: The unique id of the on-call schedule associated with this occurrence
-          readOnly: true
-        status:
-          $ref: '#/components/schemas/OnCallStatus'
-          description: The status of this on-call occurrence
-        layer_type:
-          type: string
-          description: The schedule layer this occurrences belongs to
-          readOnly: true
-        created:
-          $ref: '#/components/schemas/Timestamp'
-          description: when the on-call occurrence was created
-        last_updated:
-          $ref: '#/components/schemas/Timestamp'
-          description: when the on-call occurrence was last updated
-        created_by:
-          type: string
-          description: user who created the on-call occurrence
-          readOnly: true
-        last_updated_by:
-          type: string
-          description: user who last updated the on-call occurrence
-          readOnly: true
-      required:
-      - start
-      - end
-      - user
-    ScheduleUserDto:
-      type: object
-      title: Schedule User Dto
-      properties:
-        user:
-          type: string
-          description: the email of the moogsoft user
-          pattern: ^(.+)@(\S+)$
-          examples:
-          - username@domain.com
-        order:
+        result:
+          type: array
+          description: List of on-call schedule occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
+        count:
           type: integer
-          description: the order of the user in the schedule rotation
-          format: int32
-          examples:
-          - 3
-      required:
-      - user
-      - order
-    Rotation:
+          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
+          format: int64
+    ScheduleListDto:
       type: object
-      title: Rotation
+      title: Schedule List Dto
       properties:
-        type:
-          $ref: '#/components/schemas/RotationType'
-          description: a repeating rotation type for the on-call schedule
-        length:
+        result:
+          type: array
+          description: List of on-call schedules, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
+          items:
+            $ref: '#/components/schemas/ScheduleDto'
+        count:
           type: integer
-          description: the length of each on-call shift, based on rotation type
-          format: int32
-      required:
-      - type
-      - length
-    MoogResponseScheduleDto:
-      type: object
-      description: On-Call API ScheduleDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ScheduleDto'
-      required:
-      - status
-      - data
-    DayOfWeek:
+          description: Total number of on-call schedules that would have been returned in the absence of offset and limit
+          format: int64
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    RotationType:
       type: string
       enum:
-      - monday
-      - tuesday
-      - wednesday
-      - thursday
-      - friday
-      - saturday
-      - sunday
-      title: Day Of Week
-      description: Day of Week
-    BaseScheduleDto:
-      type: object
-      title: Base Schedule Dto
-      description: definition for creating or updating a given on-call schedule
-      properties:
-        name:
-          type: string
-          description: name of the schedule
-          pattern: ^[a-zA-Z0-9()_\-\s]+$
-        description:
-          type: string
-          description: (optional) description of the schedule
-        user_groups:
-          type: array
-          description: (optional) list of user group ids
-          items:
-            type: string
-        users:
-          type: array
-          description: ordered list of users to rotate in the on-call schedule rotation
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/ScheduleUserDto'
-        rotation:
-          $ref: '#/components/schemas/Rotation'
-          description: The type of rotation for this on-call schedule
-        handoff:
-          $ref: '#/components/schemas/Handoff'
-          description: when on-call responsibilities should rotate, milliseconds since Jan 1, 1970 GMT
-        start:
-          $ref: '#/components/schemas/Timestamp'
-          description: when schedule takes effect, milliseconds since Jan 1, 1970 GMT
-        timezone:
-          type: string
-          description: (optional) timezone used of the schedule; used for display purposes
-          default: UTC - UTC
-        restrictions:
-          type: array
-          description: (optional) daily or weekly restrictions on the schedule
-          items:
-            $ref: '#/components/schemas/Restriction'
-      required:
-      - name
-      - users
-      - rotation
-      - handoff
-      - start
+      - days
+      - weeks
+      title: Rotation Type
+      description: On-call scheduling rotation type
     MoogResponseScheduleOccurrenceListDto:
       type: object
       description: On-Call API ScheduleOccurrenceListDto response body
@@ -955,101 +839,6 @@ components:
       required:
       - status
       - data
-    ScheduleListDto:
-      type: object
-      title: Schedule List Dto
-      properties:
-        result:
-          type: array
-          description: List of on-call schedules, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
-          items:
-            $ref: '#/components/schemas/ScheduleDto'
-        count:
-          type: integer
-          description: Total number of on-call schedules that would have been returned in the absence of offset and limit
-          format: int64
-    RestrictionType:
-      type: string
-      enum:
-      - daily
-      - weekly
-      title: Restriction Type
-      description: Type of Restriction on a Schedule
-    Restriction:
-      type: object
-      title: Restriction
-      properties:
-        type:
-          $ref: '#/components/schemas/RestrictionType'
-          description: the type of restriction - daily or weekly
-        start_day_of_week:
-          $ref: '#/components/schemas/DayOfWeek'
-          description: the day of week to start this restriction
-        end_day_of_week:
-          $ref: '#/components/schemas/DayOfWeek'
-          description: the day of week to end this restriction
-        start_time:
-          type: string
-          description: the start time of day, in the form HH:mm
-        end_time:
-          type: string
-          description: the end time of day, in the form HH:mm
-      required:
-      - type
-      - start_time
-      - end_time
-    MoogErrorResponse:
-      type: object
-      description: On-Call API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    OnCallStatus:
-      type: string
-      enum:
-      - pending
-      - active
-      - completed
-      - overridden
-      title: On Call Status
-      description: OnCall Occurrence Status
-    MoogFailureResponse:
-      type: object
-      description: On-Call API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    RotationType:
-      type: string
-      enum:
-      - days
-      - weeks
-      title: Rotation Type
-      description: On-call scheduling rotation type
     MoogResponseScheduleListDto:
       type: object
       description: On-Call API ScheduleListDto response body
@@ -1061,20 +850,6 @@ components:
           - success
         data:
           $ref: '#/components/schemas/ScheduleListDto'
-      required:
-      - status
-      - data
-    MoogResponseFinalScheduleDto:
-      type: object
-      description: On-Call API FinalScheduleDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/FinalScheduleDto'
       required:
       - status
       - data
@@ -1147,52 +922,83 @@ components:
       - rotation
       - handoff
       - start
-    Handoff:
+    ScheduleOccurrenceDto:
       type: object
-      title: Handoff
-      properties:
-        day_of_week:
-          $ref: '#/components/schemas/DayOfWeek'
-          description: 'the day of week to handoff on-call responsibilities. (Note: is optional ONLY if Rotation.type is DAYS and Rotation.length is not 7)'
-        time:
-          type: string
-          description: the time of day, in the form HH:mm, to handoff on-call responsibilities
-      required:
-      - time
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
-    FinalScheduleDto:
-      type: object
-      title: Final Schedule Dto
+      title: Schedule Occurrence Dto
       description: Definition for a specific occurrence of an on-call schedule
       properties:
-        base_schedule:
-          type: array
-          description: the schedule created from the schedule configuration
-          items:
-            $ref: '#/components/schemas/ScheduleOccurrenceDto'
-        final_schedule:
-          type: array
-          description: the schedule after applying overrides
-          items:
-            $ref: '#/components/schemas/ScheduleOccurrenceDto'
-    ScheduleOccurrenceListDto:
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        end:
+          $ref: '#/components/schemas/Timestamp'
+          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        user:
+          type: string
+          description: The user "on-call" between this occurrence's start and end time
+          pattern: \S
+          readOnly: true
+        id:
+          type: string
+          description: The unique id of this on-call schedule occurrence
+          readOnly: true
+        schedule_id:
+          type: string
+          description: The unique id of the on-call schedule associated with this occurrence
+          readOnly: true
+        status:
+          $ref: '#/components/schemas/OnCallStatus'
+          description: The status of this on-call occurrence
+        layer_type:
+          type: string
+          description: The schedule layer this occurrences belongs to
+          readOnly: true
+        created:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the on-call occurrence was created
+        last_updated:
+          $ref: '#/components/schemas/Timestamp'
+          description: when the on-call occurrence was last updated
+        created_by:
+          type: string
+          description: user who created the on-call occurrence
+          readOnly: true
+        last_updated_by:
+          type: string
+          description: user who last updated the on-call occurrence
+          readOnly: true
+      required:
+      - start
+      - end
+      - user
+    MoogResponseScheduleDto:
       type: object
-      title: Schedule Occurrence List Dto
-      description: Definition for a list of on-call schedule occurrences
+      description: On-Call API ScheduleDto response body
       properties:
-        result:
-          type: array
-          description: List of on-call schedule occurrences, as per sortOrder/sortBy/offset/limit; an empty list indicates no more to be retrieved
-          items:
-            $ref: '#/components/schemas/ScheduleOccurrenceDto'
-        count:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ScheduleDto'
+      required:
+      - status
+      - data
+    Rotation:
+      type: object
+      title: Rotation
+      properties:
+        type:
+          $ref: '#/components/schemas/RotationType'
+          description: a repeating rotation type for the on-call schedule
+        length:
           type: integer
-          description: Total number of occurrences that would have been returned in the absence of offset and limit and unique
-          format: int64
+          description: the length of each on-call shift, based on rotation type
+          format: int32
+      required:
+      - type
+      - length
     BaseScheduleOccurrenceDto:
       type: object
       title: Base Schedule Occurrence Dto
@@ -1213,6 +1019,200 @@ components:
       - start
       - end
       - user
+    MoogFailureResponse:
+      type: object
+      description: On-Call API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    RestrictionType:
+      type: string
+      enum:
+      - daily
+      - weekly
+      title: Restriction Type
+      description: Type of Restriction on a Schedule
+    OnCallStatus:
+      type: string
+      enum:
+      - pending
+      - active
+      - completed
+      - overridden
+      title: On Call Status
+      description: OnCall Occurrence Status
+    ScheduleUserDto:
+      type: object
+      title: Schedule User Dto
+      properties:
+        user:
+          type: string
+          description: the email of the moogsoft user
+          pattern: ^(.+)@(\S+)$
+          examples:
+          - username@domain.com
+        order:
+          type: integer
+          description: the order of the user in the schedule rotation
+          format: int32
+          examples:
+          - 3
+      required:
+      - user
+      - order
+    MoogResponseFinalScheduleDto:
+      type: object
+      description: On-Call API FinalScheduleDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/FinalScheduleDto'
+      required:
+      - status
+      - data
+    Handoff:
+      type: object
+      title: Handoff
+      properties:
+        day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: 'the day of week to handoff on-call responsibilities. (Note: is optional ONLY if Rotation.type is DAYS and Rotation.length is not 7)'
+        time:
+          type: string
+          description: the time of day, in the form HH:mm, to handoff on-call responsibilities
+      required:
+      - time
+    Restriction:
+      type: object
+      title: Restriction
+      properties:
+        type:
+          $ref: '#/components/schemas/RestrictionType'
+          description: the type of restriction - daily or weekly
+        start_day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: the day of week to start this restriction
+        end_day_of_week:
+          $ref: '#/components/schemas/DayOfWeek'
+          description: the day of week to end this restriction
+        start_time:
+          type: string
+          description: the start time of day, in the form HH:mm
+        end_time:
+          type: string
+          description: the end time of day, in the form HH:mm
+      required:
+      - type
+      - start_time
+      - end_time
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    DayOfWeek:
+      type: string
+      enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+      title: Day Of Week
+      description: Day of Week
+    BaseScheduleDto:
+      type: object
+      title: Base Schedule Dto
+      description: definition for creating or updating a given on-call schedule
+      properties:
+        name:
+          type: string
+          description: name of the schedule
+          pattern: ^[a-zA-Z0-9()_\-\s]+$
+        description:
+          type: string
+          description: (optional) description of the schedule
+        user_groups:
+          type: array
+          description: (optional) list of user group ids
+          items:
+            type: string
+        users:
+          type: array
+          description: ordered list of users to rotate in the on-call schedule rotation
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ScheduleUserDto'
+        rotation:
+          $ref: '#/components/schemas/Rotation'
+          description: The type of rotation for this on-call schedule
+        handoff:
+          $ref: '#/components/schemas/Handoff'
+          description: when on-call responsibilities should rotate, milliseconds since Jan 1, 1970 GMT
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: when schedule takes effect, milliseconds since Jan 1, 1970 GMT
+        timezone:
+          type: string
+          description: (optional) timezone used of the schedule; used for display purposes
+          default: UTC - UTC
+        restrictions:
+          type: array
+          description: (optional) daily or weekly restrictions on the schedule
+          items:
+            $ref: '#/components/schemas/Restriction'
+      required:
+      - name
+      - users
+      - rotation
+      - handoff
+      - start
+    FinalScheduleDto:
+      type: object
+      title: Final Schedule Dto
+      description: Definition for a specific occurrence of an on-call schedule
+      properties:
+        base_schedule:
+          type: array
+          description: the schedule created from the schedule configuration
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
+        final_schedule:
+          type: array
+          description: the schedule after applying overrides
+          items:
+            $ref: '#/components/schemas/ScheduleOccurrenceDto'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

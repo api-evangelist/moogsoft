@@ -198,15 +198,47 @@ paths:
         - integrations:view
 components:
   schemas:
-    MoogFailureResponse:
+    MoogResponseListOfRecentPayload:
       type: object
-      description: Create Your Own Integration API failure response body
+      title: Moog Response List Of Recent Payload
+      description: Create Your Own Integration API RecentPayload response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Success status indicator (always "success")
           examples:
-          - failure
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RecentPayload'
+      required:
+      - status
+      - data
+    MoogResponseRecentPayload:
+      type: object
+      title: Moog Response Recent Payload
+      description: Create Your Own Integration API RecentPayload response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/RecentPayload'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
         message:
           type: string
         additional:
@@ -240,23 +272,24 @@ components:
             type: object
         _raw:
           type: string
-    MoogResponseListOfRecentPayload:
+    MoogFailureResponse:
       type: object
-      title: Moog Response List Of Recent Payload
-      description: Create Your Own Integration API RecentPayload response body
+      description: Create Your Own Integration API failure response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Failure status indicator (always "failure")
           examples:
-          - success
-        data:
+          - failure
+        message:
+          type: string
+        additional:
           type: array
           items:
-            $ref: '#/components/schemas/RecentPayload'
+            type: string
       required:
       - status
-      - data
+      - message
     TrafficSummaryDto:
       type: object
       title: Traffic Summary Dto
@@ -270,21 +303,6 @@ components:
           type: integer
           description: The number of payloads failed.
           format: int64
-    MoogResponseRecentPayload:
-      type: object
-      title: Moog Response Recent Payload
-      description: Create Your Own Integration API RecentPayload response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/RecentPayload'
-      required:
-      - status
-      - data
     MoogResponseTrafficSummaryDto:
       type: object
       title: Moog Response Traffic Summary Dto
@@ -300,24 +318,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Create Your Own Integration API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

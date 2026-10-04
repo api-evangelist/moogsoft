@@ -70,6 +70,39 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    MoogErrorResponse:
+      type: object
+      description: Similar Incidents Service API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseIncidentSimilarityResult:
+      type: object
+      title: Moog Response Incident Similarity Result
+      description: Similar Incidents Service API IncidentSimilarityResult response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/IncidentSimilarityResult'
+      required:
+      - status
+      - data
     MoogFailureResponse:
       type: object
       description: Similar Incidents Service API failure response body
@@ -95,21 +128,6 @@ components:
       properties:
         result:
           $ref: '#/components/schemas/IncidentSimilarityDto'
-    MoogResponseIncidentSimilarityResult:
-      type: object
-      title: Moog Response Incident Similarity Result
-      description: Similar Incidents Service API IncidentSimilarityResult response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/IncidentSimilarityResult'
-      required:
-      - status
-      - data
     IncidentSimilarityRequest:
       type: object
       title: Incident Similarity Request
@@ -126,24 +144,6 @@ components:
       required:
       - refIncidentID
       - cmpIncidentID
-    MoogErrorResponse:
-      type: object
-      description: Similar Incidents Service API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     IncidentSimilarityDto:
       type: object
       title: Incident Similarity Dto

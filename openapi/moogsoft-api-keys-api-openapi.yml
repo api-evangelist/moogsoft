@@ -128,6 +128,24 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    MoogErrorResponse:
+      type: object
+      description: User API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogFailureResponse:
       type: object
       description: User API failure response body
@@ -162,6 +180,12 @@ components:
       required:
       - status
       - data
+    Date:
+      type: number
+      title: Date
+      format: int64
+      examples:
+      - '2022-03-10'
     ApiKeyDto:
       type: object
       title: Api Key Dto
@@ -189,30 +213,6 @@ components:
           type: string
       required:
       - name
-    MoogErrorResponse:
-      type: object
-      description: User API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    Date:
-      type: number
-      title: Date
-      format: int64
-      examples:
-      - '2022-03-10'
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

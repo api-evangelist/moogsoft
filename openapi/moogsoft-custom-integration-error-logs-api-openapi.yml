@@ -125,41 +125,6 @@ paths:
         - integrations:edit
 components:
   schemas:
-    MoogFailureResponse:
-      type: object
-      description: Create Your Own Integration API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseListOfByoErrorLogDto:
-      type: object
-      title: Moog Response List Of Byo Error Log Dto
-      description: Create Your Own Integration API ByoErrorLogDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ByoErrorLogDto'
-      required:
-      - status
-      - data
     Instant:
       type: number
       title: Instant
@@ -180,6 +145,23 @@ components:
             type: string
         reason:
           type: string
+    MoogResponseListOfByoErrorLogDto:
+      type: object
+      title: Moog Response List Of Byo Error Log Dto
+      description: Create Your Own Integration API ByoErrorLogDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ByoErrorLogDto'
+      required:
+      - status
+      - data
     MoogErrorResponse:
       type: object
       description: Create Your Own Integration API error response body
@@ -189,6 +171,24 @@ components:
           description: Error status indicator (always "error")
           examples:
           - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogFailureResponse:
+      type: object
+      description: Create Your Own Integration API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
         message:
           type: string
         additional:

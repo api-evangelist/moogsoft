@@ -129,43 +129,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    PluginDto:
-      type: object
-      title: Plugin Dto
-      description: Plugin attributes.
-      properties:
-        name:
-          type: string
-        template:
-          type: string
-        parameters:
-          type: object
-        docs:
-          type: string
-        collector_version:
-          type: string
-        support_files:
-          type: array
-          items:
-            $ref: '#/components/schemas/SupportFileDto'
-    MoogFailureResponse:
-      type: object
-      description: Collector V2 API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     SupportFileDto:
       type: object
       title: Support File Dto
@@ -214,6 +177,25 @@ components:
       required:
       - status
       - message
+    PluginDto:
+      type: object
+      title: Plugin Dto
+      description: Plugin attributes.
+      properties:
+        name:
+          type: string
+        template:
+          type: string
+        parameters:
+          type: object
+        docs:
+          type: string
+        collector_version:
+          type: string
+        support_files:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportFileDto'
     MoogResponsePluginDto:
       type: object
       description: Collector V2 API PluginDto response body
@@ -228,6 +210,24 @@ components:
       required:
       - status
       - data
+    MoogFailureResponse:
+      type: object
+      description: Collector V2 API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -254,81 +254,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogFailureResponse:
-      type: object
-      description: User API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseListOfApiKeyDto:
-      type: object
-      description: User API ApiKeyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/ApiKeyDto'
-      required:
-      - status
-      - data
-    ApiKeyDto:
-      type: object
-      title: Api Key Dto
-      properties:
-        name:
-          type: string
-          pattern: \S
-          minLength: 1
-          maxLength: 127
-        description:
-          type: string
-        permissions:
-          type: array
-          items:
-            type: string
-        id:
-          type: string
-        createdAt:
-          $ref: '#/components/schemas/Date'
-        userId:
-          type: string
-        userEmail:
-          type: string
-        apiKey:
-          type: string
-      required:
-      - name
-    MoogResponseApiKeyDto:
-      type: object
-      description: User API ApiKeyDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/ApiKeyDto'
-      required:
-      - status
-      - data
     BaseApiKeyDto:
       type: object
       title: Base Api Key Dto
@@ -364,12 +289,87 @@ components:
       required:
       - status
       - message
+    MoogFailureResponse:
+      type: object
+      description: User API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApiKeyDto'
+      required:
+      - status
+      - data
+    MoogResponseApiKeyDto:
+      type: object
+      description: User API ApiKeyDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/ApiKeyDto'
+      required:
+      - status
+      - data
     Date:
       type: number
       title: Date
       format: int64
       examples:
       - '2022-03-10'
+    ApiKeyDto:
+      type: object
+      title: Api Key Dto
+      properties:
+        name:
+          type: string
+          pattern: \S
+          minLength: 1
+          maxLength: 127
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+        id:
+          type: string
+        createdAt:
+          $ref: '#/components/schemas/Date'
+        userId:
+          type: string
+        userEmail:
+          type: string
+        apiKey:
+          type: string
+      required:
+      - name
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

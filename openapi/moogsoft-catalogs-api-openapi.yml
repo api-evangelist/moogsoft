@@ -1681,157 +1681,6 @@ paths:
         - catalog:edit
 components:
   schemas:
-    CatalogFieldSchema:
-      type: object
-      title: Catalog Field Schema
-      properties:
-        name:
-          type: string
-          pattern: ^[a-zA-Z\d-_]+$
-          minLength: 1
-        required:
-          type: boolean
-        type:
-          $ref: '#/components/schemas/CatalogFieldSchemaType'
-      required:
-      - name
-      - required
-      - type
-    MoogResponseCatalogSettings:
-      type: object
-      description: Config API CatalogSettings response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CatalogSettings'
-      required:
-      - status
-      - data
-    MoogFailureResponse:
-      type: object
-      description: Config API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    MoogResponseListOfDocumentDto:
-      type: object
-      description: Config API DocumentDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/DocumentDto'
-      required:
-      - status
-      - data
-    ComparisonOperator:
-      type: string
-      enum:
-      - equals
-      - contains
-      title: Comparison Operator
-      description: Comparison operator type to use for the filter
-    SearchFieldsDto:
-      type: array
-      title: Search Fields Dto
-      items:
-        $ref: '#/components/schemas/SearchFieldDto'
-    CatalogSchema:
-      type: object
-      title: Catalog Schema
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/CatalogFieldSchema'
-      required:
-      - fields
-    MoogResponseCatalog:
-      type: object
-      description: Config API Catalog response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/Catalog'
-      required:
-      - status
-      - data
-    MoogResponseListOfCatalog:
-      type: object
-      description: Config API Catalog response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Catalog'
-      required:
-      - status
-      - data
-    CatalogFieldSchemaType:
-      type: string
-      enum:
-      - STRING
-      - NUMBER
-      - BOOLEAN
-      - JSON_OBJECT
-      - JSON_ARRAY
-      title: Catalog Field Schema Type
-    MoogResponseDocumentDto:
-      type: object
-      description: Config API DocumentDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/DocumentDto'
-      required:
-      - status
-      - data
-    SearchMatchType:
-      type: string
-      enum:
-      - STRING
-      - REGEX
-      - RANGE
-      title: Search Match Type
-    DocumentDto:
-      type: object
-      title: Document Dto
-      additionalProperties:
-        type: string
     Catalog:
       type: object
       title: Catalog
@@ -1910,30 +1759,42 @@ components:
       required:
       - name
       - description
-    CatalogSettings:
+    CatalogSchema:
       type: object
-      title: Catalog Settings
+      title: Catalog Schema
       properties:
-        max_catalogs:
-          type: integer
-          description: Maximum number of allowed catalogs
-          format: int64
-          readOnly: true
-        num_catalogs:
-          type: integer
-          description: Current number of catalogs
-          format: int64
-          readOnly: true
-        maxCatalogs:
-          type: integer
-          description: Use max_catalogs instead
-          format: int64
-          readOnly: true
-        numCatalogs:
-          type: integer
-          description: Use num_catalogs instead
-          format: int64
-          readOnly: true
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/CatalogFieldSchema'
+      required:
+      - fields
+    SearchFieldsDto:
+      type: array
+      title: Search Fields Dto
+      items:
+        $ref: '#/components/schemas/SearchFieldDto'
+    MoogResponseCatalog:
+      type: object
+      description: Config API Catalog response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/Catalog'
+      required:
+      - status
+      - data
+    ComparisonOperator:
+      type: string
+      enum:
+      - equals
+      - contains
+      title: Comparison Operator
+      description: Comparison operator type to use for the filter
     MoogErrorResponse:
       type: object
       description: Config API error response body
@@ -1943,6 +1804,77 @@ components:
           description: Error status indicator (always "error")
           examples:
           - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    MoogResponseListOfDocumentDto:
+      type: object
+      description: Config API DocumentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentDto'
+      required:
+      - status
+      - data
+    SearchMatchType:
+      type: string
+      enum:
+      - STRING
+      - REGEX
+      - RANGE
+      title: Search Match Type
+    MoogResponseDocumentDto:
+      type: object
+      description: Config API DocumentDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/DocumentDto'
+      required:
+      - status
+      - data
+    MoogResponseListOfCatalog:
+      type: object
+      description: Config API Catalog response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Catalog'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Config API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
         message:
           type: string
         additional:
@@ -1968,6 +1900,74 @@ components:
           description: The comparison operator to use for filtering. Note that this field only affects the search if the match_type is STRING. For other match types (RANGE, REGEX), this field is ignored.
       required:
       - field_name
+    CatalogFieldSchema:
+      type: object
+      title: Catalog Field Schema
+      properties:
+        name:
+          type: string
+          pattern: ^[a-zA-Z\d-_]+$
+          minLength: 1
+        required:
+          type: boolean
+        type:
+          $ref: '#/components/schemas/CatalogFieldSchemaType'
+      required:
+      - name
+      - required
+      - type
+    MoogResponseCatalogSettings:
+      type: object
+      description: Config API CatalogSettings response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CatalogSettings'
+      required:
+      - status
+      - data
+    DocumentDto:
+      type: object
+      title: Document Dto
+      additionalProperties:
+        type: string
+    CatalogSettings:
+      type: object
+      title: Catalog Settings
+      properties:
+        max_catalogs:
+          type: integer
+          description: Maximum number of allowed catalogs
+          format: int64
+          readOnly: true
+        num_catalogs:
+          type: integer
+          description: Current number of catalogs
+          format: int64
+          readOnly: true
+        maxCatalogs:
+          type: integer
+          description: Use max_catalogs instead
+          format: int64
+          readOnly: true
+        numCatalogs:
+          type: integer
+          description: Use num_catalogs instead
+          format: int64
+          readOnly: true
+    CatalogFieldSchemaType:
+      type: string
+      enum:
+      - STRING
+      - NUMBER
+      - BOOLEAN
+      - JSON_OBJECT
+      - JSON_ARRAY
+      title: Catalog Field Schema Type
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

@@ -69,24 +69,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogFailureResponse:
-      type: object
-      description: Events Integration failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     FilterStringDto:
       type: object
       title: Filter String Dto
@@ -100,28 +82,6 @@ components:
           - severity = Clear AND source = www.my-source.com
       required:
       - filterString
-    MoogResponseFilterStringResultDto:
-      type: object
-      title: Moog Response Filter String Result Dto
-      description: Events Integration FilterStringResultDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/FilterStringResultDto'
-      required:
-      - status
-      - data
-    FilterStringResultDto:
-      type: object
-      title: Filter String Result Dto
-      description: The result of validating a filter string
-      properties:
-        isValid:
-          type: boolean
     MoogErrorResponse:
       type: object
       description: Events Integration error response body
@@ -140,6 +100,46 @@ components:
       required:
       - status
       - message
+    MoogResponseFilterStringResultDto:
+      type: object
+      title: Moog Response Filter String Result Dto
+      description: Events Integration FilterStringResultDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/FilterStringResultDto'
+      required:
+      - status
+      - data
+    MoogFailureResponse:
+      type: object
+      description: Events Integration failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    FilterStringResultDto:
+      type: object
+      title: Filter String Result Dto
+      description: The result of validating a filter string
+      properties:
+        isValid:
+          type: boolean
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

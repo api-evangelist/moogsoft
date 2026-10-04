@@ -67,6 +67,64 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
+    ColumnsDto:
+      type: object
+      title: Columns Dto
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColumnInfo'
+    MoogErrorResponse:
+      type: object
+      description: Alerts/Incidents API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    ColumnInfo:
+      type: object
+      title: Column Info
+      properties:
+        colId:
+          type: string
+        headerName:
+          type: string
+        cellRenderer:
+          type: string
+        sortable:
+          type: boolean
+        hide:
+          type: boolean
+        filterOptions:
+          $ref: '#/components/schemas/FilterOptions'
+    FilterOptions:
+      type: object
+      title: Filter Options
+      properties:
+        type:
+          type: string
+        operators:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComparisonType'
+        setValues:
+          type: array
+          items:
+            type: string
+        category:
+          $ref: '#/components/schemas/FieldCategory'
     MoogFailureResponse:
       type: object
       description: Alerts/Incidents API failure response body
@@ -85,38 +143,6 @@ components:
       required:
       - status
       - message
-    FilterOptions:
-      type: object
-      title: Filter Options
-      properties:
-        type:
-          type: string
-        operators:
-          type: array
-          items:
-            $ref: '#/components/schemas/ComparisonType'
-        setValues:
-          type: array
-          items:
-            type: string
-        category:
-          $ref: '#/components/schemas/FieldCategory'
-    ColumnInfo:
-      type: object
-      title: Column Info
-      properties:
-        colId:
-          type: string
-        headerName:
-          type: string
-        cellRenderer:
-          type: string
-        sortable:
-          type: boolean
-        hide:
-          type: boolean
-        filterOptions:
-          $ref: '#/components/schemas/FilterOptions'
     ComparisonType:
       type: string
       enum:
@@ -137,38 +163,6 @@ components:
       - notExactMatch
       title: Comparison Type
       description: Comparison operator type to use for the filter
-    ColumnsDto:
-      type: object
-      title: Columns Dto
-      properties:
-        fields:
-          type: array
-          items:
-            $ref: '#/components/schemas/ColumnInfo'
-    FieldCategory:
-      type: string
-      enum:
-      - primitive
-      - array
-      title: Field Category
-    MoogErrorResponse:
-      type: object
-      description: Alerts/Incidents API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
     MoogResponseColumnsDto:
       type: object
       description: Alerts/Incidents API ColumnsDto response body
@@ -183,6 +177,12 @@ components:
       required:
       - status
       - data
+    FieldCategory:
+      type: string
+      enum:
+      - primitive
+      - array
+      title: Field Category
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

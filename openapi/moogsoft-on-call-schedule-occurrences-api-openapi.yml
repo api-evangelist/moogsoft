@@ -76,44 +76,6 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    MoogErrorResponse:
-      type: object
-      description: On-Call API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    BaseScheduleOccurrenceDto:
-      type: object
-      title: Base Schedule Occurrence Dto
-      description: base definition for a schedule occurrence
-      properties:
-        start:
-          $ref: '#/components/schemas/Timestamp'
-          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
-        end:
-          $ref: '#/components/schemas/Timestamp'
-          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
-        user:
-          type: string
-          description: The user "on-call" between this occurrence's start and end time
-          pattern: \S
-          readOnly: true
-      required:
-      - start
-      - end
-      - user
     MoogFailureResponse:
       type: object
       description: On-Call API failure response body
@@ -137,6 +99,44 @@ components:
       title: Timestamp
       description: Number of milliseconds since Jan 1, 1970 UTC
       format: int64
+    BaseScheduleOccurrenceDto:
+      type: object
+      title: Base Schedule Occurrence Dto
+      description: base definition for a schedule occurrence
+      properties:
+        start:
+          $ref: '#/components/schemas/Timestamp'
+          description: The start of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        end:
+          $ref: '#/components/schemas/Timestamp'
+          description: The end of this on-call schedule occurrence, milliseconds since Jan 1, 1970 GMT
+        user:
+          type: string
+          description: The user "on-call" between this occurrence's start and end time
+          pattern: \S
+          readOnly: true
+      required:
+      - start
+      - end
+      - user
+    MoogErrorResponse:
+      type: object
+      description: On-Call API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

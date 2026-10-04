@@ -440,6 +440,67 @@ paths:
         - correlation:edit
 components:
   schemas:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseListOfCorrelationDefinitionDto:
+      type: object
+      description: Config API CorrelationDefinitionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CorrelationDefinitionDto'
+      required:
+      - status
+      - data
+    MoogErrorResponse:
+      type: object
+      description: Config API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    DefinitionType:
+      type: string
+      enum:
+      - scoped
+      - seeded
+      title: Definition Type
+      description: The type of correlation definition.
+    MoogResponseCorrelationDefinitionDto:
+      type: object
+      description: Config API CorrelationDefinitionDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/CorrelationDefinitionDto'
+      required:
+      - status
+      - data
     MoogFailureResponse:
       type: object
       description: Config API failure response body
@@ -548,67 +609,6 @@ components:
         mapping:
           scoped: '#/components/schemas/ScopedCorrelationDefinitionDto'
           seeded: '#/components/schemas/SeededCorrelationDefinitionDto'
-    DefinitionType:
-      type: string
-      enum:
-      - scoped
-      - seeded
-      title: Definition Type
-      description: The type of correlation definition.
-    MoogResponseCorrelationDefinitionDto:
-      type: object
-      description: Config API CorrelationDefinitionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          $ref: '#/components/schemas/CorrelationDefinitionDto'
-      required:
-      - status
-      - data
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    MoogResponseListOfCorrelationDefinitionDto:
-      type: object
-      description: Config API CorrelationDefinitionDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/CorrelationDefinitionDto'
-      required:
-      - status
-      - data
-    MoogErrorResponse:
-      type: object
-      description: Config API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

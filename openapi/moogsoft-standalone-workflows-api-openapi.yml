@@ -73,6 +73,24 @@ paths:
         - workflows:view
 components:
   schemas:
+    MoogErrorResponse:
+      type: object
+      description: Workflow Engine API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     MoogFailureResponse:
       type: object
       description: Workflow Engine API failure response body
@@ -91,14 +109,6 @@ components:
       required:
       - status
       - message
-    NameIdPair:
-      type: object
-      title: Name Id Pair
-      properties:
-        name:
-          type: string
-        id:
-          type: string
     StandaloneWorkflowUsageInfo:
       type: object
       title: Standalone Workflow Usage Info
@@ -122,6 +132,14 @@ components:
           description: The id/name pairs for each menu action that is using the identified workflow.
           items:
             $ref: '#/components/schemas/NameIdPair'
+    NameIdPair:
+      type: object
+      title: Name Id Pair
+      properties:
+        name:
+          type: string
+        id:
+          type: string
     MoogResponseListOfStandaloneWorkflowUsageInfo:
       type: object
       title: Moog Response List Of Standalone Workflow Usage Info
@@ -139,24 +157,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Workflow Engine API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

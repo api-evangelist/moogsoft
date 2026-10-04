@@ -444,110 +444,16 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    WebhookResponse:
+    CreatedTriggerConfig:
       type: object
-      title: Webhook Response
+      title: Created Trigger Config
       properties:
-        code:
-          type: integer
-          format: int32
-        code_reason:
-          type: string
-        body:
-          type: string
-        duration_ms:
-          type: integer
-          format: int64
-        attempts:
-          type: integer
-          format: int32
-        codeReason:
-          type: string
-          description: Use code_reason instead
-          x-deprecated: true
-        durationMs:
-          type: integer
-          description: Use duration_ms instead
-          format: int64
-    MoogResponseListOfWebhookDto:
-      type: object
-      title: Moog Response List Of Webhook Dto
-      description: Webhook API WebhookDto response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/WebhookDto'
+        enabled:
+          type: boolean
+          description: Trigger is enabled or not
+          default: false
       required:
-      - status
-      - data
-    WebhookCredentialsDto:
-      type: object
-      title: Webhook Credentials Dto
-      description: Outbound Integration Credentials Definition
-      properties:
-        type:
-          $ref: '#/components/schemas/CredentialsType1'
-          description: Credentials type
-        name:
-          type: string
-          description: Credentials name
-      required:
-      - type
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
-    WebhookStatus:
-      type: string
-      enum:
-      - DISABLED
-      - RUNNING
-      - PROVISIONED
-      - INVALID_URL
-      - BAD_AUTH
-      - BAD_FILTER
-      - PAGE_NOT_FOUND
-      - BAD_RESPONSE
-      - SOCKET_TIMEOUT
-      - IO_ERROR
-      - TICKET_PARSE_FAILURE
-      - MOOG_ERROR
-      title: Webhook Status
-      description: Webhook Status
-    MoogErrorResponse:
-      type: object
-      description: Webhook API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    WebhookAction:
-      type: string
-      enum:
-      - IGNORE
-      - CREATE
-      - UPDATE
-      - DELETE
-      title: Webhook Action
+      - enabled
     WebhookType:
       type: string
       enum:
@@ -555,49 +461,106 @@ components:
       - ALERT
       title: Webhook Type
       description: Webhook Type
-    WebhookIntegrationDto:
+    PatchWebhookDto:
       type: object
-      title: Webhook Integration Dto
-      description: Outbound Integration Profile Definition
+      title: PatchWebhook
+      description: Patch body for Webhook. Any non-null values are used to patch the webhook
       properties:
+        description:
+          type: string
+          description: Webhook description
+        enabled:
+          type: boolean
+          description: Enable/disable Outbound integration
+          default: true
+        on_demand_only:
+          type: boolean
+          description: Enable/disable On-Demand only webhooks
+          default: false
+        name:
+          type: string
+          description: Outbound integration name
         type:
+          $ref: '#/components/schemas/WebhookType'
+          description: Outbound integration type
+        filter:
           type: string
-          description: Integration type
-          default: none
-        ticket_id_regex:
+          description: Outbound integration filter to apply
+        headers:
+          type: object
+          description: Outbound integration headers to send; mapping of key/value pairs
+          additionalProperties:
+            type: string
+        create_body:
           type: string
-          description: Regex for identifying external_id
-        ticket_name_regex:
+          description: Outbound integration create body template
+        updates_enabled:
+          type: boolean
+          description: Update notification enabled
+          default: false
+        update_body:
           type: string
-          description: Regex for identifying external_name
-        ticketIdRegex:
+          description: Outbound integration update body template (optional)
+        integration:
+          $ref: '#/components/schemas/WebhookIntegrationDto'
+        credentials:
+          $ref: '#/components/schemas/WebhookCredentialsDto'
+          description: Outbound integration credentials
+        urls:
+          $ref: '#/components/schemas/WebhookUrls'
+          description: Outbound integration HTTP URLs
+        triggers:
+          $ref: '#/components/schemas/WebhookTriggerDto'
+          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
+        external_link_url:
           type: string
-          description: Use ticket_id_regex instead
+          description: Outbound URL definition for linking to external records
+        create_mappings:
+          type: object
+          description: Data mappings for create requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        update_mappings:
+          type: object
+          description: Data mappings for update requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        onDemandOnly:
+          type: boolean
+          description: Use on_demand_only instead
           x-deprecated: true
-        ticketNameRegex:
+        createBody:
           type: string
-          description: Use ticket_name_regex instead
+          description: Use create_body instead
+          x-deprecated: true
+        updatesEnabled:
+          type: boolean
+          description: Use updates_enabled instead
+          x-deprecated: true
+        updateBody:
+          type: string
+          description: Use update_body instead
+          x-deprecated: true
+        externalLinkUrl:
+          type: string
+          description: Use external_link_url instead
+          x-deprecated: true
+        createMappings:
+          type: object
+          description: Use create_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        updateMappings:
+          type: object
+          description: Use update_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
           x-deprecated: true
       required:
       - type
-    MoogFailureResponse:
-      type: object
-      description: Webhook API failure response body
-      properties:
-        status:
-          type: string
-          description: Failure status indicator (always "failure")
-          examples:
-          - failure
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
+      - create_body
+      - urls
     WebhookTestDto:
       type: object
       title: Webhook Test Dto
@@ -623,6 +586,105 @@ components:
           type: object
           description: Use additional_info instead
           x-deprecated: true
+    BaseWebhookDto:
+      type: object
+      title: BaseWebhook
+      properties:
+        description:
+          type: string
+          description: Webhook description
+        enabled:
+          type: boolean
+          description: Enable/disable Outbound integration
+          default: true
+        on_demand_only:
+          type: boolean
+          description: Enable/disable On-Demand only webhooks
+          default: false
+        name:
+          type: string
+          description: Outbound integration name
+        type:
+          $ref: '#/components/schemas/WebhookType'
+          description: Outbound integration type
+        filter:
+          type: string
+          description: Outbound integration filter to apply
+        headers:
+          type: object
+          description: Outbound integration headers to send; mapping of key/value pairs
+          additionalProperties:
+            type: string
+        create_body:
+          type: string
+          description: Outbound integration create body template
+        updates_enabled:
+          type: boolean
+          description: Update notification enabled
+          default: false
+        update_body:
+          type: string
+          description: Outbound integration update body template (optional)
+        integration:
+          $ref: '#/components/schemas/WebhookIntegrationDto'
+        credentials:
+          $ref: '#/components/schemas/WebhookCredentialsDto'
+          description: Outbound integration credentials
+        urls:
+          $ref: '#/components/schemas/WebhookUrls'
+          description: Outbound integration HTTP URLs
+        triggers:
+          $ref: '#/components/schemas/WebhookTriggerDto'
+          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
+        external_link_url:
+          type: string
+          description: Outbound URL definition for linking to external records
+        create_mappings:
+          type: object
+          description: Data mappings for create requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        update_mappings:
+          type: object
+          description: Data mappings for update requests
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+        onDemandOnly:
+          type: boolean
+          description: Use on_demand_only instead
+          x-deprecated: true
+        createBody:
+          type: string
+          description: Use create_body instead
+          x-deprecated: true
+        updatesEnabled:
+          type: boolean
+          description: Use updates_enabled instead
+          x-deprecated: true
+        updateBody:
+          type: string
+          description: Use update_body instead
+          x-deprecated: true
+        externalLinkUrl:
+          type: string
+          description: Use external_link_url instead
+          x-deprecated: true
+        createMappings:
+          type: object
+          description: Use create_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+        updateMappings:
+          type: object
+          description: Use update_mappings instead
+          additionalProperties:
+            $ref: '#/components/schemas/WebhookDataMapping'
+          x-deprecated: true
+      required:
+      - type
+      - create_body
+      - urls
     WebhookDto:
       type: object
       title: Webhook Dto
@@ -752,6 +814,145 @@ components:
       - type
       - create_body
       - urls
+    WebhookVerb:
+      type: string
+      enum:
+      - POST
+      - PATCH
+      - PUT
+      - DELETE
+      title: Webhook Verb
+      description: HTTP Verb
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    MoogResponseWebhookDto:
+      type: object
+      title: Moog Response Webhook Dto
+      description: Webhook API WebhookDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          $ref: '#/components/schemas/WebhookDto'
+      required:
+      - status
+      - data
+    WebhookStatus:
+      type: string
+      enum:
+      - DISABLED
+      - RUNNING
+      - PROVISIONED
+      - INVALID_URL
+      - BAD_AUTH
+      - BAD_FILTER
+      - PAGE_NOT_FOUND
+      - BAD_RESPONSE
+      - SOCKET_TIMEOUT
+      - IO_ERROR
+      - TICKET_PARSE_FAILURE
+      - MOOG_ERROR
+      title: Webhook Status
+      description: Webhook Status
+    WebhookDataMapping:
+      type: object
+      title: Webhook Data Mapping
+      description: Data mapping definition
+      properties:
+        type:
+          $ref: '#/components/schemas/WebhookDataType'
+          description: Output data mapping to perform on the field
+        as_list:
+          type: boolean
+          description: Flag indicating whether to coerce the value into a list, or make a scalar
+          default: false
+        custom_mapping:
+          type: object
+          description: Custom mapping of input value to output value
+          additionalProperties:
+            type: string
+        asList:
+          type: boolean
+          description: Use as_list instead
+          x-deprecated: true
+        customMapping:
+          type: object
+          description: Use custom_mapping instead
+          additionalProperties:
+            type: string
+          x-deprecated: true
+      required:
+      - type
+    WebhookResponse:
+      type: object
+      title: Webhook Response
+      properties:
+        code:
+          type: integer
+          format: int32
+        code_reason:
+          type: string
+        body:
+          type: string
+        duration_ms:
+          type: integer
+          format: int64
+        attempts:
+          type: integer
+          format: int32
+        codeReason:
+          type: string
+          description: Use code_reason instead
+          x-deprecated: true
+        durationMs:
+          type: integer
+          description: Use duration_ms instead
+          format: int64
+    WebhookIntegrationDto:
+      type: object
+      title: Webhook Integration Dto
+      description: Outbound Integration Profile Definition
+      properties:
+        type:
+          type: string
+          description: Integration type
+          default: none
+        ticket_id_regex:
+          type: string
+          description: Regex for identifying external_id
+        ticket_name_regex:
+          type: string
+          description: Regex for identifying external_name
+        ticketIdRegex:
+          type: string
+          description: Use ticket_id_regex instead
+          x-deprecated: true
+        ticketNameRegex:
+          type: string
+          description: Use ticket_name_regex instead
+          x-deprecated: true
+      required:
+      - type
+    WebhookCredentialsDto:
+      type: object
+      title: Webhook Credentials Dto
+      description: Outbound Integration Credentials Definition
+      properties:
+        type:
+          $ref: '#/components/schemas/CredentialsType1'
+          description: Credentials type
+        name:
+          type: string
+          description: Credentials name
+      required:
+      - type
     UrlDefinition:
       type: object
       title: Url Definition
@@ -766,6 +967,87 @@ components:
       required:
       - verb
       - url
+    MoogFailureResponse:
+      type: object
+      description: Webhook API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    WebhookUrls:
+      type: object
+      title: Webhook Urls
+      description: Outbound integration URL information
+      properties:
+        create:
+          $ref: '#/components/schemas/UrlDefinition'
+          description: Outbound integration URL definition for creates
+        update:
+          $ref: '#/components/schemas/UrlDefinition'
+          description: Outbound integration URL definition for updates
+      required:
+      - create
+    MoogResponseListOfWebhookDto:
+      type: object
+      title: Moog Response List Of Webhook Dto
+      description: Webhook API WebhookDto response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookDto'
+      required:
+      - status
+      - data
+    TagsChangeTriggerConfig:
+      type: object
+      title: Tags Change Trigger Config
+      properties:
+        enabled:
+          type: boolean
+          description: Trigger is enabled or not
+          default: false
+      required:
+      - enabled
+    WebhookRequest:
+      type: object
+      title: Webhook Request
+      properties:
+        url:
+          $ref: '#/components/schemas/UrlDefinition'
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+      required:
+      - body
+    CredentialsType1:
+      type: string
+      enum:
+      - BEARER
+      - BASIC
+      - OAUTH
+      - OAUTH_CLIENT_CREDENTIALS
+      title: Credentials Type1
+      description: Credentials Type
     WebhookTriggerDto:
       type: object
       title: Webhook Trigger Dto
@@ -844,64 +1126,45 @@ components:
       - DATE_FORMATTED
       title: Webhook Data Type
       description: Webhook Data Type, used for data output mapping
-    MoogResponseWebhookDto:
+    WebhookMetrics:
       type: object
-      title: Moog Response Webhook Dto
-      description: Webhook API WebhookDto response body
+      title: Webhook Metrics
+      properties:
+        errors:
+          type: integer
+          format: int64
+        successes:
+          type: integer
+          format: int64
+        total:
+          type: integer
+          format: int64
+    MoogErrorResponse:
+      type: object
+      description: Webhook API error response body
       properties:
         status:
           type: string
-          description: Success status indicator (always "success")
+          description: Error status indicator (always "error")
           examples:
-          - success
-        data:
-          $ref: '#/components/schemas/WebhookDto'
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
       required:
       - status
-      - data
-    WebhookDataMapping:
-      type: object
-      title: Webhook Data Mapping
-      description: Data mapping definition
-      properties:
-        type:
-          $ref: '#/components/schemas/WebhookDataType'
-          description: Output data mapping to perform on the field
-        as_list:
-          type: boolean
-          description: Flag indicating whether to coerce the value into a list, or make a scalar
-          default: false
-        custom_mapping:
-          type: object
-          description: Custom mapping of input value to output value
-          additionalProperties:
-            type: string
-        asList:
-          type: boolean
-          description: Use as_list instead
-          x-deprecated: true
-        customMapping:
-          type: object
-          description: Use custom_mapping instead
-          additionalProperties:
-            type: string
-          x-deprecated: true
-      required:
-      - type
-    WebhookRequest:
-      type: object
-      title: Webhook Request
-      properties:
-        url:
-          $ref: '#/components/schemas/UrlDefinition'
-        headers:
-          type: object
-          additionalProperties:
-            type: string
-        body:
-          type: string
-      required:
-      - body
+      - message
+    WebhookAction:
+      type: string
+      enum:
+      - IGNORE
+      - CREATE
+      - UPDATE
+      - DELETE
+      title: Webhook Action
     MoogResponseListOfWebhookTestDto:
       type: object
       title: Moog Response List Of Webhook Test Dto
@@ -919,272 +1182,9 @@ components:
       required:
       - status
       - data
-    PatchWebhookDto:
-      type: object
-      title: PatchWebhook
-      description: Patch body for Webhook. Any non-null values are used to patch the webhook
-      properties:
-        description:
-          type: string
-          description: Webhook description
-        enabled:
-          type: boolean
-          description: Enable/disable Outbound integration
-          default: true
-        on_demand_only:
-          type: boolean
-          description: Enable/disable On-Demand only webhooks
-          default: false
-        name:
-          type: string
-          description: Outbound integration name
-        type:
-          $ref: '#/components/schemas/WebhookType'
-          description: Outbound integration type
-        filter:
-          type: string
-          description: Outbound integration filter to apply
-        headers:
-          type: object
-          description: Outbound integration headers to send; mapping of key/value pairs
-          additionalProperties:
-            type: string
-        create_body:
-          type: string
-          description: Outbound integration create body template
-        updates_enabled:
-          type: boolean
-          description: Update notification enabled
-          default: false
-        update_body:
-          type: string
-          description: Outbound integration update body template (optional)
-        integration:
-          $ref: '#/components/schemas/WebhookIntegrationDto'
-        credentials:
-          $ref: '#/components/schemas/WebhookCredentialsDto'
-          description: Outbound integration credentials
-        urls:
-          $ref: '#/components/schemas/WebhookUrls'
-          description: Outbound integration HTTP URLs
-        triggers:
-          $ref: '#/components/schemas/WebhookTriggerDto'
-          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
-        external_link_url:
-          type: string
-          description: Outbound URL definition for linking to external records
-        create_mappings:
-          type: object
-          description: Data mappings for create requests
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-        update_mappings:
-          type: object
-          description: Data mappings for update requests
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-        onDemandOnly:
-          type: boolean
-          description: Use on_demand_only instead
-          x-deprecated: true
-        createBody:
-          type: string
-          description: Use create_body instead
-          x-deprecated: true
-        updatesEnabled:
-          type: boolean
-          description: Use updates_enabled instead
-          x-deprecated: true
-        updateBody:
-          type: string
-          description: Use update_body instead
-          x-deprecated: true
-        externalLinkUrl:
-          type: string
-          description: Use external_link_url instead
-          x-deprecated: true
-        createMappings:
-          type: object
-          description: Use create_mappings instead
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-          x-deprecated: true
-        updateMappings:
-          type: object
-          description: Use update_mappings instead
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-          x-deprecated: true
-      required:
-      - type
-      - create_body
-      - urls
-    BaseWebhookDto:
-      type: object
-      title: BaseWebhook
-      properties:
-        description:
-          type: string
-          description: Webhook description
-        enabled:
-          type: boolean
-          description: Enable/disable Outbound integration
-          default: true
-        on_demand_only:
-          type: boolean
-          description: Enable/disable On-Demand only webhooks
-          default: false
-        name:
-          type: string
-          description: Outbound integration name
-        type:
-          $ref: '#/components/schemas/WebhookType'
-          description: Outbound integration type
-        filter:
-          type: string
-          description: Outbound integration filter to apply
-        headers:
-          type: object
-          description: Outbound integration headers to send; mapping of key/value pairs
-          additionalProperties:
-            type: string
-        create_body:
-          type: string
-          description: Outbound integration create body template
-        updates_enabled:
-          type: boolean
-          description: Update notification enabled
-          default: false
-        update_body:
-          type: string
-          description: Outbound integration update body template (optional)
-        integration:
-          $ref: '#/components/schemas/WebhookIntegrationDto'
-        credentials:
-          $ref: '#/components/schemas/WebhookCredentialsDto'
-          description: Outbound integration credentials
-        urls:
-          $ref: '#/components/schemas/WebhookUrls'
-          description: Outbound integration HTTP URLs
-        triggers:
-          $ref: '#/components/schemas/WebhookTriggerDto'
-          description: 'Outbound integration triggers, either IncidentTriggerDto or AlertTriggerDto (note: triggers not used when on_demand_only=true)'
-        external_link_url:
-          type: string
-          description: Outbound URL definition for linking to external records
-        create_mappings:
-          type: object
-          description: Data mappings for create requests
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-        update_mappings:
-          type: object
-          description: Data mappings for update requests
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-        onDemandOnly:
-          type: boolean
-          description: Use on_demand_only instead
-          x-deprecated: true
-        createBody:
-          type: string
-          description: Use create_body instead
-          x-deprecated: true
-        updatesEnabled:
-          type: boolean
-          description: Use updates_enabled instead
-          x-deprecated: true
-        updateBody:
-          type: string
-          description: Use update_body instead
-          x-deprecated: true
-        externalLinkUrl:
-          type: string
-          description: Use external_link_url instead
-          x-deprecated: true
-        createMappings:
-          type: object
-          description: Use create_mappings instead
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-          x-deprecated: true
-        updateMappings:
-          type: object
-          description: Use update_mappings instead
-          additionalProperties:
-            $ref: '#/components/schemas/WebhookDataMapping'
-          x-deprecated: true
-      required:
-      - type
-      - create_body
-      - urls
-    WebhookMetrics:
-      type: object
-      title: Webhook Metrics
-      properties:
-        errors:
-          type: integer
-          format: int64
-        successes:
-          type: integer
-          format: int64
-        total:
-          type: integer
-          format: int64
-    CreatedTriggerConfig:
-      type: object
-      title: Created Trigger Config
-      properties:
-        enabled:
-          type: boolean
-          description: Trigger is enabled or not
-          default: false
-      required:
-      - enabled
-    WebhookVerb:
-      type: string
-      enum:
-      - POST
-      - PATCH
-      - PUT
-      - DELETE
-      title: Webhook Verb
-      description: HTTP Verb
-    CredentialsType1:
-      type: string
-      enum:
-      - BEARER
-      - BASIC
-      - OAUTH
-      - OAUTH_CLIENT_CREDENTIALS
-      title: Credentials Type1
-      description: Credentials Type
-    WebhookUrls:
-      type: object
-      title: Webhook Urls
-      description: Outbound integration URL information
-      properties:
-        create:
-          $ref: '#/components/schemas/UrlDefinition'
-          description: Outbound integration URL definition for creates
-        update:
-          $ref: '#/components/schemas/UrlDefinition'
-          description: Outbound integration URL definition for updates
-      required:
-      - create
     BaseTriggerConfig:
       type: object
       title: Base Trigger Config
-      properties:
-        enabled:
-          type: boolean
-          description: Trigger is enabled or not
-          default: false
-      required:
-      - enabled
-    TagsChangeTriggerConfig:
-      type: object
-      title: Tags Change Trigger Config
       properties:
         enabled:
           type: boolean

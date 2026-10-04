@@ -136,15 +136,23 @@ components:
       - team_reference
       title: Pager Duty Webhook Subscription Type
       description: PagerDuty webhook subscription type
-    MoogFailureResponse:
+    PagerDutyIntegrationType:
+      type: string
+      enum:
+      - alert
+      - incident
+      - both
+      title: Pager Duty Integration Type
+      description: The event type of your PagerDuty integration (alert, incidents or both)
+    MoogErrorResponse:
       type: object
-      description: Pager Duty API failure response body
+      description: Pager Duty API error response body
       properties:
         status:
           type: string
-          description: Failure status indicator (always "failure")
+          description: Error status indicator (always "error")
           examples:
-          - failure
+          - error
         message:
           type: string
         additional:
@@ -164,6 +172,24 @@ components:
           type: string
         message:
           type: string
+    MoogFailureResponse:
+      type: object
+      description: Pager Duty API failure response body
+      properties:
+        status:
+          type: string
+          description: Failure status indicator (always "failure")
+          examples:
+          - failure
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
     WebhookFilterDto:
       type: object
       title: Webhook Filter Dto
@@ -191,32 +217,6 @@ components:
       required:
       - status
       - data
-    MoogErrorResponse:
-      type: object
-      description: Pager Duty API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
-    PagerDutyIntegrationType:
-      type: string
-      enum:
-      - alert
-      - incident
-      - both
-      title: Pager Duty Integration Type
-      description: The event type of your PagerDuty integration (alert, incidents or both)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

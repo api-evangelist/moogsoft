@@ -76,25 +76,47 @@ paths:
         description: Required user permissions for this endpoint
 components:
   schemas:
-    Timestamp:
-      type: integer
-      title: Timestamp
-      description: Number of milliseconds since Jan 1, 1970 UTC
-      format: int64
-    IsgErrorResponse:
+    LocationDto:
       type: object
-      title: Isg Error Response
-      description: Error response format for non-2XX responses
+      title: Location
       properties:
-        http_status_code:
+        street:
+          type: string
+        building:
+          type: string
+        suite:
           type: integer
-          description: HTTP response code. This is the same as the standard HTTP response value
           format: int32
-        messages:
-          type: array
-          description: List of messages providing additional information relating to the API error
-          items:
-            $ref: '#/components/schemas/IsgErrorMessage'
+        floor:
+          type: string
+        city:
+          type: string
+        state_or_province:
+          type: string
+        country:
+          type: string
+        postcode:
+          type: string
+        geo_coordinates:
+          $ref: '#/components/schemas/GeoLocationDto'
+        rack:
+          type: string
+        aisle:
+          type: string
+        u_position:
+          type: string
+        region:
+          type: string
+        data_center:
+          type: string
+        availability_zone:
+          type: string
+        geo_coordinates_lat:
+          type: integer
+          format: int32
+        geo_coordinates_long:
+          type: integer
+          format: int32
     WebEventDto:
       type: object
       title: Event
@@ -189,17 +211,16 @@ components:
       - Critical
       title: Isg Error Severity
       description: Severity of the message (should be treated as case-insensitive)
-    Severity:
-      type: string
-      enum:
-      - clear
-      - unknown
-      - warning
-      - minor
-      - major
-      - critical
-      title: Severity
-      description: Severity Level (case-insensitive)
+    GeoLocationDto:
+      type: object
+      title: GeoLocation
+      properties:
+        lat:
+          type: number
+          format: float
+        long:
+          type: number
+          format: float
     IsgErrorMessage:
       type: object
       title: Isg Error Message
@@ -228,57 +249,36 @@ components:
           description: Substitution arguments used for localization
           items:
             type: string
-    GeoLocationDto:
+    IsgErrorResponse:
       type: object
-      title: GeoLocation
+      title: Isg Error Response
+      description: Error response format for non-2XX responses
       properties:
-        lat:
-          type: number
-          format: float
-        long:
-          type: number
-          format: float
-    LocationDto:
-      type: object
-      title: Location
-      properties:
-        street:
-          type: string
-        building:
-          type: string
-        suite:
+        http_status_code:
           type: integer
+          description: HTTP response code. This is the same as the standard HTTP response value
           format: int32
-        floor:
-          type: string
-        city:
-          type: string
-        state_or_province:
-          type: string
-        country:
-          type: string
-        postcode:
-          type: string
-        geo_coordinates:
-          $ref: '#/components/schemas/GeoLocationDto'
-        rack:
-          type: string
-        aisle:
-          type: string
-        u_position:
-          type: string
-        region:
-          type: string
-        data_center:
-          type: string
-        availability_zone:
-          type: string
-        geo_coordinates_lat:
-          type: integer
-          format: int32
-        geo_coordinates_long:
-          type: integer
-          format: int32
+        messages:
+          type: array
+          description: List of messages providing additional information relating to the API error
+          items:
+            $ref: '#/components/schemas/IsgErrorMessage'
+    Timestamp:
+      type: integer
+      title: Timestamp
+      description: Number of milliseconds since Jan 1, 1970 UTC
+      format: int64
+    Severity:
+      type: string
+      enum:
+      - clear
+      - unknown
+      - warning
+      - minor
+      - major
+      - critical
+      title: Severity
+      description: Severity Level (case-insensitive)
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

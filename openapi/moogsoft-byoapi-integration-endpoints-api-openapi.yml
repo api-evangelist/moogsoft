@@ -68,6 +68,15 @@ paths:
         - integrations:view
 components:
   schemas:
+    Instant:
+      type: number
+      title: Instant
+      format: int64
+      examples:
+      - '2022-03-10T16:15:50Z'
+    Mapping:
+      type: object
+      title: Mapping
     Endpoint:
       type: object
       title: Endpoint
@@ -108,6 +117,62 @@ components:
       required:
       - endpointName
       - authRequired
+    MoogErrorResponse:
+      type: object
+      description: Create Your Own Integration API error response body
+      properties:
+        status:
+          type: string
+          description: Error status indicator (always "error")
+          examples:
+          - error
+        message:
+          type: string
+        additional:
+          type: array
+          items:
+            type: string
+      required:
+      - status
+      - message
+    IntegrationType:
+      type: string
+      enum:
+      - SPLUNK
+      - ANSIBLE_TOWER
+      - PROMETHEUS
+      - APPDYNAMICS
+      - PINGDOM
+      - DYNATRACE
+      - NEWRELIC
+      - ZABBIX
+      - AZURE
+      - NAGIOS
+      - SCOM
+      title: Integration Type
+    MoogResponseListOfEndpoint:
+      type: object
+      title: Moog Response List Of Endpoint
+      description: Create Your Own Integration API Endpoint response body
+      properties:
+        status:
+          type: string
+          description: Success status indicator (always "success")
+          examples:
+          - success
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Endpoint'
+      required:
+      - status
+      - data
+    Type:
+      type: string
+      enum:
+      - EVENT
+      - METRIC
+      title: Type
     MoogFailureResponse:
       type: object
       description: Create Your Own Integration API failure response body
@@ -142,50 +207,6 @@ components:
             $ref: '#/components/schemas/Mapping'
       required:
       - mappings
-    Type:
-      type: string
-      enum:
-      - EVENT
-      - METRIC
-      title: Type
-    MoogResponseListOfEndpoint:
-      type: object
-      title: Moog Response List Of Endpoint
-      description: Create Your Own Integration API Endpoint response body
-      properties:
-        status:
-          type: string
-          description: Success status indicator (always "success")
-          examples:
-          - success
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Endpoint'
-      required:
-      - status
-      - data
-    IntegrationType:
-      type: string
-      enum:
-      - SPLUNK
-      - ANSIBLE_TOWER
-      - PROMETHEUS
-      - APPDYNAMICS
-      - PINGDOM
-      - DYNATRACE
-      - NEWRELIC
-      - ZABBIX
-      - AZURE
-      - NAGIOS
-      - SCOM
-      title: Integration Type
-    Instant:
-      type: number
-      title: Instant
-      format: int64
-      examples:
-      - '2022-03-10T16:15:50Z'
     EndpointStatus:
       type: string
       enum:
@@ -194,27 +215,6 @@ components:
       - INACTIVE
       - ERROR
       title: Endpoint Status
-    Mapping:
-      type: object
-      title: Mapping
-    MoogErrorResponse:
-      type: object
-      description: Create Your Own Integration API error response body
-      properties:
-        status:
-          type: string
-          description: Error status indicator (always "error")
-          examples:
-          - error
-        message:
-          type: string
-        additional:
-          type: array
-          items:
-            type: string
-      required:
-      - status
-      - message
   securitySchemes:
     ApiKeyAuth:
       type: apiKey

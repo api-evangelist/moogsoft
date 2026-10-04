@@ -77,23 +77,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    FeaturesResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          example: success
-        data:
-          type: object
-          properties:
-            Feature1:
-              type: string
-              example: 'off'
-            Feature2:
-              type: string
-              example: 'on'
-      xml:
-        name: FeaturesResponse
     LicenseType:
       type: string
       enum:
@@ -124,6 +107,23 @@ components:
           example: Detailed error message when available
       xml:
         name: ErrorResponse
+    FeaturesResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        data:
+          type: object
+          properties:
+            Feature1:
+              type: string
+              example: 'off'
+            Feature2:
+              type: string
+              example: 'on'
+      xml:
+        name: FeaturesResponse
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
