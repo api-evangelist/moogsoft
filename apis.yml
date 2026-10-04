@@ -47,7 +47,6 @@ tags:
 - Incident Management
 - Observability
 - Alerting
-- Event Management
 - Anomaly Detection
 - Correlation
 - On-Call
@@ -4213,6 +4212,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - APIKeys
+  tags_raw:
   - API Keys
   properties:
   - type: OpenAPI
@@ -4266,6 +4267,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - InstanceType
+  tags_raw:
   - Instance Type
   properties:
   - type: OpenAPI
@@ -4319,6 +4322,8 @@ apis:
     https://api.docs.moogsoft.com/docs/latest/branches/main/4c987d4e03d42-alerts-incidents-api
   baseURL: https://api.moogsoft.ai
   tags:
+  - Webhooks (v2)
+  tags_raw:
   - Webhooks V2
   properties:
   - type: OpenAPI
@@ -4366,6 +4371,9 @@ apis:
     url: >-
       https://api.docs.moogsoft.com/docs/latest/branches/main/433fa2324eebd-workflow-engine-api
 common:
+- type: CapabilityMap
+  url: capabilities/moogsoft-capability-edges.yml
+  name: Moogsoft Business Capability Map
 - type: Overlay
   url: overlays/moogsoft-alerts-incidents-overlay.yaml
 - type: Overlay
@@ -4508,3 +4516,5 @@ x-enrichment:
   status: enriched
   artifacts_added: 56
   pass: local-v1
+x-tags-removed:
+- Event Management
