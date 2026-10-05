@@ -1,0 +1,222 @@
+slug: moogsoft
+provider: Moogsoft
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 21
+edges:
+- tag: Incidents
+  spec_file: moogsoft-incidents-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.85
+  evidence: PATCH /v1/incidents/{incidentId} 'Update the incident to the given status and/or assignee';
+    schemas Severity, Priority, Impact
+  reason: Core incident records with status, assignee, severity and priority for IT/SRE responders — incident
+    response management. Correlation of alerts into incidents is this vendor's stated purpose.
+- tag: Metrics
+  spec_file: moogsoft-metrics-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.85
+  evidence: POST /v1/integrations/metrics/prometheus-remote-write 'Prometheus remote-write'; POST /v1/integrations/metrics/telegraf-json
+    'Process metrics from the Telegraf JSON format'
+  reason: Ingestion of time-series telemetry from Prometheus/Telegraf for monitoring a running estate
+    — observability management (metrics), not financial or business KPI metrics.
+- tag: On-Call Schedules
+  spec_file: moogsoft-on-call-schedules-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.85
+  evidence: GET /v1/on-call/schedules/{id}/active-user 'Gets the user currently on call for a schedule';
+    schemas Rotation, Handoff, OnCallStatus
+  reason: On-call rotation scheduling and overrides for responders — explicitly the on-call response element
+    of incident response management, not workforce/HR scheduling.
+- tag: on-call schedule occurrences
+  spec_file: moogsoft-on-call-schedule-occurrences-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.85
+  evidence: openapi description "This API allows you to save and retrieve on-call schedules, escalation
+    policies"; PATCH /v1/on-call/occurrences/{id}/overrides "Edits an Override"
+  reason: On-call rota overrides and escalation policies are the core of on-call response and incident
+    coordination for production incidents.
+- tag: Acknowledge Resource
+  spec_file: moogsoft-acknowledge-resource-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.8
+  evidence: POST /v1/on-call/ack/{incidentId}  acknowledgeIncident  Acknowledge Incident
+  reason: On-call acknowledgement of production incidents, with the spec described as covering 'on-call
+    schedules, escalation policies' — this is incident response/on-call management for IT operations and
+    SRE teams.
+- tag: Roles
+  spec_file: moogsoft-roles-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.8
+  evidence: GET /v1/roles "Get all roles in the system"; DELETE /v1/roles/{id} "Delete a custom role in
+    the system"; schema RoleDto
+  reason: CRUD over system roles for an application's user service is role-based access control administration
+    — identity and access management.
+- tag: Notification Policies
+  spec_file: moogsoft-notification-policies-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.78
+  evidence: POST /v1/on-call/notification-policy 'creates a new on-call notification policy'; schema NotificationAction
+  reason: On-call notification/escalation policy configuration, which governs how responders are paged
+    for production incidents; part of incident response rather than marketing or customer communications.
+- tag: Alerts Search
+  spec_file: moogsoft-alerts-search-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.75
+  evidence: GET /v1/alerts-search  Search for alerts for given namespace; "retrieve and update alerts
+    and incidents"
+  reason: Moogsoft is an AIOps platform; searching alerts/incidents supports production incident detection
+    and response. Could also be observability, but alerts/incidents point to incident response. Not financial-crime
+    alerting.
+- tag: cloudwatch
+  spec_file: moogsoft-cloudwatch-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.75
+  evidence: POST /v2/integrations/aws createCloudwatchV2 "Create a new cloudwatch integration"; POST /v2/integrations/aws/{id}/detectors
+    "Update cloudwatch detector configuration"; schemas MetricConfigDto, CloudwatchStatusDto
+  reason: Configures ingestion of AWS CloudWatch metrics and anomaly detectors into the monitoring platform
+    — metrics/monitoring of running services, i.e. observability management.
+- tag: incident-comments
+  spec_file: moogsoft-incident-comments-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.75
+  evidence: POST /v1/incidents/{incidentId}/comments — "Add comment to existing incident"
+  reason: Collaboration notes on operational incidents in an AIOps platform used by SRE/on-call responders
+    — incident coordination during production incidents.
+- tag: incident-similarity
+  spec_file: moogsoft-incident-similarity-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.75
+  evidence: POST /v1/incident-similarity — "Returns the set of similar incidents for a given target incident"
+  reason: Surfaces similar past incidents to accelerate responder diagnosis, matching the vendor's stated
+    purpose of surfacing probable root cause; this is incident detection/response support, not financial
+    or security alerting.
+- tag: Alerts
+  spec_file: moogsoft-alerts-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: PATCH /v1/alerts/{alertId}  updateAlert  Update the "status" or "assignee" or "assigned_groups"
+    field in a specific alert
+  reason: Operations retrieve and triage monitoring alerts correlated into incidents (status, assignee,
+    situation-room alerts, event timelines) for IT ops/SRE responders — production alert and incident
+    handling, not financial-crime alerting.
+- tag: Apikeys-users
+  spec_file: moogsoft-apikeys-users-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /v2/users/{userId}/keys  createApiKey  Create a new API key
+  reason: API key issuance and lifecycle for users is credential/identity and access management plumbing.
+    Emitting at moderate confidence; arguably pure technical auth plumbing.
+- tag: Incident Workflows
+  spec_file: moogsoft-incident-workflows-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: POST /v1/incident-workflows/standalone — 'Invokes the named standalone workflow on a single
+    incident'; 'This API enables you to retrieve and update alerts and incidents'
+  reason: Automation workflows that act on production incidents in an AIOps/SRE tool — supports incident
+    detection and response coordination, not business-process workflow. Some ambiguity vs. generic ITSM
+    change/incident handling, hence moderate confidence.
+- tag: User
+  spec_file: moogsoft-user-api-openapi.yml
+  capability_id: BC-620.20
+  capability_id_l1: BC-620
+  capability_name: Identity & Access Management
+  confidence: 0.7
+  evidence: POST /v2/users "Create new users"; DELETE /v2/users/{id} "Delete a user in the system"; schemas
+    UserDto, UserStatus
+  reason: Administration of application user accounts and profiles (joiner/mover/leaver style lifecycle)
+    is identity and access management, not HR employee records.
+- tag: autoclose-policy
+  spec_file: moogsoft-autoclose-policy-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: POST /v2/autoclose-policy "Create autoclose policy"; AutoClosePolicyDto; "retrieve and update
+    alerts and incidents"
+  reason: Policies governing automatic closure of IT alerts/incidents in an AIOps/SRE tool; supports incident
+    response operations rather than any business-domain alert handling.
+- tag: automation-config
+  spec_file: moogsoft-automation-config-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: PATCH /v1/automation-config "Update automation config for auto close of alerts and incidents"
+  reason: Explicitly configures automated auto-close behaviour of alerts and incidents in the incident-management
+    service, i.e. incident response operations tooling.
+- tag: correlation-groups
+  spec_file: moogsoft-correlation-groups-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: POST /v2/correlation/groups createCorrelationGroup; schema IncidentMergeThreshold
+  reason: Correlation groups with an IncidentMergeThreshold govern how alerts are merged into incidents,
+    which is incident detection/coordination for production services.
+- tag: events-integration
+  spec_file: moogsoft-events-integration-api-openapi.yml
+  capability_id: BC-4220.20
+  capability_id_l1: BC-4220
+  capability_name: Observability Management
+  confidence: 0.7
+  evidence: POST /v1/integrations/events — "Post event(s) to MOC"; schemas WebEventDto, Severity
+  reason: Ingestion endpoint for monitoring events into the AIOps incident-management pipeline — telemetry/event
+    collection that makes the running estate understandable, i.e. observability management rather than
+    product usage telemetry.
+- tag: pagerduty
+  spec_file: moogsoft-pagerduty-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: POST /v1/integrations/pagerduty 'Create a PagerDuty integration'; schema 'PagerDutyIntegrationDto'
+  reason: Configures routing of correlated incidents to PagerDuty, the on-call paging tool, which is part
+    of on-call incident response; some chance it is better read as pure integration plumbing.
+- tag: root cause
+  spec_file: moogsoft-root-cause-api-openapi.yml
+  capability_id: BC-4220.30
+  capability_id_l1: BC-4220
+  capability_name: Incident Response Management
+  confidence: 0.7
+  evidence: GET /v1/root-cause/incidents/probabilities/{id} 'Get the incident root cause and labels for
+    a specific incident id'
+  reason: Probable root cause surfacing and labelling for production incidents supports responder triage
+    during incident response; alternatively could be seen as post-incident improvement, hence 0.7.
