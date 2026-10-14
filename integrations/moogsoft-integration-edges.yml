@@ -1,6 +1,7 @@
 generated: '2026-10-13'
 method: searched
 checked:
+- grafana-com/integrations/grafana-com-integration-edges.yml
 - https://azuremarketplace.microsoft.com/
 marketplace_apps: []
 edges:
@@ -20,3 +21,24 @@ edges:
   seller_name: Moogsoft
   detected_by: sweep-cloud-marketplaces.py
   detected: '2026-10-13'
+- partner_name: Grafana (own)
+  partner: grafana-com
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://grafana.com/grafana/plugins/moogsoft-aiops-app/
+  mirror_of: grafana-com/integrations/grafana-com-integration-edges.yml
+  apps:
+  - Moogsoft AIOps
+  listing_count: 1
+  detected: '2026-10-14'
+  detected_by: mirror-platform-listings.py
+  category: Application
+  badges:
+  - signature:commercial
+source:
+- grafana-com/integrations/grafana-com-integration-edges.yml

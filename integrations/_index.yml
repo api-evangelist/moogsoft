@@ -15,3 +15,16 @@
   relationship: distribution-channel
   status: not-a-workflow
   arazzo: null
+- slug: moogsoft-grafana-own
+  label: Grafana (own)
+  partner: grafana-com
+  partner_name: Grafana (own)
+  category: Application
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://grafana.com/grafana/plugins/moogsoft-aiops-app/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
