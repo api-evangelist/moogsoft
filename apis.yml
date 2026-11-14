@@ -4488,6 +4488,16 @@ common:
   url: plans/moogsoft-plans-pricing.yml
 - type: FinOps
   url: finops/moogsoft-finops.yml
+- type: UsageTerms
+  url: terms/moogsoft-terms-of-service.yml
+- type: Eligibility
+  url: eligibility/moogsoft-eligibility.yml
+- type: DataLicense
+  url: data-license/moogsoft-data-license.yml
+- type: DataProcessing
+  url: privacy/moogsoft-privacy-policy.yml
+- type: Attestations
+  url: compliance/moogsoft-compliance.yml
 integrations:
 - name: Partner - AppDynamics floating
 - name: Partner - AWS floating floating
